@@ -1,0 +1,25 @@
+@startuml
+skinparam handwritten false
+skinparam monochrome true
+title UC15: Manage Promotional Vouchers - Activity Diagram
+start
+:Administrator opens Voucher Management console;
+:Select action (Create new voucher or Edit existing campaign);
+if (Action?) then (Create New)
+  :Enter voucher code, discount rate/amount, and usage quota;
+  :Set effective date range (startDate to endDate);
+  :Define minimum order value requirement;
+else (Edit Existing)
+  :Search and select voucher campaign;
+  :Modify quota limits or toggle active status;
+endif
+:System validates campaign business rules;
+if (Rules valid?) then (yes)
+  :Save voucher record to database;
+  :Log administrative audit trail;
+  :Display success confirmation;
+else (no)
+  :Highlight invalid fields with error message;
+endif
+stop
+@enduml
