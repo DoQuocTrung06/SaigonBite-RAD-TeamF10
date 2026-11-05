@@ -1,0 +1,15 @@
+@startuml
+skinparam monochrome true
+title UC15: Manage Vouchers - System Sequence Diagram (SSD)
+actor "Administrator" as Admin
+participant ":SaigonBiteSystem" as System
+
+Admin -> System: requestVoucherList(filterCriteria)
+System --> Admin: displayVouchers(campaignList)
+
+Admin -> System: createVoucher(voucherDetails)
+System --> Admin: validateAndConfirmCreation(voucherId, status)
+
+Admin -> System: updateVoucherStatus(voucherId, newStatus)
+System --> Admin: notifyStatusUpdated(auditLogId)
+@enduml
