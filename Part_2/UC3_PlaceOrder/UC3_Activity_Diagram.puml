@@ -1,0 +1,25 @@
+@startuml
+skinparam monochrome true
+title UC3: Place an Order - Activity Diagram
+start
+:Customer browses menus from multiple brands at chosen Hub;
+:Add items to cart across brands within the same hub;
+:Proceed to checkout review;
+if (Voucher provided?) then (yes)
+  :Enter voucher code;
+  :System verifies voucher validity, expiry, and min order;
+  :Apply discount to order subtotal;
+else (no)
+endif
+:Select payment method (E-wallet or COD);
+:Customer confirms and submits order;
+:System processes payment authorization;
+if (Payment authorized?) then (success)
+  :Create Order in 'Placed' status;
+  :Route order to hub kitchen display with 2-min SLA timer;
+  :Display order confirmation and live ETA tracking screen;
+else (failed)
+  :Notify payment failure and offer payment retry;
+endif
+stop
+@enduml
