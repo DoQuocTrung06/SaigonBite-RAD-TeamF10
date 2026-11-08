@@ -1,0 +1,15 @@
+@startuml
+skinparam monochrome true
+title UC7: Confirm or Reject Order - System Sequence Diagram (SSD)
+actor "Kitchen Staff" as Kitchen
+participant ":SaigonBiteSystem" as System
+
+System -> Kitchen: displayIncomingOrderAlert(orderId, items, timer)
+alt Confirm Order
+  Kitchen -> System: confirmOrder(orderId)
+  System --> Kitchen: confirmSuccess(stationTicketList)
+else Reject Order
+  Kitchen -> System: rejectOrder(orderId, rejectionReason)
+  System --> Kitchen: rejectionProcessed(refundStatus)
+end
+@enduml
