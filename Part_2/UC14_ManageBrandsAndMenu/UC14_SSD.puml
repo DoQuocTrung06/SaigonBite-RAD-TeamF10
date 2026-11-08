@@ -1,0 +1,64 @@
+@startuml
+skinparam style strictuml
+skinparam monochrome true
+skinparam shadowing false
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName Arial
+skinparam defaultFontSize 11
+skinparam roundcorner 0
+skinparam dpi 200
+hide footbox
+
+skinparam SequenceLifeLineBorderColor #000000
+skinparam SequenceLifeLineBackgroundColor #FFFFFF
+skinparam ParticipantBackgroundColor #FFFFFF
+skinparam ParticipantBorderColor #000000
+skinparam ParticipantBorderThickness 1.2
+skinparam ParticipantFontColor #000000
+
+skinparam ActorBackgroundColor #FFFFFF
+skinparam ActorBorderColor #000000
+skinparam ActorFontColor #000000
+
+skinparam ArrowColor #000000
+skinparam ArrowThickness 1.2
+skinparam ArrowFontColor #000000
+skinparam ArrowFontSize 10
+
+skinparam GroupBackgroundColor #FFFFFF
+skinparam GroupBorderColor #000000
+skinparam GroupBorderThickness 1.0
+skinparam GroupFontColor #000000
+skinparam GroupHeaderFontColor #000000
+
+right header 524H0031
+
+actor "Administrator" as Admin
+participant "__:System__" as System
+
+Admin -> System: openBrandCatalog()
+System --> Admin: brand list, hub assignments
+
+Admin -> System: selectBrand(brandId)
+System --> Admin: brand details, menu items, available stations
+
+Admin -> System: saveBrandDetails(brandName, cuisineType, assignedHubs)
+alt valid brand details
+  System --> Admin: brand confirmation
+else invalid brand details
+  System --> Admin: validation error message
+end
+
+Admin -> System: saveMenuItem(itemCode, nameVi, nameEn, unitPrice, stationType)
+alt valid item details
+  System --> Admin: updated menu catalog, state Active
+else invalid item details
+  System --> Admin: validation error message
+end
+
+opt discontinue menu item
+  Admin -> System: discontinueMenuItem(itemCode)
+  System --> Admin: confirmation, state Discontinued
+end
+
+@enduml
