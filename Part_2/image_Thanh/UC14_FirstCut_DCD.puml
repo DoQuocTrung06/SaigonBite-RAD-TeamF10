@@ -1,0 +1,89 @@
+@startuml
+skinparam monochrome true
+skinparam shadowing false
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName Arial
+skinparam defaultFontSize 10
+skinparam roundcorner 0
+skinparam dpi 150
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+skinparam nodesep 46
+skinparam ranksep 46
+
+skinparam ClassBackgroundColor #FFFFFF
+skinparam ClassBorderColor #000000
+skinparam ClassBorderThickness 1.2
+skinparam ClassFontColor #000000
+skinparam ClassFontSize 11
+skinparam ClassFontStyle bold
+skinparam ClassAttributeFontColor #000000
+skinparam ClassAttributeFontSize 10
+skinparam ClassStereotypeFontColor #000000
+skinparam ClassStereotypeFontSize 9
+
+skinparam ArrowColor #000000
+skinparam ArrowThickness 1.1
+skinparam ArrowFontColor #000000
+
+hide circle
+show members
+top to bottom direction
+right header 524H0031
+
+class BrandCatalogHandler <<controller>> {
+  --
+}
+
+class Brand {
+  -brandId: string {key}
+  -brandName: string
+  -cuisineType: string
+  -status: string
+  --
+}
+
+class Hub {
+  -hubId: string {key}
+  -hubName: string
+  -address: string
+  -maxCapacityOrders: int
+  -hubStatus: string
+  --
+}
+
+class MenuItem {
+  -itemId: string {key}
+  -itemNameVi: string
+  -itemNameEn: string
+  -description: string
+  -unitPrice: currency
+  -stationType: string
+  -status: string
+  --
+}
+
+class KitchenStation {
+  -stationId: string {key}
+  -stationName: string
+  -stationType: string
+  -currentLoad: int
+  -capacityLimit: int
+  --
+}
+
+' Row 1 -> Row 2
+BrandCatalogHandler -down-> Brand
+BrandCatalogHandler -down-> Hub
+
+' Row 2: Brand --> Hub
+Brand -right-> Hub
+
+' Row 2 -> Row 3
+Brand -down-> MenuItem
+Hub -down-> KitchenStation
+
+' Row 3 alignment
+MenuItem -[hidden]right-> KitchenStation
+
+@enduml
