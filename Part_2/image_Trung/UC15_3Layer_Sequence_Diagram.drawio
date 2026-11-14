@@ -1,0 +1,278 @@
+<mxfile host="Electron" agent="Mozilla/5.0" version="21.0.0" type="device">
+  <diagram id="UC15_3Layer_Seq" name="UC15 3-Layer Sequence Diagram - Create Voucher">
+    <mxGraphModel dx="1200" dy="1000" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="970" pageHeight="860" background="#ffffff" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- ==================== 5 PRE-EXISTING TOP LIFELINES ==================== -->
+        <!-- 1. Actor -->
+        <mxCell id="ll_actor" value=":Administrator" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.5;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="50" y="30" width="30" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="line_actor" value="" style="endArrow=none;dashed=1;html=1;strokeColor=#000000;strokeWidth=1.2;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="65" y="110" as="sourcePoint" />
+            <mxPoint x="65" y="770" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- 2. View Layer: UI (Stereotype «view» on top) -->
+        <mxCell id="ll_ui" value="&lt;i style=&quot;font-size: 10px;&quot;&gt;«view»&lt;/i&gt;&lt;br&gt;&lt;b&gt;:VoucherConsoleUI&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.5;align=center;" vertex="1" parent="1">
+          <mxGeometry x="160" y="45" width="130" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="line_ui" value="" style="endArrow=none;dashed=1;html=1;strokeColor=#000000;strokeWidth=1.2;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="225" y="90" as="sourcePoint" />
+            <mxPoint x="225" y="770" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- 3. Controller Layer (Stereotype «controller» on top) -->
+        <mxCell id="ll_ctrl" value="&lt;i style=&quot;font-size: 10px;&quot;&gt;«controller»&lt;/i&gt;&lt;br&gt;&lt;b&gt;:VoucherController&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.5;align=center;" vertex="1" parent="1">
+          <mxGeometry x="330" y="45" width="130" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="line_ctrl" value="" style="endArrow=none;dashed=1;html=1;strokeColor=#000000;strokeWidth=1.2;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="395" y="90" as="sourcePoint" />
+            <mxPoint x="395" y="770" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- 4. Data Access Layer: VoucherDAO (Stereotype «dataAccess» on top) -->
+        <mxCell id="ll_vdao" value="&lt;i style=&quot;font-size: 10px;&quot;&gt;«dataAccess»&lt;/i&gt;&lt;br&gt;&lt;b&gt;:VoucherDAO&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.5;align=center;" vertex="1" parent="1">
+          <mxGeometry x="670" y="45" width="120" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="line_vdao" value="" style="endArrow=none;dashed=1;html=1;strokeColor=#000000;strokeWidth=1.2;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="730" y="90" as="sourcePoint" />
+            <mxPoint x="730" y="770" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- 5. Data Access Layer: AuditLogDAO (Stereotype «dataAccess» on top) -->
+        <mxCell id="ll_adao" value="&lt;i style=&quot;font-size: 10px;&quot;&gt;«dataAccess»&lt;/i&gt;&lt;br&gt;&lt;b&gt;:AuditLogDAO&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.5;align=center;" vertex="1" parent="1">
+          <mxGeometry x="830" y="45" width="120" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="line_adao" value="" style="endArrow=none;dashed=1;html=1;strokeColor=#000000;strokeWidth=1.2;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="890" y="90" as="sourcePoint" />
+            <mxPoint x="890" y="770" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+
+        <!-- ==================== GIAI ĐOẠN 1: MỞ FORM VÀ SUBMIT ==================== -->
+        <!-- Open modal -->
+        <mxCell id="m_open" value="openCreateModal()" style="endArrow=block;html=1;strokeColor=#000000;strokeWidth=1.2;endFill=1;align=center;verticalAlign=bottom;fontSize=10;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="65" y="120" as="sourcePoint" />
+            <mxPoint x="225" y="120" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m_render" value="renderCreateForm()" style="endArrow=open;dashed=1;html=1;strokeColor=#000000;strokeWidth=1.2;endFill=0;align=center;verticalAlign=bottom;fontSize=10;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="225" y="140" as="sourcePoint" />
+            <mxPoint x="65" y="140" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Admin submits create form -->
+        <mxCell id="m_submit" value="submitCreate(voucherData)" style="endArrow=block;html=1;strokeColor=#000000;strokeWidth=1.2;endFill=1;align=center;verticalAlign=bottom;fontSize=10;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="65" y="170" as="sourcePoint" />
+            <mxPoint x="225" y="170" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- UI Activation Bar -->
+        <mxCell id="act_ui" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.2;" vertex="1" parent="1">
+          <mxGeometry x="218" y="170" width="14" height="550" as="geometry" />
+        </mxCell>
+
+        <!-- UI forwards to Controller -->
+        <mxCell id="m_ctrl_create" value="createVoucher(voucherData)" style="endArrow=block;html=1;strokeColor=#000000;strokeWidth=1.2;endFill=1;align=center;verticalAlign=bottom;fontSize=10;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="232" y="195" as="sourcePoint" />
+            <mxPoint x="395" y="195" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Controller Activation Bar -->
+        <mxCell id="act_ctrl" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.2;" vertex="1" parent="1">
+          <mxGeometry x="388" y="195" width="14" height="495" as="geometry" />
+        </mxCell>
+
+        <!-- Controller checks duplicate code via VoucherDAO -->
+        <mxCell id="m_check_dup" value="existsByCode(voucherData.code)" style="endArrow=block;html=1;strokeColor=#000000;strokeWidth=1.2;endFill=1;align=center;verticalAlign=bottom;fontSize=10;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="402" y="225" as="sourcePoint" />
+            <mxPoint x="723" y="225" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- VoucherDAO Activation Bar 1 -->
+        <mxCell id="act_vdao1" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.2;" vertex="1" parent="1">
+          <mxGeometry x="723" y="225" width="14" height="35" as="geometry" />
+        </mxCell>
+
+        <mxCell id="m_dup_ret" value="isDuplicate: Boolean" style="endArrow=open;dashed=1;html=1;strokeColor=#000000;strokeWidth=1.2;endFill=0;align=center;verticalAlign=bottom;fontSize=10;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="723" y="255" as="sourcePoint" />
+            <mxPoint x="402" y="255" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Controller self-call: validateDates with Nested Activation Bar -->
+        <mxCell id="m_self_val" value="validateDates(startDate, endDate)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#000000;strokeWidth=1.2;align=left;verticalAlign=middle;fontSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="402" y="275" as="sourcePoint" />
+            <mxPoint x="408" y="295" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="445" y="275" />
+              <mxPoint x="445" y="295" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <!-- Nested Activation Bar (chồng lệch sang phải trên Controller) -->
+        <mxCell id="act_ctrl_nested" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.2;" vertex="1" parent="1">
+          <mxGeometry x="398" y="280" width="10" height="25" as="geometry" />
+        </mxCell>
+
+
+        <!-- ==================== GIAI ĐOẠN 2: KHUNG ALT XỬ LÝ ĐIỀU KIỆN ==================== -->
+        <mxCell id="box_alt" value="" style="shape=rect;fillColor=none;strokeColor=#000000;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="30" y="320" width="930" height="420" as="geometry" />
+        </mxCell>
+        <mxCell id="tag_alt" value="alt" style="shape=umlFrame;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.5;width=45;height=22;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="30" y="320" width="930" height="420" as="geometry" />
+        </mxCell>
+
+        <!-- NHÁNH 1: [isDuplicate == true || endDate <= startDate] -->
+        <mxCell id="g_inv" value="[isDuplicate == true || endDate &lt;= startDate]" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontStyle=1;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="85" y="322" width="280" height="20" as="geometry" />
+        </mxCell>
+
+        <mxCell id="m_err1" value="return errorMessage(&quot;Duplicate code or invalid date range&quot;)" style="endArrow=open;dashed=1;html=1;strokeColor=#000000;strokeWidth=1.2;endFill=0;align=center;verticalAlign=bottom;fontSize=10;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="388" y="355" as="sourcePoint" />
+            <mxPoint x="232" y="355" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="m_err2" value="displayErrorAlert(&quot;Duplicate code or invalid date range&quot;)" style="endArrow=open;dashed=1;html=1;strokeColor=#000000;strokeWidth=1.2;endFill=0;align=center;verticalAlign=bottom;fontSize=10;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="218" y="380" as="sourcePoint" />
+            <mxPoint x="65" y="380" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+
+        <!-- VÁCH NGĂN ALT (DIVIDER) -->
+        <mxCell id="div_alt" value="" style="endArrow=none;dashed=1;html=1;strokeColor=#000000;strokeWidth=1.5;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="30" y="410" as="sourcePoint" />
+            <mxPoint x="960" y="410" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- NHÁNH 2: [else: Valid inputs] -->
+        <mxCell id="g_val" value="[else: Valid voucher inputs]" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontStyle=1;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="40" y="412" width="200" height="20" as="geometry" />
+        </mxCell>
+
+        <!-- 4. Domain Entity Lifeline (THỤT XUỐNG CHUẨN OMG UML 2.5 & SATZINGER HÌNH 13-20 TRANG 451) -->
+        <!-- Mũi tên create có độ rộng 128px thoáng đạt, chữ không chạm mép -->
+        <mxCell id="m_create_obj" value="«create» (voucherData)" style="endArrow=block;html=1;strokeColor=#000000;strokeWidth=1.2;endFill=1;align=center;verticalAlign=bottom;fontSize=10;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="402" y="450" as="sourcePoint" />
+            <mxPoint x="530" y="450" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Hộp :Voucher nằm tại y=430 ngang tầm mũi tên create -->
+        <mxCell id="ll_ent" value="&lt;i style=&quot;font-size: 10px;&quot;&gt;«entity»&lt;/i&gt;&lt;br&gt;&lt;b&gt;:Voucher&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.5;align=center;" vertex="1" parent="1">
+          <mxGeometry x="530" y="430" width="110" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="line_ent" value="" style="endArrow=none;dashed=1;html=1;strokeColor=#000000;strokeWidth=1.2;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="585" y="475" as="sourcePoint" />
+            <mxPoint x="585" y="770" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Entity Activation Bar -->
+        <mxCell id="act_ent" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.2;" vertex="1" parent="1">
+          <mxGeometry x="578" y="475" width="14" height="35" as="geometry" />
+        </mxCell>
+
+        <!-- Entity returns reference to Controller -->
+        <mxCell id="m_ret_ent" value="aVoucher" style="endArrow=open;dashed=1;html=1;strokeColor=#000000;strokeWidth=1.2;endFill=0;align=center;verticalAlign=bottom;fontSize=10;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="578" y="505" as="sourcePoint" />
+            <mxPoint x="402" y="505" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Controller calls VoucherDAO to insert entity -->
+        <mxCell id="m_insert" value="insert(aVoucher)" style="endArrow=block;html=1;strokeColor=#000000;strokeWidth=1.2;endFill=1;align=center;verticalAlign=bottom;fontSize=10;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="402" y="535" as="sourcePoint" />
+            <mxPoint x="723" y="535" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- VoucherDAO Activation Bar 2 -->
+        <mxCell id="act_vdao2" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.2;" vertex="1" parent="1">
+          <mxGeometry x="723" y="535" width="14" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- DAO returns generated voucherId -->
+        <mxCell id="m_ret_id" value="voucherId" style="endArrow=open;dashed=1;html=1;strokeColor=#000000;strokeWidth=1.2;endFill=0;align=center;verticalAlign=bottom;fontSize=10;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="723" y="570" as="sourcePoint" />
+            <mxPoint x="402" y="570" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Controller calls AuditLogDAO to log action (NFR5) -->
+        <mxCell id="m_audit" value="writeLog(&quot;CREATE_VOUCHER&quot;, adminId, timestamp)" style="endArrow=block;html=1;strokeColor=#000000;strokeWidth=1.2;endFill=1;align=center;verticalAlign=bottom;fontSize=10;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="402" y="600" as="sourcePoint" />
+            <mxPoint x="883" y="600" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- AuditLogDAO Activation Bar -->
+        <mxCell id="act_adao" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.2;" vertex="1" parent="1">
+          <mxGeometry x="883" y="600" width="14" height="35" as="geometry" />
+        </mxCell>
+
+        <!-- AuditLog returns status -->
+        <mxCell id="m_audit_ret" value="status: success" style="endArrow=open;dashed=1;html=1;strokeColor=#000000;strokeWidth=1.2;endFill=0;align=center;verticalAlign=bottom;fontSize=10;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="883" y="630" as="sourcePoint" />
+            <mxPoint x="402" y="630" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Controller confirms success to UI -->
+        <mxCell id="m_succ_ui" value="confirmSuccess(voucherId, &quot;Created&quot;)" style="endArrow=open;dashed=1;html=1;strokeColor=#000000;strokeWidth=1.2;endFill=0;align=center;verticalAlign=bottom;fontSize=10;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="388" y="660" as="sourcePoint" />
+            <mxPoint x="232" y="660" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- UI displays success modal to Admin -->
+        <mxCell id="m_succ_modal" value="displaySuccessModal(voucherId)" style="endArrow=open;dashed=1;html=1;strokeColor=#000000;strokeWidth=1.2;endFill=0;align=center;verticalAlign=bottom;fontSize=10;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="218" y="690" as="sourcePoint" />
+            <mxPoint x="65" y="690" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
