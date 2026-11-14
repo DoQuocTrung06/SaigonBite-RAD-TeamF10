@@ -1,0 +1,178 @@
+@startuml
+skinparam monochrome true
+skinparam shadowing false
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName Arial
+skinparam defaultFontSize 11
+skinparam classFontSize 12
+skinparam classFontStyle bold
+skinparam roundCorner 0
+skinparam dpi 300
+
+title SaigonBite - Domain Model Class Diagram\nAuthor: Nguyen Quang Tuu (524H0136)
+
+abstract class Customer {
+    + customerId: String
+    + fullName: String
+    + createdAt: DateTime
+}
+
+class LocalCustomer {
+    + phoneNumber: String
+}
+
+class ForeignTourist {
+    + passportNumber: String
+    + emailAddress: String
+    + preferredLanguage: String
+}
+
+Customer <|-- LocalCustomer
+Customer <|-- ForeignTourist
+
+class Hub {
+    + hubId: String
+    + hubName: String
+    + address: String
+    + latitude: Decimal
+    + longitude: Decimal
+    + maxCapacityOrders: Integer
+    + isBusy: Boolean
+}
+
+class KitchenStation {
+    + stationId: String
+    + stationName: String
+    + stationType: String
+    + currentLoadOrders: Integer
+    + capacityLimit: Integer
+}
+
+Hub *-- "1..*" KitchenStation : contains >
+
+class Brand {
+    + brandId: String
+    + brandName: String
+    + cuisineType: String
+    + status: String
+    + logoUrl: String
+}
+
+class MenuItem {
+    + itemId: String
+    + itemName: String
+    + description: String
+    + unitPrice: Decimal
+    + isAvailable: Boolean
+    + stationType: String
+}
+
+Brand "1" -- "1..*" MenuItem : offers >
+
+class Order {
+    + orderId: String
+    + orderTime: DateTime
+    + orderStatus: String
+    + deliveryAddress: String
+    + distanceKm: Decimal
+    + subtotal: Decimal
+    + deliveryFee: Decimal
+    + discountAmount: Decimal
+    + finalTotal: Decimal
+    + paymentMethod: String
+}
+
+class OrderLine {
+    + quantity: Integer
+    + itemPrice: Decimal
+    + lineTotal: Decimal
+    + specialNotes: String
+}
+
+Customer "1" -- "0..*" Order : places >
+Hub "1" -- "0..*" Order : processes >
+Order "1" -- "1..*" OrderLine : contains >
+MenuItem "1" -- "0..*" OrderLine : ordered in >
+(Order, MenuItem) .. OrderLine
+
+class Voucher {
+    + voucherCode: String
+    + discountPercent: Decimal
+    + maxDiscountAmount: Decimal
+    + minOrderAmount: Decimal
+    + startDate: DateTime
+    + endDate: DateTime
+    + usageQuota: Integer
+    + timesUsed: Integer
+    + status: String
+}
+
+Order "0..*" -- "0..1" Voucher : applies >
+
+class Payment {
+    + paymentId: String
+    + paymentMethod: String
+    + paymentAmount: Decimal
+    + paymentStatus: String
+    + transactionRef: String
+    + paymentTime: DateTime
+}
+
+Order "1" -- "1" Payment : paid via >
+
+class KitchenTicket {
+    + ticketId: String
+    + stationId: String
+    + status: String
+    + printedTime: DateTime
+    + completedTime: DateTime
+}
+
+Order "1" -- "1..*" KitchenTicket : splits into >
+KitchenStation "1" -- "0..*" KitchenTicket : prepares >
+
+class DeliveryTask {
+    + taskId: String
+    + shipperId: String
+    + pickupTime: DateTime
+    + deliveredTime: DateTime
+    + deliveryStatus: String
+    + cashCollected: Decimal
+    + failureReason: String
+    + photoProofUrl: String
+}
+
+Order "1" -- "1" DeliveryTask : fulfilled by >
+
+class ManagementReport {
+    + reportId: String
+    + hubId: String
+    + reportType: String
+    + generatedDate: DateTime
+    + startDate: Date
+    + endDate: Date
+    + totalRevenue: Decimal
+    + totalOrders: Integer
+    + avgDeliveryMinutes: Decimal
+    + wasteCost: Decimal
+}
+
+Hub "1" -- "0..*" ManagementReport : reported in >
+
+note right of Customer
+  **Generalization:**
+  Local Customer vs Foreign Tourist
+end note
+
+note right of Hub
+  **Whole-Part Composition:**
+  Hub owns KitchenStations
+end note
+
+note bottom of OrderLine
+  **Association Class:**
+  Links Order and MenuItem
+  with line-level pricing
+end note
+
+@enduml
