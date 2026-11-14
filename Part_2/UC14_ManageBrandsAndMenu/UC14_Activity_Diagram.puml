@@ -1,0 +1,19 @@
+@startuml
+skinparam monochrome true
+title UC14: Manage Brands and Menu Items - Activity Diagram
+start
+:Administrator authenticates into Platform Portal;
+:Select Virtual Restaurant Brand management;
+if (Manage Brand?) then (Brand Profile)
+  :Create new brand profile or update existing profile;
+  :Assign brand to authorized physical cloud kitchen hubs;
+else (Menu Items)
+  :Select specific brand menu catalog;
+  :Add or modify menu item details (name, price, prep station, image);
+  :Set station routing rules (Wok, Fryer, Assembly, Beverage);
+  :Toggle hub-specific inventory availability;
+endif
+:System validates unique item codes and pricing constraints;
+:Save changes and synchronize live catalog across hubs;
+stop
+@enduml
