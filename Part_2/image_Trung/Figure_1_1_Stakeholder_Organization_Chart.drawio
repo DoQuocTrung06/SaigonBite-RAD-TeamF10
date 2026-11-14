@@ -1,0 +1,157 @@
+<mxfile host="Electron" agent="Mozilla/5.0" version="21.0.0" type="device">
+  <diagram id="OrgChart_SaigonBite" name="Stakeholder Organization Chart">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="750" background="#ffffff" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Root Node -->
+        <mxCell id="root" value="&lt;b style=&quot;font-size: 13px;&quot;&gt;SaigonBite Platform Ecosystem&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="460" y="40" width="280" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- Trunk connector and Horizontal Bus line -->
+        <mxCell id="trunk_down" value="" style="endArrow=none;html=1;strokeColor=#000000;strokeWidth=1.5;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="600" y="80" as="sourcePoint" />
+            <mxPoint x="600" y="120" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="bus_line" value="" style="endArrow=none;html=1;strokeColor=#000000;strokeWidth=1.5;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="160" y="120" as="sourcePoint" />
+            <mxPoint x="1040" y="120" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- 4 Downward drop lines from bus -->
+        <mxCell id="drop_col1" value="" style="endArrow=classic;html=1;strokeColor=#000000;strokeWidth=1.5;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="160" y="120" as="sourcePoint" />
+            <mxPoint x="160" y="160" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="drop_col2" value="" style="endArrow=classic;html=1;strokeColor=#000000;strokeWidth=1.5;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="450" y="120" as="sourcePoint" />
+            <mxPoint x="450" y="160" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="drop_col3" value="" style="endArrow=classic;html=1;strokeColor=#000000;strokeWidth=1.5;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="750" y="120" as="sourcePoint" />
+            <mxPoint x="750" y="160" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="drop_col4" value="" style="endArrow=classic;html=1;strokeColor=#000000;strokeWidth=1.5;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1040" y="120" as="sourcePoint" />
+            <mxPoint x="1040" y="160" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- ==================== COLUMN 1: Internal Hub Operations ==================== -->
+        <mxCell id="col1_head" value="&lt;b style=&quot;font-size: 12px;&quot;&gt;1. Internal Hub Operations&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8f9fa;strokeColor=#000000;strokeWidth=1.5;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="40" y="160" width="240" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="c1_line1" value="" style="endArrow=none;html=1;strokeColor=#000000;strokeWidth=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="160" y="200" as="sourcePoint" />
+            <mxPoint x="160" y="225" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c1_box1" value="&lt;b&gt;Hub General Manager&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size: 10px;&quot;&gt;• Overall Hub operations oversight&lt;br&gt;• Station capacity &amp;amp; SLA monitoring&lt;br&gt;• Produce management reports (UC16)&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1;align=left;spacingLeft=10;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="40" y="225" width="240" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="c1_line2" value="" style="endArrow=none;html=1;strokeColor=#000000;strokeWidth=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="160" y="290" as="sourcePoint" />
+            <mxPoint x="160" y="315" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c1_box2" value="&lt;b&gt;Kitchen Station Line Chefs&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size: 10px;&quot;&gt;• Confirm/reject tickets &amp;lt;120s (UC7)&lt;br&gt;• Multi-brand parallel food prep&lt;br&gt;• Station ticket printing &amp;amp; order handover&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1;align=left;spacingLeft=10;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="40" y="315" width="240" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="c1_line3" value="" style="endArrow=none;html=1;strokeColor=#000000;strokeWidth=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="160" y="380" as="sourcePoint" />
+            <mxPoint x="160" y="405" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c1_box3" value="&lt;b&gt;Marketing &amp;amp; Promotions Lead&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size: 10px;&quot;&gt;• Configure promo vouchers (UC15)&lt;br&gt;• Quota, expiry dates &amp;amp; min spend rules&lt;br&gt;• Quiet-kitchen 10% discount campaigns&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1;align=left;spacingLeft=10;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="40" y="405" width="240" height="65" as="geometry" />
+        </mxCell>
+
+        <!-- ==================== COLUMN 2: Merchant & Brand Partners ==================== -->
+        <mxCell id="col2_head" value="&lt;b style=&quot;font-size: 12px;&quot;&gt;2. Merchant &amp;amp; Brand Partners&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8f9fa;strokeColor=#000000;strokeWidth=1.5;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="330" y="160" width="240" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="c2_line1" value="" style="endArrow=none;html=1;strokeColor=#000000;strokeWidth=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="450" y="200" as="sourcePoint" />
+            <mxPoint x="450" y="225" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c2_box1" value="&lt;b&gt;Virtual Restaurant Brand Owners&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size: 10px;&quot;&gt;• Brand profiles &amp;amp; logos (UC14)&lt;br&gt;• Digital menus, items &amp;amp; prices (UC14)&lt;br&gt;• Revenue sharing &amp;amp; sales auditing&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1;align=left;spacingLeft=10;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="330" y="225" width="240" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="c2_line2" value="" style="endArrow=none;html=1;strokeColor=#000000;strokeWidth=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="450" y="290" as="sourcePoint" />
+            <mxPoint x="450" y="315" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c2_box2" value="&lt;b&gt;Raw Ingredient Suppliers&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size: 10px;&quot;&gt;• Centralized bulk kitchen supply&lt;br&gt;• Cold-chain inventory replenishment&lt;br&gt;• Quality &amp;amp; food safety compliance&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1;align=left;spacingLeft=10;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="330" y="315" width="240" height="65" as="geometry" />
+        </mxCell>
+
+        <!-- ==================== COLUMN 3: Customer Segments ==================== -->
+        <mxCell id="col3_head" value="&lt;b style=&quot;font-size: 12px;&quot;&gt;3. Customer Segments&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8f9fa;strokeColor=#000000;strokeWidth=1.5;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="630" y="160" width="240" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="c3_line1" value="" style="endArrow=none;html=1;strokeColor=#000000;strokeWidth=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="750" y="200" as="sourcePoint" />
+            <mxPoint x="750" y="225" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c3_box1" value="&lt;b&gt;Local Domestic Consumers&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size: 10px;&quot;&gt;• Multi-brand basket checkout (UC3)&lt;br&gt;• Domestic OTP phone registration&lt;br&gt;• Cash on Delivery (COD) or VNPay/cards&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1;align=left;spacingLeft=10;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="630" y="225" width="240" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="c3_line2" value="" style="endArrow=none;html=1;strokeColor=#000000;strokeWidth=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="750" y="290" as="sourcePoint" />
+            <mxPoint x="750" y="315" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c3_box2" value="&lt;b&gt;Foreign Tourists &amp;amp; Hotel Guests&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size: 10px;&quot;&gt;• Passport / Email account authentication&lt;br&gt;• English UI &amp;amp; international card gateway&lt;br&gt;• Hotel room &amp;amp; concierge drop-off (UC3)&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1;align=left;spacingLeft=10;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="630" y="315" width="240" height="65" as="geometry" />
+        </mxCell>
+
+        <!-- ==================== COLUMN 4: Delivery & Logistics Providers ==================== -->
+        <mxCell id="col4_head" value="&lt;b style=&quot;font-size: 12px;&quot;&gt;4. Delivery &amp;amp; Logistics Providers&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8f9fa;strokeColor=#000000;strokeWidth=1.5;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="920" y="160" width="240" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="c4_line1" value="" style="endArrow=none;html=1;strokeColor=#000000;strokeWidth=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1040" y="200" as="sourcePoint" />
+            <mxPoint x="1040" y="225" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c4_box1" value="&lt;b&gt;In-Hub Dispatch Runners&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size: 10px;&quot;&gt;• Consolidate items across kitchen stations&lt;br&gt;• Quality check &amp;amp; thermal packaging&lt;br&gt;• Package staging at counter &amp;amp; QR scan&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1;align=left;spacingLeft=10;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="920" y="225" width="240" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="c4_line2" value="" style="endArrow=none;html=1;strokeColor=#000000;strokeWidth=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1040" y="290" as="sourcePoint" />
+            <mxPoint x="1040" y="315" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c4_box2" value="&lt;b&gt;Third-Party (3PL) Couriers&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size: 10px;&quot;&gt;• Grab / Ahamove / ShopeeFood drivers&lt;br&gt;• Scan package QR code &amp;amp; pickup (UC10)&lt;br&gt;• Collect COD &amp;amp; 10-min wait protocol (UC10)&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1;align=left;spacingLeft=10;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="920" y="315" width="240" height="65" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

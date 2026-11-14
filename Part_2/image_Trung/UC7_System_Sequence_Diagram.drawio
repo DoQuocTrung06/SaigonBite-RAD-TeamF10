@@ -1,0 +1,115 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0">
+  <diagram id="UC7_SSD" name="UC7 System Sequence Diagram - Confirm or Reject Order">
+    <mxGraphModel dx="1164" dy="599" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="960" pageHeight="860" background="#ffffff" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="actor_icon" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.5;fontStyle=1;fontSize=12;" value=":KitchenStaff" vertex="1">
+          <mxGeometry height="60" width="30" x="120" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="actor_line" edge="1" parent="1" style="endArrow=none;dashed=1;html=1;strokeColor=#000000;strokeWidth=1.2;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="135" y="125" as="sourcePoint" />
+            <mxPoint x="135" y="790" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="system_box" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.5;fontStyle=1;fontSize=12;align=center;" value=":System" vertex="1">
+          <mxGeometry height="40" width="120" x="760" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="system_line" edge="1" parent="1" style="endArrow=none;dashed=1;html=1;strokeColor=#000000;strokeWidth=1.2;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="820" y="100" as="sourcePoint" />
+            <mxPoint x="820" y="790" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="act_confirm" parent="1" style="fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.2;" value="" vertex="1">
+          <mxGeometry height="50" width="14" x="813" y="225" as="geometry" />
+        </mxCell>
+        <mxCell id="act_rej_tap1" parent="1" style="fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.2;" value="" vertex="1">
+          <mxGeometry height="45" width="14" x="813" y="375" as="geometry" />
+        </mxCell>
+        <mxCell id="act_rej_tap2" parent="1" style="fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.2;" value="" vertex="1">
+          <mxGeometry height="50" width="14" x="813" y="475" as="geometry" />
+        </mxCell>
+        <mxCell id="act_timeout" parent="1" style="fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.2;" value="" vertex="1">
+          <mxGeometry height="35" width="14" x="813" y="625" as="geometry" />
+        </mxCell>
+        <mxCell id="msg_disp" edge="1" parent="1" style="endArrow=open;dashed=1;html=1;strokeColor=#000000;strokeWidth=1.2;endFill=0;align=center;verticalAlign=bottom;fontSize=11;" value="displayIncomingOrder(orderId, orderDetails, timer=120s)">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="820" y="145" as="sourcePoint" />
+            <mxPoint x="135" y="145" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="alt_main" parent="1" style="shape=rect;fillColor=none;strokeColor=#000000;strokeWidth=1.5;" value="" vertex="1">
+          <mxGeometry height="580" width="830" x="60" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="alt_tag" parent="1" style="shape=umlFrame;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.5;width=45;height=22;fontStyle=1;fontSize=11;" value="alt" vertex="1">
+          <mxGeometry height="580" width="830" x="60" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="guard1" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontStyle=1;fontSize=11;" value="[Case 1: Kitchen confirms order within 120s]" vertex="1">
+          <mxGeometry height="20" width="300" x="115" y="182" as="geometry" />
+        </mxCell>
+        <mxCell id="msg_confirm" edge="1" parent="1" style="endArrow=block;html=1;strokeColor=#000000;strokeWidth=1.2;endFill=1;align=center;verticalAlign=bottom;fontSize=11;" value="confirmOrder(orderId)">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="135" y="225" as="sourcePoint" />
+            <mxPoint x="813" y="225" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg_confirm_ack" edge="1" parent="1" style="endArrow=open;dashed=1;html=1;strokeColor=#000000;strokeWidth=1.2;endFill=0;align=center;verticalAlign=bottom;fontSize=10;" value="orderConfirmed(orderId, status=&quot;Confirmed&quot;, itemsLocked=true, ticketsDispatched, hubStatus)">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="813" y="275" as="sourcePoint" />
+            <mxPoint x="135" y="275" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="div1" edge="1" parent="1" style="endArrow=none;dashed=1;html=1;strokeColor=#000000;strokeWidth=1.5;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="60" y="320" as="sourcePoint" />
+            <mxPoint x="890" y="320" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="guard2" parent="1" style="text;html=1;strokeColor=none;fillColor=#ffffff;align=left;verticalAlign=middle;whiteSpace=wrap;fontStyle=1;fontSize=11;spacingLeft=5;" value="[Case 2: Kitchen rejects order within 120s (NFR4 - 2 taps)]" vertex="1">
+          <mxGeometry height="22" width="360" x="70" y="330" as="geometry" />
+        </mxCell>
+        <mxCell id="msg_req_reject" edge="1" parent="1" style="endArrow=block;html=1;strokeColor=#000000;strokeWidth=1.2;endFill=1;align=center;verticalAlign=bottom;fontSize=11;" value="requestReject(orderId)">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="135" y="375" as="sourcePoint" />
+            <mxPoint x="813" y="375" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg_reasons" edge="1" parent="1" style="endArrow=open;dashed=1;html=1;strokeColor=#000000;strokeWidth=1.2;endFill=0;align=center;verticalAlign=bottom;fontSize=11;" value="rejectionReasonOptions(reasonList)">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="813" y="420" as="sourcePoint" />
+            <mxPoint x="135" y="420" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg_sub_reject" edge="1" parent="1" style="endArrow=block;html=1;strokeColor=#000000;strokeWidth=1.2;endFill=1;align=center;verticalAlign=bottom;fontSize=11;" value="submitRejection(orderId, selectedReasonCode)">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="135" y="475" as="sourcePoint" />
+            <mxPoint x="813" y="475" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg_reject_ack" edge="1" parent="1" style="endArrow=open;dashed=1;html=1;strokeColor=#000000;strokeWidth=1.2;endFill=0;align=center;verticalAlign=bottom;fontSize=10;" value="orderRejected(orderId, status=&quot;Rejected&quot;, message=&quot;Ticket removed from KDS&quot;)">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="813" y="525" as="sourcePoint" />
+            <mxPoint x="135" y="525" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="div2" edge="1" parent="1" style="endArrow=none;dashed=1;html=1;strokeColor=#000000;strokeWidth=1.5;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="60" y="565" as="sourcePoint" />
+            <mxPoint x="890" y="565" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="guard3" parent="1" style="text;html=1;strokeColor=none;fillColor=#ffffff;align=left;verticalAlign=middle;whiteSpace=wrap;fontStyle=1;fontSize=11;spacingLeft=5;" value="[Case 3: SLA Timer &gt; 120s expires with no action (Temporal Event 5)]" vertex="1">
+          <mxGeometry height="22" width="430" x="70" y="575" as="geometry" />
+        </mxCell>
+        <mxCell id="msg_sla_alert" edge="1" parent="1" style="endArrow=open;dashed=1;html=1;strokeColor=#000000;strokeWidth=1.2;endFill=0;align=center;verticalAlign=bottom;fontSize=11;" value="notifySlaBreachAlert(orderId, status=&quot;Cancelled_Timeout&quot;, penaltyLogged=true)">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="813" y="650" as="sourcePoint" />
+            <mxPoint x="135" y="650" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

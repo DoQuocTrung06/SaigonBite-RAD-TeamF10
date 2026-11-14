@@ -1,0 +1,142 @@
+<mxfile host="Electron" agent="Mozilla/5.0" version="21.0.0" type="device">
+  <diagram id="UC7_StateMachine" name="UC7 State Machine Diagram - Order Fulfillment &amp; SLA Lifecycle">
+    <mxGraphModel dx="1200" dy="1100" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1050" pageHeight="920" background="#ffffff" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- ==================== INITIAL PSEUDOSTATE ==================== -->
+        <mxCell id="s_init" value="" style="ellipse;html=1;shape=startState;fillColor=#000000;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="510" y="35" width="30" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- Initial Transition -> Pending -->
+        <mxCell id="e_init" value="dispatchOrderToKitchen(orderId)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#000000;strokeWidth=1.2;align=center;verticalAlign=bottom;fontSize=10;fontColor=#000000;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="s_init" target="s_pending">
+          <mxGeometry x="-0.1" y="20" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+
+
+        <!-- ==================== 1. PENDING STATE ==================== -->
+        <mxCell id="s_pending" value="&lt;b style=&quot;font-size: 13px;&quot;&gt;Pending&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size: 10px; color: #444444;&quot;&gt;entry / start120sTimer()&lt;br&gt;do / displayIncomingTicketOnKDS()&lt;br&gt;exit / stop120sTimer()&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.5;arcSize=20;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="405" y="135" width="240" height="80" as="geometry" />
+        </mxCell>
+
+
+        <!-- ==================== CORRIDOR 1: REJECTED (LEFT WING) ==================== -->
+        <!-- Transition: Pending -> Rejected -->
+        <mxCell id="e_reject" value="rejectOrder(reason) [within 120s]" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#000000;strokeWidth=1.2;align=center;verticalAlign=bottom;fontSize=10;fontColor=#000000;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="s_pending" target="s_rejected">
+          <mxGeometry x="-0.3" y="-12" relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="175" y="175" />
+            </Array>
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Rejected State -->
+        <mxCell id="s_rejected" value="&lt;b style=&quot;font-size: 13px;&quot;&gt;Rejected&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size: 10px; color: #444444;&quot;&gt;entry / processAutomatedRefund() [Online]&lt;br&gt;entry / cancelOrderAuthorization() [COD]&lt;br&gt;entry / notifyCustomerWithReason()&lt;br&gt;entry / recordAuditLog(&quot;REJECTED&quot;)&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.5;arcSize=20;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="50" y="295" width="250" height="95" as="geometry" />
+        </mxCell>
+
+        <!-- Transition: Rejected -> Final Cancel -->
+        <mxCell id="e_rej_end" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#000000;strokeWidth=1.2;" edge="1" parent="1" source="s_rejected" target="s_final_cancel">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Terminal Pseudostate: Cancelled via Reject -->
+        <mxCell id="s_final_cancel" value="" style="ellipse;html=1;shape=endState;fillColor=#000000;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="160" y="465" width="30" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="lbl_final_cancel" value="«terminal» Order Cancelled&#xa;(Rejected by Kitchen)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=top;whiteSpace=wrap;fontStyle=2;fontSize=9.5;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="85" y="500" width="180" height="30" as="geometry" />
+        </mxCell>
+
+
+        <!-- ==================== CORRIDOR 3: TIMEOUT (RIGHT WING) ==================== -->
+        <!-- Transition: Pending -> Cancelled_Timeout -->
+        <mxCell id="e_timeout" value="after(120s)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#000000;strokeWidth=1.2;align=center;verticalAlign=bottom;fontSize=10;fontColor=#000000;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="s_pending" target="s_timeout">
+          <mxGeometry x="-0.3" y="-12" relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="872" y="175" />
+            </Array>
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Cancelled_Timeout State -->
+        <mxCell id="s_timeout" value="&lt;b style=&quot;font-size: 13px;&quot;&gt;Cancelled_Timeout&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size: 10px; color: #444444;&quot;&gt;entry / triggerSlaViolationAlert()&lt;br&gt;entry / processAutomatedRefund() [Online]&lt;br&gt;entry / cancelOrderAuthorization() [COD]&lt;br&gt;entry / logSlaBreachInHubMetrics()&lt;br&gt;entry / recordAuditLog(&quot;TIMEOUT&quot;)&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.5;arcSize=20;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="745" y="290" width="255" height="105" as="geometry" />
+        </mxCell>
+
+        <!-- Transition: Timeout -> Final Timeout -->
+        <mxCell id="e_to_end" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#000000;strokeWidth=1.2;" edge="1" parent="1" source="s_timeout" target="s_final_timeout">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Terminal Pseudostate: Cancelled via Timeout -->
+        <mxCell id="s_final_timeout" value="" style="ellipse;html=1;shape=endState;fillColor=#000000;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="857" y="465" width="30" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="lbl_final_to" value="«terminal» Order Cancelled&#xa;(SLA Breach Exceeded)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=top;whiteSpace=wrap;fontStyle=2;fontSize=9.5;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="782" y="500" width="180" height="30" as="geometry" />
+        </mxCell>
+
+
+        <!-- ==================== CORRIDOR 2: CENTRAL SPINE (SUCCESS FLOW) ==================== -->
+        <!-- Transition: Pending -> Confirmed -->
+        <mxCell id="e_confirm" value="confirmOrder() [within 120s]" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#000000;strokeWidth=1.2;align=center;verticalAlign=bottom;fontSize=10;fontColor=#000000;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="s_pending" target="s_confirmed">
+          <mxGeometry x="0.1" y="25" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- 2. Confirmed State -->
+        <mxCell id="s_confirmed" value="&lt;b style=&quot;font-size: 13px;&quot;&gt;Confirmed&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size: 10px; color: #444444;&quot;&gt;entry / lockOrderItemsAndAddress()&lt;br&gt;entry / generateKitchenTickets()&lt;br&gt;entry / evaluateHubCapacityAndThrottle()&lt;br&gt;entry / recordAuditLog(&quot;CONFIRMED&quot;)&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.5;arcSize=20;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="390" y="295" width="270" height="95" as="geometry" />
+        </mxCell>
+
+        <!-- Transition: Confirmed -> Preparing -->
+        <mxCell id="e_start_cook" value="startCooking()" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#000000;strokeWidth=1.2;align=center;verticalAlign=bottom;fontSize=10;fontColor=#000000;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="s_confirmed" target="s_preparing">
+          <mxGeometry x="0.1" y="20" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- 3. Preparing State -->
+        <mxCell id="s_preparing" value="&lt;b style=&quot;font-size: 13px;&quot;&gt;Preparing&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size: 10px; color: #444444;&quot;&gt;entry / dispatchTicketsToPhysicalStations()&lt;br&gt;do / monitorCookingProgress()&lt;br&gt;entry / recordAuditLog(&quot;PREPARING&quot;)&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.5;arcSize=20;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="390" y="465" width="270" height="85" as="geometry" />
+        </mxCell>
+
+        <!-- Transition: Preparing -> Ready -->
+        <mxCell id="e_all_done" value="allStationTicketsCompleted [completed == total]" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#000000;strokeWidth=1.2;align=center;verticalAlign=bottom;fontSize=10;fontColor=#000000;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="s_preparing" target="s_ready">
+          <mxGeometry x="0.1" y="20" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- 4. Ready State -->
+        <mxCell id="s_ready" value="&lt;b style=&quot;font-size: 13px;&quot;&gt;Ready&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size: 10px; color: #444444;&quot;&gt;entry / notifyDispatchRunnerForConsolidation()&lt;br&gt;entry / generatePackageQRCode()&lt;br&gt;entry / recordAuditLog(&quot;READY&quot;)&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.5;arcSize=20;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="390" y="625" width="270" height="85" as="geometry" />
+        </mxCell>
+
+        <!-- Transition: Ready -> Final Handover -->
+        <mxCell id="e_handover" value="handoverPackageToShipper() [packageVerified == true]" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#000000;strokeWidth=1.2;align=center;verticalAlign=bottom;fontSize=10;fontColor=#000000;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="s_ready" target="s_final_success">
+          <mxGeometry x="0.1" y="20" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Terminal Pseudostate: Success Handover to UC10 -->
+        <mxCell id="s_final_success" value="" style="ellipse;html=1;shape=endState;fillColor=#000000;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="510" y="785" width="30" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="lbl_final_success" value="«terminal» Order Ready &amp; Handed Over&#xa;(Scope transitions to UC10: Deliver order)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=top;whiteSpace=wrap;fontStyle=2;fontSize=9.5;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="405" y="820" width="240" height="30" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
