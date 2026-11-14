@@ -1,0 +1,20 @@
+@startuml
+skinparam monochrome true
+title UC10: Deliver an Order - System Sequence Diagram (SSD)
+actor "Shipper" as Shipper
+participant ":SaigonBiteSystem" as System
+
+Shipper -> System: acceptDeliveryTask(taskId)
+System --> Shipper: taskAssigned(packageDetails, hubCounter)
+
+Shipper -> System: scanPackageQRCode(qrData)
+System --> Shipper: verifyPackageSuccess(customerAddress, routeMap)
+
+alt Delivery Successful
+  Shipper -> System: confirmDeliverySuccess(proofPhoto, codCollected)
+  System --> Shipper: deliveryRecorded(receiptGenerated)
+else Customer Unreachable (10 min timeout)
+  Shipper -> System: reportFailedDelivery(callLogProof, returnHubId)
+  System --> Shipper: returnAuthorized(cancellationLogged)
+end
+@enduml
