@@ -1,0 +1,95 @@
+@startuml
+skinparam monochrome true
+skinparam shadowing false
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName Arial
+skinparam defaultFontSize 10
+skinparam roundcorner 0
+skinparam dpi 160
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+skinparam nodesep 60
+skinparam ranksep 60
+
+skinparam ClassBackgroundColor #FFFFFF
+skinparam ClassBorderColor #000000
+skinparam ClassBorderThickness 1.2
+skinparam ClassFontColor #000000
+skinparam ClassFontSize 11
+skinparam ClassFontStyle bold
+skinparam ClassAttributeFontColor #000000
+skinparam ClassAttributeFontSize 10
+skinparam ClassStereotypeFontColor #000000
+skinparam ClassStereotypeFontSize 9
+
+skinparam ArrowColor #000000
+skinparam ArrowThickness 1.1
+skinparam ArrowFontColor #000000
+
+hide circle
+show members
+top to bottom direction
+right header 524H0132
+
+' Layer 1: View
+class VoucherConsoleUI <<view>> {
+  --
+  +openCreateModal(): void
+  +renderCreateForm(): void
+  +submitCreate(voucherData: VoucherDTO): void
+  +submitUpdate(voucherCode: string, voucherData: VoucherDTO): void
+  +submitDeactivate(voucherCode: string): void
+  +displayErrorAlert(errorMessage: string): void
+  +displaySuccessModal(voucherId: string): void
+}
+
+' Layer 2: Controller
+class VoucherController <<controller>> {
+  --
+  +createVoucher(voucherData: VoucherDTO): VoucherResponseDTO
+  +updateVoucher(voucherCode: string, voucherData: VoucherDTO): boolean
+  +deactivateVoucher(voucherCode: string): boolean
+  -validateDates(startDate: datetime, endDate: datetime): boolean
+}
+
+' Layer 3: Data Access
+class VoucherDAO <<dataAccess>> {
+  --
+  +existsByCode(code: string): boolean
+  +insert(aVoucher: Voucher): string
+  +findById(voucherCode: string): Voucher
+  +update(aVoucher: Voucher): boolean
+  +updateStatus(voucherCode: string, status: string): boolean
+  +updateQuota(voucherCode: string, usedCount: int): boolean
+}
+
+class AuditLogDAO <<dataAccess>> {
+  --
+  +writeLog(action: string, adminId: string, timestamp: datetime): string
+}
+
+' Layer 4: Domain
+class Voucher {
+  -voucherCode: string {key}
+  -discountPercent: decimal
+  -maxDiscountAmount: decimal
+  -minOrderAmount: decimal
+  -startDate: datetime
+  -endDate: datetime
+  -usageQuota: int
+  -status: string
+  --
+  +create(voucherData: VoucherDTO): Voucher
+  +isValid(): boolean
+  +applyDiscount(orderAmount: decimal): decimal
+  +deactivate(): void
+}
+
+' Perfect symmetrical cruciform wiring
+VoucherConsoleUI -down-> VoucherController
+
+VoucherController -left-> VoucherDAO
+VoucherController -right-> AuditLogDAO
+VoucherController -down-> Voucher
+
+@enduml

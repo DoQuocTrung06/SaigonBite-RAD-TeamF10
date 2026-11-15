@@ -1,0 +1,53 @@
+@startuml
+skinparam monochrome true
+skinparam shadowing false
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName Arial
+skinparam defaultFontSize 10
+skinparam roundcorner 0
+skinparam dpi 160
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+skinparam nodesep 60
+skinparam ranksep 60
+
+skinparam ClassBackgroundColor #FFFFFF
+skinparam ClassBorderColor #000000
+skinparam ClassBorderThickness 1.2
+skinparam ClassFontColor #000000
+skinparam ClassFontSize 11
+skinparam ClassFontStyle bold
+skinparam ClassAttributeFontColor #000000
+skinparam ClassAttributeFontSize 10
+skinparam ClassStereotypeFontColor #000000
+skinparam ClassStereotypeFontSize 9
+
+skinparam ArrowColor #000000
+skinparam ArrowThickness 1.1
+skinparam ArrowFontColor #000000
+
+hide circle
+show members
+top to bottom direction
+right header 524H0132
+
+class VoucherController <<controller>> {
+  --
+}
+
+class Voucher {
+  -voucherCode: string {key}
+  -discountPercent: decimal
+  -maxDiscountAmount: decimal
+  -minOrderAmount: decimal
+  -startDate: datetime
+  -endDate: datetime
+  -usageQuota: int
+  -usedCount: int
+  -status: string
+  --
+}
+
+VoucherController -down-> Voucher
+
+@enduml
