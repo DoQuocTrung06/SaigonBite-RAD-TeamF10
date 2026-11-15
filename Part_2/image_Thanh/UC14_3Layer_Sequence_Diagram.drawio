@@ -1,0 +1,346 @@
+<mxfile host="Electron" agent="Mozilla/5.0" version="21.0.0" type="device">
+  <diagram id="UC14_3Layer_Seq" name="UC14 3-Layer Sequence Diagram - Add &amp; Configure Menu Item">
+    <mxGraphModel dx="1200" dy="1100" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1180" pageHeight="980" background="#ffffff" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- ==================== 5 PRE-EXISTING TOP LIFELINES ==================== -->
+        <!-- 1. Actor: Administrator (x=60..90, center line x=75) -->
+        <mxCell id="ll_actor" value=":Administrator" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.5;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="60" y="30" width="30" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="line_actor" value="" style="endArrow=none;dashed=1;html=1;strokeColor=#000000;strokeWidth=1.2;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="75" y="105" as="sourcePoint" />
+            <mxPoint x="75" y="930" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- 2. View Layer: BrandMenuConsoleUI (x=200..360, center line x=280) -->
+        <mxCell id="ll_ui" value="&lt;i style=&quot;font-size: 10px;&quot;&gt;«view»&lt;/i&gt;&lt;br&gt;&lt;b&gt;:BrandMenuConsoleUI&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.5;align=center;" vertex="1" parent="1">
+          <mxGeometry x="200" y="45" width="160" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="line_ui" value="" style="endArrow=none;dashed=1;html=1;strokeColor=#000000;strokeWidth=1.2;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="280" y="90" as="sourcePoint" />
+            <mxPoint x="280" y="930" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- 3. Controller Layer: BrandMenuController (x=450..610, center line x=530) -->
+        <mxCell id="ll_ctrl" value="&lt;i style=&quot;font-size: 10px;&quot;&gt;«controller»&lt;/i&gt;&lt;br&gt;&lt;b&gt;:BrandMenuController&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.5;align=center;" vertex="1" parent="1">
+          <mxGeometry x="450" y="45" width="160" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="line_ctrl" value="" style="endArrow=none;dashed=1;html=1;strokeColor=#000000;strokeWidth=1.2;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="530" y="90" as="sourcePoint" />
+            <mxPoint x="530" y="930" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- 5. Data Access Layer: MenuItemDAO (x=870..1000, center line x=935) -->
+        <mxCell id="ll_mdao" value="&lt;i style=&quot;font-size: 10px;&quot;&gt;«dataAccess»&lt;/i&gt;&lt;br&gt;&lt;b&gt;:MenuItemDAO&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.5;align=center;" vertex="1" parent="1">
+          <mxGeometry x="870" y="45" width="130" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="line_mdao" value="" style="endArrow=none;dashed=1;html=1;strokeColor=#000000;strokeWidth=1.2;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="935" y="90" as="sourcePoint" />
+            <mxPoint x="935" y="930" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- 6. Data Access Layer: AuditLogDAO (x=1040..1160, center line x=1100) -->
+        <mxCell id="ll_adao" value="&lt;i style=&quot;font-size: 10px;&quot;&gt;«dataAccess»&lt;/i&gt;&lt;br&gt;&lt;b&gt;:AuditLogDAO&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.5;align=center;" vertex="1" parent="1">
+          <mxGeometry x="1040" y="45" width="120" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="line_adao" value="" style="endArrow=none;dashed=1;html=1;strokeColor=#000000;strokeWidth=1.2;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1100" y="90" as="sourcePoint" />
+            <mxPoint x="1100" y="930" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+
+        <!-- ==================== GIAI ĐOẠN 1: TẢI METADATA & SELECT BRAND ==================== -->
+        <!-- Admin selects brand to configure menu (SSD Msg 6) -->
+        <mxCell id="m_sel_brand" value="selectBrand(brandId)" style="endArrow=block;html=1;strokeColor=#000000;strokeWidth=1.2;endFill=1;align=center;verticalAlign=bottom;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="75" y="115" as="sourcePoint" />
+            <mxPoint x="280" y="115" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <!-- UI Activation 1 -->
+        <mxCell id="act_ui_init" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.2;" vertex="1" parent="1">
+          <mxGeometry x="273" y="115" width="14" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- UI requests brand menu configuration -->
+        <mxCell id="m_req_cfg" value="getBrandMenuData(brandId)" style="endArrow=block;html=1;strokeColor=#000000;strokeWidth=1.2;endFill=1;align=center;verticalAlign=bottom;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="287" y="130" as="sourcePoint" />
+            <mxPoint x="530" y="130" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <!-- Controller Activation 1 -->
+        <mxCell id="act_ctrl_init" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.2;" vertex="1" parent="1">
+          <mxGeometry x="523" y="130" width="14" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- Controller queries DAO -->
+        <mxCell id="m_dao_find" value="findMenuByBrand(brandId)" style="endArrow=block;html=1;strokeColor=#000000;strokeWidth=1.2;endFill=1;align=center;verticalAlign=bottom;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="537" y="140" as="sourcePoint" />
+            <mxPoint x="935" y="140" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <!-- MenuItemDAO Activation 1 -->
+        <mxCell id="act_mdao_init" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.2;" vertex="1" parent="1">
+          <mxGeometry x="928" y="140" width="14" height="20" as="geometry" />
+        </mxCell>
+
+        <!-- DAO returns data -->
+        <mxCell id="m_dao_ret_init" value="brandMenuData(categoryList, menuItemList, stationRoutingList)" style="endArrow=open;dashed=1;html=1;strokeColor=#000000;strokeWidth=1.2;endFill=0;align=center;verticalAlign=bottom;fontSize=9;labelBackgroundColor=#ffffff;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="928" y="155" as="sourcePoint" />
+            <mxPoint x="537" y="155" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Controller returns data to UI -->
+        <mxCell id="m_ctrl_ret_init" value="brandMenuData(categoryList, menuItemList, stationRoutingList)" style="endArrow=open;dashed=1;html=1;strokeColor=#000000;strokeWidth=1.2;endFill=0;align=center;verticalAlign=bottom;fontSize=9;labelBackgroundColor=#ffffff;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="523" y="165" as="sourcePoint" />
+            <mxPoint x="287" y="165" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- UI presents Brand Menu Console to Admin (SSD Msg 7) -->
+        <mxCell id="m_ui_ret_init" value="brandMenuData(brandId, categoryList, menuItemList, stationRoutingList)" style="endArrow=open;dashed=1;html=1;strokeColor=#000000;strokeWidth=1.2;endFill=0;align=center;verticalAlign=bottom;fontSize=9;labelBackgroundColor=#ffffff;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="273" y="175" as="sourcePoint" />
+            <mxPoint x="75" y="175" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+
+        <!-- ==================== GIAI ĐOẠN 2: SUBMIT MENU ITEM & VALIDATION ==================== -->
+        <!-- Admin submits new/configured menu item (SSD Msg 8) -->
+        <mxCell id="m_submit" value="submitMenuItem(brandId, itemId, itemName, unitPrice, description, categoryName, stationType, status)" style="endArrow=block;html=1;strokeColor=#000000;strokeWidth=1.2;endFill=1;align=center;verticalAlign=bottom;fontSize=9;labelBackgroundColor=#ffffff;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="75" y="210" as="sourcePoint" />
+            <mxPoint x="280" y="210" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <!-- Main UI Activation Bar -->
+        <mxCell id="act_ui_main" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.2;" vertex="1" parent="1">
+          <mxGeometry x="273" y="210" width="14" height="665" as="geometry" />
+        </mxCell>
+
+        <!-- UI forwards request to Controller -->
+        <mxCell id="m_ctrl_proc" value="processMenuItem(brandId, itemId, itemName, unitPrice, description, categoryName, stationType, status)" style="endArrow=block;html=1;strokeColor=#000000;strokeWidth=1.2;endFill=1;align=center;verticalAlign=bottom;fontSize=9;labelBackgroundColor=#ffffff;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="287" y="235" as="sourcePoint" />
+            <mxPoint x="530" y="235" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <!-- Main Controller Activation Bar -->
+        <mxCell id="act_ctrl_main" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.2;" vertex="1" parent="1">
+          <mxGeometry x="523" y="235" width="14" height="625" as="geometry" />
+        </mxCell>
+
+        <!-- Controller checks duplicate dish name in Brand -->
+        <mxCell id="m_chk_dup" value="existsByNameAndBrand(itemName, brandId)" style="endArrow=block;html=1;strokeColor=#000000;strokeWidth=1.2;endFill=1;align=center;verticalAlign=bottom;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="537" y="260" as="sourcePoint" />
+            <mxPoint x="935" y="260" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <!-- MenuItemDAO Activation 2 -->
+        <mxCell id="act_mdao_dup" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.2;" vertex="1" parent="1">
+          <mxGeometry x="928" y="260" width="14" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="m_ret_dup" value="isDuplicate: Boolean" style="endArrow=open;dashed=1;html=1;strokeColor=#000000;strokeWidth=1.2;endFill=0;align=center;verticalAlign=bottom;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="928" y="285" as="sourcePoint" />
+            <mxPoint x="537" y="285" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Controller self-call: validatePricingAndStation -->
+        <mxCell id="m_self_val" value="validatePricingAndStation(unitPrice, stationType)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#000000;strokeWidth=1.2;align=left;verticalAlign=middle;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="537" y="305" as="sourcePoint" />
+            <mxPoint x="543" y="325" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="585" y="305" />
+              <mxPoint x="585" y="325" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <!-- Nested Activation Bar 1 -->
+        <mxCell id="act_ctrl_nested1" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.2;" vertex="1" parent="1">
+          <mxGeometry x="533" y="310" width="10" height="20" as="geometry" />
+        </mxCell>
+
+
+        <!-- ==================== GIAI ĐOẠN 3: KHUNG ALT XỬ LÝ ĐIỀU KIỆN ==================== -->
+        <mxCell id="box_alt" value="" style="shape=rect;fillColor=none;strokeColor=#000000;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="35" y="350" width="1125" height="535" as="geometry" />
+        </mxCell>
+        <mxCell id="tag_alt" value="alt" style="shape=umlFrame;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.5;width=45;height=22;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="35" y="350" width="1125" height="535" as="geometry" />
+        </mxCell>
+
+        <!-- NHÁNH 1: [isDuplicate == true || unitPrice <= 0 || invalidStation] -->
+        <mxCell id="g_inv" value="[isDuplicate == true || unitPrice &lt;= 0 || invalidStation]" style="text;html=1;strokeColor=none;fillColor=#ffffff;align=left;verticalAlign=middle;fontStyle=1;fontSize=10;spacingLeft=5;" vertex="1" parent="1">
+          <mxGeometry x="90" y="352" width="300" height="18" as="geometry" />
+        </mxCell>
+
+        <!-- Error response to UI -->
+        <mxCell id="m_err_ctrl" value="return errorMessage(&quot;Price must be &gt; 0 and kitchen station routing must be valid&quot;)" style="endArrow=open;dashed=1;html=1;strokeColor=#000000;strokeWidth=1.2;endFill=0;align=center;verticalAlign=bottom;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="523" y="390" as="sourcePoint" />
+            <mxPoint x="287" y="390" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Error display to Admin (SSD Msg 10) -->
+        <mxCell id="m_err_ui" value="displayErrorAlert(&quot;Price must be &gt; 0 and kitchen station routing must be valid&quot;)" style="endArrow=open;dashed=1;html=1;strokeColor=#000000;strokeWidth=1.2;endFill=0;align=center;verticalAlign=bottom;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="273" y="420" as="sourcePoint" />
+            <mxPoint x="75" y="420" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+
+        <!-- VÁCH NGĂN ALT (DIVIDER) -->
+        <mxCell id="div_alt" value="" style="endArrow=none;dashed=1;html=1;strokeColor=#000000;strokeWidth=1.5;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="35" y="455" as="sourcePoint" />
+            <mxPoint x="1160" y="455" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- NHÁNH 2: [else: Valid constraints & unique itemName] -->
+        <mxCell id="g_val" value="[else: Valid constraints &amp; unique itemName]" style="text;html=1;strokeColor=none;fillColor=#ffffff;align=left;verticalAlign=middle;fontStyle=1;fontSize=10;spacingLeft=5;" vertex="1" parent="1">
+          <mxGeometry x="45" y="457" width="250" height="18" as="geometry" />
+        </mxCell>
+
+        <!-- 4. Domain Entity Lifeline (THỤT XUỐNG CHUẨN OMG UML 2.5 & SATZINGER HÌNH 13-20 TRANG 451) -->
+        <!-- Mũi tên create có khoảng cách 195px từ Controller x=537 đến hộp MenuItem x=730 -->
+        <mxCell id="m_create_ent" value="«create» (menuItemData)" style="endArrow=block;html=1;strokeColor=#000000;strokeWidth=1.2;endFill=1;align=center;verticalAlign=bottom;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="537" y="495" as="sourcePoint" />
+            <mxPoint x="730" y="495" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Hộp :MenuItem nằm tại x=730..855, y=475, center line x=792 -->
+        <mxCell id="ll_ent" value="&lt;i style=&quot;font-size: 10px;&quot;&gt;«entity»&lt;/i&gt;&lt;br&gt;&lt;b&gt;:MenuItem&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.5;align=center;" vertex="1" parent="1">
+          <mxGeometry x="730" y="475" width="125" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="line_ent" value="" style="endArrow=none;dashed=1;html=1;strokeColor=#000000;strokeWidth=1.2;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="792" y="520" as="sourcePoint" />
+            <mxPoint x="792" y="930" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Entity Activation Bar -->
+        <mxCell id="act_ent" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.2;" vertex="1" parent="1">
+          <mxGeometry x="785" y="525" width="14" height="45" as="geometry" />
+        </mxCell>
+
+        <!-- MenuItem self-call: setAvailable(true) (Khớp 1-1 với State Machine Diagram!) -->
+        <mxCell id="m_ent_avail" value="setAvailable(true)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#000000;strokeWidth=1.2;align=left;verticalAlign=middle;fontSize=9;labelBackgroundColor=#ffffff;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="799" y="535" as="sourcePoint" />
+            <mxPoint x="805" y="555" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="845" y="535" />
+              <mxPoint x="845" y="555" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Entity returns object reference to Controller -->
+        <mxCell id="m_ret_ent" value="aMenuItem" style="endArrow=open;dashed=1;html=1;strokeColor=#000000;strokeWidth=1.2;endFill=0;align=center;verticalAlign=bottom;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="785" y="565" as="sourcePoint" />
+            <mxPoint x="537" y="565" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Controller calls MenuItemDAO.save(aMenuItem) -->
+        <mxCell id="m_dao_save" value="save(aMenuItem)" style="endArrow=block;html=1;strokeColor=#000000;strokeWidth=1.2;endFill=1;align=center;verticalAlign=bottom;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="537" y="605" as="sourcePoint" />
+            <mxPoint x="935" y="605" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <!-- MenuItemDAO Activation 3 -->
+        <mxCell id="act_mdao_save" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.2;" vertex="1" parent="1">
+          <mxGeometry x="928" y="605" width="14" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="m_ret_saved" value="savedStatus: &quot;SUCCESS&quot;" style="endArrow=open;dashed=1;html=1;strokeColor=#000000;strokeWidth=1.2;endFill=0;align=center;verticalAlign=bottom;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="928" y="635" as="sourcePoint" />
+            <mxPoint x="537" y="635" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Controller calls AuditLogDAO.logAction(...) (NFR5 & Event 11) -->
+        <mxCell id="m_dao_log" value="logAction(&quot;CREATE_MENU_ITEM&quot;, itemId, actorId, timestamp)" style="endArrow=block;html=1;strokeColor=#000000;strokeWidth=1.2;endFill=1;align=center;verticalAlign=bottom;fontSize=9;labelBackgroundColor=#ffffff;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="537" y="670" as="sourcePoint" />
+            <mxPoint x="1100" y="670" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <!-- AuditLogDAO Activation Bar -->
+        <mxCell id="act_adao" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.2;" vertex="1" parent="1">
+          <mxGeometry x="1093" y="670" width="14" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="m_ret_log" value="auditLogId" style="endArrow=open;dashed=1;html=1;strokeColor=#000000;strokeWidth=1.2;endFill=0;align=center;verticalAlign=bottom;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1093" y="700" as="sourcePoint" />
+            <mxPoint x="537" y="700" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Controller self-call: broadcastCatalogUpdate (Real-time WebSocket signal to UC3 & UC7) -->
+        <mxCell id="m_self_bc" value="broadcastCatalogUpdate(itemId, &quot;SYNC_HUBS&quot;)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#000000;strokeWidth=1.2;align=left;verticalAlign=middle;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="537" y="730" as="sourcePoint" />
+            <mxPoint x="543" y="750" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="585" y="730" />
+              <mxPoint x="585" y="750" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <!-- Nested Activation Bar 2 -->
+        <mxCell id="act_ctrl_nested2" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.2;" vertex="1" parent="1">
+          <mxGeometry x="533" y="735" width="10" height="20" as="geometry" />
+        </mxCell>
+
+        <!-- Controller returns success confirmation to UI -->
+        <mxCell id="m_ret_ok" value="confirmMenuItemSaved(itemId, itemName, status, syncStatus=&quot;OK&quot;, auditLogId)" style="endArrow=open;dashed=1;html=1;strokeColor=#000000;strokeWidth=1.2;endFill=0;align=center;verticalAlign=bottom;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="523" y="785" as="sourcePoint" />
+            <mxPoint x="287" y="785" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- UI displays success feedback to Admin (SSD Msg 9) -->
+        <mxCell id="m_ret_toast" value="displaySuccessToast(&quot;MenuItem saved and synchronized across kitchen stations&quot;)" style="endArrow=open;dashed=1;html=1;strokeColor=#000000;strokeWidth=1.2;endFill=0;align=center;verticalAlign=bottom;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="273" y="825" as="sourcePoint" />
+            <mxPoint x="75" y="825" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

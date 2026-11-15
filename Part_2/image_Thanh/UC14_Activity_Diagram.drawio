@@ -1,0 +1,156 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0">
+  <diagram id="UC14_Activity" name="UC14 Activity Diagram">
+    <mxGraphModel dx="1989" dy="1024" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1020" pageHeight="1100" background="#ffffff" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="lane_admin" parent="1" style="swimlane;html=1;startSize=35;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.5;collapsible=0;fontStyle=1;fontSize=13;align=center;" value="Administrator" vertex="1">
+          <mxGeometry height="980" width="450" x="40" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="start_node" parent="lane_admin" style="ellipse;html=1;shape=startState;fillColor=#000000;strokeColor=#000000;" value="" vertex="1">
+          <mxGeometry height="30" width="30" x="210" y="55" as="geometry" />
+        </mxCell>
+        <mxCell id="act_open" parent="lane_admin" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1;align=center;arcSize=20;fontSize=11;" value="Open Brand &amp; Digital Menu Console" vertex="1">
+          <mxGeometry height="40" width="280" x="85" y="115" as="geometry" />
+        </mxCell>
+        <mxCell id="dec_action" parent="lane_admin" style="rhombus;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1;align=center;fontSize=11;" value="Action?" vertex="1">
+          <mxGeometry height="50" width="80" x="185" y="195" as="geometry" />
+        </mxCell>
+        <mxCell id="act_brand" parent="lane_admin" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1;align=left;spacingLeft=10;arcSize=15;fontSize=10;" value="Manage Virtual Brand Profile (Event 10):&#xa;• Register new brand or select existing brand&#xa;• Enter Brand Name, Logo &amp; Operating Hours&#xa;• Assign to physical Hubs&#xa;• Select status: Active or Deactivate/Archive&#xa;• Click Submit Brand Profile" vertex="1">
+          <mxGeometry height="90" width="280" x="85" y="285" as="geometry" />
+        </mxCell>
+        <mxCell id="act_dish" parent="lane_admin" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1;align=left;spacingLeft=10;arcSize=15;fontSize=10;" value="Manage Menu Items &amp; Categories (Event 11, FR4):&#xa;• Select Virtual Brand to manage menu&#xa;• Enter Dish Name, Unit Price (&gt; 0) &amp; Description&#xa;• Select Menu Category (Appetizer, Main, Drink, etc.)&#xa;• Assign kitchen station: Wok / Fryer / Assembly / Beverage&#xa;• Select action: Create, Update, or Archive/Deactivate&#xa;• Click Submit MenuItem" vertex="1">
+          <mxGeometry height="100" width="280" x="85" y="410" as="geometry" />
+        </mxCell>
+        <mxCell id="act_correct" parent="lane_admin" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1;align=center;arcSize=20;fontSize=11;" value="Review &amp; correct invalid input fields&#xa;(or click Cancel to revert)" vertex="1">
+          <mxGeometry height="45" width="280" x="85" y="550" as="geometry" />
+        </mxCell>
+        <mxCell id="act_stock" parent="lane_admin" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1;align=left;spacingLeft=10;arcSize=15;fontSize=10;" value="Real-time Out-of-Stock Toggle (Event 11):&#xa;• Review kitchen ingredient notification&#xa;• Toggle item switch: In-Stock &lt;--&gt; Out-of-Stock&#xa;• Confirm immediate stock update" vertex="1">
+          <mxGeometry height="65" width="280" x="85" y="635" as="geometry" />
+        </mxCell>
+        <mxCell id="end_node" parent="lane_admin" style="ellipse;html=1;shape=endState;fillColor=#000000;strokeColor=#000000;" value="" vertex="1">
+          <mxGeometry height="30" width="30" x="210" y="895" as="geometry" />
+        </mxCell>
+        <mxCell id="lane_system" parent="1" style="swimlane;html=1;startSize=35;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1.5;collapsible=0;fontStyle=1;fontSize=13;align=center;" value="OFDH Platform System" vertex="1">
+          <mxGeometry height="980" width="470" x="490" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="act_load" parent="lane_system" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1;align=center;arcSize=20;fontSize=10;" value="Query database &amp; display active Brands,&#xa;Menu Categories &amp; Hub Station Matrix&#xa;(Wok, Fryer, Assembly, Beverage)" vertex="1">
+          <mxGeometry height="45" width="310" x="80" y="115" as="geometry" />
+        </mxCell>
+        <mxCell id="act_validate" parent="lane_system" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1;align=left;spacingLeft=10;arcSize=15;fontSize=10;" value="Validate Submitted Data &amp; Constraints (FR4):&#xa;• For Brand: Verify unique name, hours &amp; Hub assignment&#xa;• For MenuItem: Verify Unit Price &gt; 0, station routing&#xa;  (Wok / Fryer / Assembly / Beverage) &amp; unique dish name" vertex="1">
+          <mxGeometry height="80" width="310" x="80" y="345" as="geometry" />
+        </mxCell>
+        <mxCell id="dec_valid" parent="lane_system" style="rhombus;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1;align=center;fontSize=11;" value="Valid?" vertex="1">
+          <mxGeometry height="50" width="80" x="195" y="460" as="geometry" />
+        </mxCell>
+        <mxCell id="act_error" parent="lane_system" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1;align=center;arcSize=20;fontSize=11;" value="Highlight invalid fields with error messages" vertex="1">
+          <mxGeometry height="45" width="310" x="80" y="550" as="geometry" />
+        </mxCell>
+        <mxCell id="act_broadcast" parent="lane_system" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1;align=left;spacingLeft=10;arcSize=15;fontSize=10;" value="Update isAvailable status in database &amp;&#xa;broadcast real-time WebSocket signal to:&#xa;• Customer Carts (UC3) &amp; Kitchen KDS (UC7)" vertex="1">
+          <mxGeometry height="65" width="310" x="80" y="635" as="geometry" />
+        </mxCell>
+        <mxCell id="act_persist" parent="lane_system" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1;align=center;arcSize=20;fontSize=10;" value="Persist changes to database (Brand / MenuItem)&#xa;&amp; write immutable administrative audit log (NFR5)&#xa;with timestamp &amp; Actor ID" vertex="1">
+          <mxGeometry height="60" width="310" x="80" y="740" as="geometry" />
+        </mxCell>
+        <mxCell id="act_confirm" parent="lane_system" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=1;align=center;arcSize=20;fontSize=10;" value="Display success notification &amp;&#xa;synchronize updated catalog across Hubs" vertex="1">
+          <mxGeometry height="45" width="310" x="80" y="840" as="geometry" />
+        </mxCell>
+        <mxCell id="t1" edge="1" parent="1" source="start_node" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#000000;strokeWidth=1.2;" target="act_open" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="t2" edge="1" parent="1" source="act_open" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#000000;strokeWidth=1.2;" target="act_load" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="430" y="177.5" />
+              <mxPoint x="430" y="177.5" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="t3" edge="1" parent="1" source="act_load" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#000000;strokeWidth=1.2;" target="dec_action" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="725" y="210" />
+              <mxPoint x="265" y="210" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="t4" edge="1" parent="1" source="dec_action" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#000000;strokeWidth=1.2;align=center;verticalAlign=bottom;fontSize=10;fontColor=#000000;labelBackgroundColor=#ffffff;" target="act_brand" value="[Manage Brand]">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="t5" edge="1" parent="1" source="dec_action" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#000000;strokeWidth=1.2;align=center;verticalAlign=bottom;fontSize=10;fontColor=#000000;labelBackgroundColor=#ffffff;" target="act_dish" value="[Manage Items]">
+          <mxGeometry relative="1" x="-0.7" y="-12" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="105" y="260" />
+              <mxPoint x="105" y="500" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="t6" edge="1" parent="1" source="dec_action" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#000000;strokeWidth=1.2;align=center;verticalAlign=bottom;fontSize=10;fontColor=#000000;labelBackgroundColor=#ffffff;" target="act_stock" value="[Stock Toggle]">
+          <mxGeometry relative="1" x="0.65" y="-12" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="75" y="260" />
+              <mxPoint x="75" y="707.5" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="t7" edge="1" parent="1" source="act_brand" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#000000;strokeWidth=1.2;" target="act_validate" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="485" y="370" />
+              <mxPoint x="485" y="400" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="t8" edge="1" parent="1" source="act_dish" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#000000;strokeWidth=1.2;" target="act_validate" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="485" y="480" />
+              <mxPoint x="485" y="450" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="t9" edge="1" parent="1" source="act_validate" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#000000;strokeWidth=1.2;" target="dec_valid" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="t10" edge="1" parent="1" source="dec_valid" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#000000;strokeWidth=1.2;align=center;verticalAlign=bottom;fontSize=10;fontColor=#000000;labelBackgroundColor=#ffffff;" target="act_error" value="[Invalid]">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="t11" edge="1" parent="1" source="act_error" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#000000;strokeWidth=1.2;" target="act_correct" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="t12" edge="1" parent="1" source="act_correct" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#000000;strokeWidth=1.2;align=center;verticalAlign=bottom;fontSize=10;fontColor=#000000;labelBackgroundColor=#ffffff;" target="act_dish" value="[Re-submit]">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="t13" edge="1" parent="1" source="act_stock" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#000000;strokeWidth=1.2;" target="act_broadcast" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="t14" edge="1" parent="1" source="act_broadcast" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#000000;strokeWidth=1.2;" target="act_persist" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="t15" edge="1" parent="1" source="dec_valid" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#000000;strokeWidth=1.2;align=center;verticalAlign=bottom;fontSize=10;fontColor=#000000;labelBackgroundColor=#ffffff;" target="act_persist" value="[Valid]">
+          <mxGeometry relative="1" x="-0.7" y="-12" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="920" y="525" />
+              <mxPoint x="920" y="810" />
+              <mxPoint x="725" y="810" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="t16" edge="1" parent="1" source="act_persist" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#000000;strokeWidth=1.2;" target="act_confirm" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="t17" edge="1" parent="1" source="act_confirm" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#000000;strokeWidth=1.2;" target="end_node" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="725" y="950" />
+              <mxPoint x="265" y="950" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
