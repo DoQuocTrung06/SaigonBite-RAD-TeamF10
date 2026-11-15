@@ -1,0 +1,74 @@
+@startuml
+skinparam monochrome true
+skinparam shadowing false
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName Arial
+skinparam defaultFontSize 11
+skinparam roundCorner 0
+skinparam dpi 300
+
+actor ":Customer" as Cust
+participant ":CustomerCheckoutUI" as UI <<view>>
+participant ":OrderController" as Ctrl <<controller>>
+participant ":Order" as Order <<entity>>
+participant ":Voucher" as Vouch <<entity>>
+participant ":Payment" as Pay <<entity>>
+participant ":OrderDAO" as OrderDAO <<dataAccess>>
+participant ":VoucherDAO" as VouchDAO <<dataAccess>>
+participant ":PaymentDAO" as PayDAO <<dataAccess>>
+
+Cust -> UI: clickSubmitCheckout(cartItems, voucherCode, paymentMethod)
+activate UI
+UI -> Ctrl: processCheckout(cartItems, voucherCode, paymentMethod)
+activate Ctrl
+
+create Order
+Ctrl -> Order: new(customerId, hubId, subtotal, deliveryFee)
+activate Order
+Order --> Ctrl: orderObj
+deactivate Order
+
+opt Voucher Code Provided
+  Ctrl -> VouchDAO: findByCode(voucherCode)
+  activate VouchDAO
+  VouchDAO --> Ctrl: voucherObj
+  deactivate VouchDAO
+
+  Ctrl -> Vouch: isEligible(subtotal)
+  activate Vouch
+  Vouch --> Ctrl: true
+  deactivate Vouch
+
+  Ctrl -> Order: applyDiscount(discountAmount)
+  activate Order
+  Order --> Ctrl: success
+  deactivate Order
+  
+  Ctrl -> VouchDAO: incrementUsage(voucherCode)
+  activate VouchDAO
+  VouchDAO --> Ctrl: success
+  deactivate VouchDAO
+end
+
+create Pay
+Ctrl -> Pay: new(orderId, paymentMethod, finalTotal)
+activate Pay
+Pay --> Ctrl: paymentObj
+deactivate Pay
+
+Ctrl -> OrderDAO: saveOrder(orderObj)
+activate OrderDAO
+OrderDAO --> Ctrl: success
+deactivate OrderDAO
+
+Ctrl -> PayDAO: recordPayment(paymentObj)
+activate PayDAO
+PayDAO --> Ctrl: success
+deactivate PayDAO
+
+Ctrl --> UI: orderPlacedConfirmation(orderId, "Placed")
+deactivate Ctrl
+UI --> Cust: displayOrderConfirmedScreen(orderId, prepTimer=120s)
+deactivate UI
+
+@enduml

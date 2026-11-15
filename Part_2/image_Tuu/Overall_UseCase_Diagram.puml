@@ -1,0 +1,81 @@
+@startuml
+skinparam monochrome true
+skinparam shadowing false
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName Arial
+skinparam defaultFontSize 11
+skinparam roundCorner 0
+skinparam dpi 300
+skinparam linetype ortho
+
+left to right direction
+
+actor "Customer" as Customer
+actor "Kitchen Staff" as Kitchen
+actor "Shipper" as Shipper
+actor "Administrator" as Admin
+actor "Hub Manager" as Manager
+
+rectangle "SaigonBite Platform" {
+
+  package "(a) Ordering Subsystem" {
+    usecase "UC1: Register & Manage Profile" as UC1
+    usecase "UC2: Browse Hubs & Menus" as UC2
+    usecase "UC3: Place an Order" as UC3
+    usecase "UC4: Track Order Status" as UC4
+  }
+
+  package "(b) Fulfilment & Logistics" {
+    usecase "UC5: Cancel Order" as UC5
+    usecase "UC6: Route Order to Hub" as UC6
+    usecase "UC7: Confirm / Reject Order" as UC7
+    usecase "UC8: Cook Station Tickets" as UC8
+    usecase "UC9: Dispatch Delivery Pool" as UC9
+    usecase "UC10: Deliver an Order" as UC10
+  }
+
+  package "(c) CRUD Management" {
+    usecase "UC11: Manage Customer Profiles" as UC11
+    usecase "UC12: Manage Courier Profiles" as UC12
+    usecase "UC13: Manage Hubs & Stations" as UC13
+    usecase "UC14: Manage Brands & Menus" as UC14
+    usecase "UC15: Manage Vouchers" as UC15
+  }
+
+  package "(d) Reports & Analytics" {
+    usecase "UC16: Produce Management Reports" as UC16
+  }
+}
+
+' Customer associations
+Customer -- UC1
+Customer -- UC2
+Customer -- UC3
+Customer -- UC4
+Customer -- UC5
+
+' Kitchen Staff associations
+Kitchen -- UC7
+Kitchen -- UC8
+
+' Shipper associations
+Shipper -- UC9
+Shipper -- UC10
+
+' Administrator associations
+Admin -- UC11
+Admin -- UC12
+Admin -- UC13
+Admin -- UC14
+Admin -- UC15
+
+' Hub Manager associations
+Manager -- UC16
+
+' Internal includes/extends
+UC3 ..> UC6 : <<include>>
+UC7 ..> UC8 : <<include>>
+UC8 ..> UC9 : <<include>>
+
+@enduml
+

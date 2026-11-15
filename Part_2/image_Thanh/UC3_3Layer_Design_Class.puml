@@ -1,0 +1,94 @@
+@startuml
+skinparam monochrome true
+skinparam shadowing false
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName Arial
+skinparam defaultFontSize 11
+skinparam roundCorner 0
+skinparam dpi 300
+skinparam linetype ortho
+hide circle
+
+package "View Layer" {
+  class CustomerCheckoutUI {
+    + displayCartSummary(items, subtotal)
+    + onApplyVoucherClicked()
+    + onSelectPaymentClicked()
+    + onSubmitCheckoutClicked()
+  }
+}
+
+package "Controller Layer" {
+  class OrderController {
+    + validateCartHub(hubId: String, items: List): Boolean
+    + calculateDeliveryFee(distanceKm: Decimal): Decimal
+    + validateAndApplyVoucher(code: String, subtotal: Decimal): Decimal
+    + processCheckout(orderDTO: OrderDTO): Order
+  }
+}
+
+package "Domain Layer" {
+  class Order {
+    - orderId: String
+    - customerId: String
+    - hubId: String
+    - subtotal: Decimal
+    - deliveryFee: Decimal
+    - discountAmount: Decimal
+    - finalTotal: Decimal
+    - orderStatus: String
+    + calculateTotal()
+    + applyDiscount(discount: Decimal)
+  }
+
+  class OrderLine {
+    - quantity: Integer
+    - itemPrice: Decimal
+    - lineTotal: Decimal
+    + calculateLineTotal()
+  }
+
+  class Voucher {
+    - voucherCode: String
+    - discountPercent: Decimal
+    - minOrderAmount: Decimal
+    - usageQuota: Integer
+    + isEligible(amount: Decimal): Boolean
+    + recordRedemption()
+  }
+
+  class Payment {
+    - paymentId: String
+    - paymentMethod: String
+    - paymentAmount: Decimal
+    - paymentStatus: String
+    + authorizeOnlinePayment()
+  }
+}
+
+package "Data Access Layer" {
+  class OrderDAO {
+    + saveOrder(order: Order, lines: List): Boolean
+    + findById(orderId: String): Order
+  }
+
+  class VoucherDAO {
+    + findByCode(code: String): Voucher
+    + incrementUsage(code: String): Boolean
+  }
+
+  class PaymentDAO {
+    + recordPayment(payment: Payment): Boolean
+  }
+}
+
+CustomerCheckoutUI ..> OrderController : invokes >
+OrderController ..> Order : creates & calculates >
+OrderController ..> OrderLine : creates >
+OrderController ..> Voucher : validates >
+OrderController ..> Payment : processes >
+OrderController ..> OrderDAO : calls >
+OrderController ..> VoucherDAO : calls >
+OrderController ..> PaymentDAO : calls >
+
+@enduml

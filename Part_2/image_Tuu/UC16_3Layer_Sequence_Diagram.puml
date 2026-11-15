@@ -1,0 +1,54 @@
+@startuml
+skinparam monochrome true
+skinparam shadowing false
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName Arial
+skinparam defaultFontSize 11
+skinparam roundCorner 0
+skinparam dpi 300
+
+actor ":HubManager" as Manager
+participant ":ReportConsoleUI" as UI <<view>>
+participant ":ReportController" as Ctrl <<controller>>
+participant ":ManagementReport" as Report <<entity>>
+participant ":OrderDAO" as OrderDAO <<dataAccess>>
+participant ":ReportDAO" as ReportDAO <<dataAccess>>
+participant ":AuditLogDAO" as AuditDAO <<dataAccess>>
+
+Manager -> UI: clickGenerateReport(hubId, startDate, endDate)
+activate UI
+UI -> Ctrl: generateReport(hubId, startDate, endDate)
+activate Ctrl
+
+Ctrl -> OrderDAO: getOrdersByHubAndDate(hubId, startDate, endDate)
+activate OrderDAO
+OrderDAO --> Ctrl: orderList
+deactivate OrderDAO
+
+create Report
+Ctrl -> Report: new(hubId, startDate, endDate)
+activate Report
+Report --> Ctrl: reportObj
+deactivate Report
+
+Ctrl -> Report: calculateKPIs(orderList)
+activate Report
+Report --> Ctrl: kpiSummary
+deactivate Report
+
+Ctrl -> ReportDAO: saveReport(reportObj)
+activate ReportDAO
+ReportDAO --> Ctrl: success
+deactivate ReportDAO
+
+Ctrl -> AuditDAO: recordAuditEntry(reportId, "HUB_MANAGER", "REPORT_GENERATED")
+activate AuditDAO
+AuditDAO --> Ctrl: success
+deactivate AuditDAO
+
+Ctrl --> UI: displayDashboard(kpiSummary)
+deactivate Ctrl
+UI --> Manager: showInteractiveCharts(kpiSummary)
+deactivate UI
+
+@enduml

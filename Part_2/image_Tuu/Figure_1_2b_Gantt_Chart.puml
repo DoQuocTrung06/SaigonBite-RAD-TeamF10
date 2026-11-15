@@ -1,0 +1,27 @@
+@startgantt
+skinparam monochrome true
+skinparam shadowing false
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName Arial
+skinparam defaultFontSize 11
+
+projectscale daily zoom 1.5
+Project starts 2026-10-21
+
+-- Phase 1: Inception & Proposal --
+[Iteration 1: Proposal Baseline] starts 2026-10-21 and ends 2026-10-26
+[Milestone 1: Proposal Submission] happens 2026-10-26
+
+-- Phase 2: Elaboration (Analysis & Design) --
+[Iteration 2: Domain Modeling & Events] starts 2026-10-27 and ends 2026-11-02
+[Iteration 3: Detailed Specs, SSDs & State] starts 2026-11-03 and ends 2026-11-09
+[Milestone 2: Part 1 Approval Review] happens 2026-11-09
+[Iteration 4: 3-Layer OOD & Sequence Diagrams] starts 2026-11-10 and ends 2026-11-16
+[Milestone 3: Part 2 BRS/SRS Submission] happens 2026-11-16
+
+-- Phase 3: Construction & Transition --
+[Iteration 5: Relational DB, UI & Code] starts 2026-11-17 and ends 2026-11-23
+[Iteration 6: Testing, Integration & Demo] starts 2026-11-24 and ends 2026-11-30
+[Milestone 4: Final Project Defense] happens 2026-11-30
+
+@endgantt

@@ -1,0 +1,24 @@
+@startuml
+skinparam monochrome true
+skinparam shadowing false
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName Arial
+skinparam defaultFontSize 11
+skinparam roundCorner 0
+skinparam dpi 300
+skinparam linetype ortho
+
+[*] --> ReadyForPickup : kitchenReady
+
+ReadyForPickup --> Assigned : assignShipper
+Assigned --> OutForDelivery : scanHubPickupQR
+OutForDelivery --> ArrivedAtCustomer : arriveAtAddress
+
+ArrivedAtCustomer -right-> Delivered : confirmHandover & codPaid
+ArrivedAtCustomer -left-> FailedDelivery : timeoutUnreachable > 10m
+
+Delivered --> [*]
+FailedDelivery --> ReturningToHub : initiateReturnTrip
+ReturningToHub --> [*] : packageReturned
+
+@enduml

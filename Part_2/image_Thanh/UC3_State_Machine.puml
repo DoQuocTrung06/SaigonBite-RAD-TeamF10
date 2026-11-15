@@ -1,0 +1,28 @@
+@startuml
+skinparam monochrome true
+skinparam shadowing false
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName Arial
+skinparam defaultFontSize 11
+skinparam roundCorner 0
+skinparam dpi 300
+skinparam linetype ortho
+
+[*] --> CartBuilding : startBrowsing
+
+CartBuilding --> CartBuilding : addItem / removeItem
+CartBuilding --> CheckoutPending : proceedToCheckout [singleHubValid]
+
+CheckoutPending --> VoucherApplied : applyValidVoucher
+VoucherApplied --> AwaitingPayment : choosePaymentMethod
+CheckoutPending --> AwaitingPayment : choosePaymentMethod [noVoucher]
+
+AwaitingPayment --> OrderPlaced : paymentAuthorized [Online]
+AwaitingPayment --> OrderPlaced : codConfirmed [COD]
+AwaitingPayment --> PaymentFailed : transactionDeclined
+
+PaymentFailed --> AwaitingPayment : retryPaymentMethod
+
+OrderPlaced --> [*] : dispatchedToKitchen
+
+@enduml

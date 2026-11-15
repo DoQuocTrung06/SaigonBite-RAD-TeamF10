@@ -1,0 +1,25 @@
+@startuml
+skinparam monochrome true
+skinparam shadowing false
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName Arial
+skinparam defaultFontSize 11
+skinparam roundCorner 0
+skinparam dpi 300
+
+actor "Shipper" as Shipper
+participant ":SaigonBiteSystem" as System
+
+System -> Shipper: notifyOrderReadyForPickup(orderId, hubAddress, pickupCounter)
+Shipper -> System: scanPickupQR(orderId, qrCode)
+System --> Shipper: confirmPickupSuccess(deliveryAddress, recipientContact, codAmount)
+
+alt Case 1: Successful Delivery Handover
+  Shipper -> System: submitDeliverySuccess(orderId, codCollectedAmount, photoProof)
+  System --> Shipper: confirmDeliveryComplete(orderStatus="Delivered", earningsEarned)
+else Case 2: Delivery Failure (Customer Unreachable > 10 Mins)
+  Shipper -> System: reportDeliveryFailure(orderId, reason="Unreachable", waitMinutes=10, photoProof)
+  System --> Shipper: confirmDeliveryFailed(orderStatus="Failed", returnHubRoute)
+end
+
+@enduml

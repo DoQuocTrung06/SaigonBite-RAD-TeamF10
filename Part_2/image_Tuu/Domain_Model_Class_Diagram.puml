@@ -8,9 +8,10 @@ skinparam classFontSize 12
 skinparam classFontStyle bold
 skinparam roundCorner 0
 skinparam dpi 300
+skinparam linetype ortho
+hide circle
 
-title SaigonBite - Domain Model Class Diagram\nAuthor: Nguyen Quang Tuu (524H0136)
-
+' --- CUSTOMER HIERARCHY ---
 abstract class Customer {
     + customerId: String
     + fullName: String
@@ -30,6 +31,7 @@ class ForeignTourist {
 Customer <|-- LocalCustomer
 Customer <|-- ForeignTourist
 
+' --- HUB & KITCHEN STATIONS ---
 class Hub {
     + hubId: String
     + hubName: String
@@ -50,12 +52,12 @@ class KitchenStation {
 
 Hub *-- "1..*" KitchenStation : contains >
 
+' --- BRAND & MENU ITEMS ---
 class Brand {
     + brandId: String
     + brandName: String
     + cuisineType: String
     + status: String
-    + logoUrl: String
 }
 
 class MenuItem {
@@ -69,6 +71,7 @@ class MenuItem {
 
 Brand "1" -- "1..*" MenuItem : offers >
 
+' --- ORDER & ORDER LINE ---
 class Order {
     + orderId: String
     + orderTime: DateTime
@@ -89,12 +92,6 @@ class OrderLine {
     + specialNotes: String
 }
 
-Customer "1" -- "0..*" Order : places >
-Hub "1" -- "0..*" Order : processes >
-Order "1" -- "1..*" OrderLine : contains >
-MenuItem "1" -- "0..*" OrderLine : ordered in >
-(Order, MenuItem) .. OrderLine
-
 class Voucher {
     + voucherCode: String
     + discountPercent: Decimal
@@ -103,11 +100,8 @@ class Voucher {
     + startDate: DateTime
     + endDate: DateTime
     + usageQuota: Integer
-    + timesUsed: Integer
     + status: String
 }
-
-Order "0..*" -- "0..1" Voucher : applies >
 
 class Payment {
     + paymentId: String
@@ -118,8 +112,7 @@ class Payment {
     + paymentTime: DateTime
 }
 
-Order "1" -- "1" Payment : paid via >
-
+' --- FULFILMENT & LOGISTICS ---
 class KitchenTicket {
     + ticketId: String
     + stationId: String
@@ -127,9 +120,6 @@ class KitchenTicket {
     + printedTime: DateTime
     + completedTime: DateTime
 }
-
-Order "1" -- "1..*" KitchenTicket : splits into >
-KitchenStation "1" -- "0..*" KitchenTicket : prepares >
 
 class DeliveryTask {
     + taskId: String
@@ -139,11 +129,9 @@ class DeliveryTask {
     + deliveryStatus: String
     + cashCollected: Decimal
     + failureReason: String
-    + photoProofUrl: String
 }
 
-Order "1" -- "1" DeliveryTask : fulfilled by >
-
+' --- REPORTING ---
 class ManagementReport {
     + reportId: String
     + hubId: String
@@ -157,23 +145,20 @@ class ManagementReport {
     + wasteCost: Decimal
 }
 
-Hub "1" -- "0..*" ManagementReport : reported in >
+' --- ASSOCIATIONS ---
+Customer "1" -down- "0..*" Order : places >
+Order "0..*" -right- "0..1" Voucher : applies >
+Order "1" -left- "1" Payment : paid via >
 
-note right of Customer
-  **Generalization:**
-  Local Customer vs Foreign Tourist
-end note
+Order "1" -down- "1..*" OrderLine : contains >
+OrderLine "*" -right- "1" MenuItem : references >
 
-note right of Hub
-  **Whole-Part Composition:**
-  Hub owns KitchenStations
-end note
+Order "1" -down- "1..*" KitchenTicket : routes to >
+KitchenStation "1" -right- "0..*" KitchenTicket : prepares >
 
-note bottom of OrderLine
-  **Association Class:**
-  Links Order and MenuItem
-  with line-level pricing
-end note
+Order "1" -right- "1" DeliveryTask : fulfilled by >
+
+Hub "1" -down- "0..*" Order : processes >
+Hub "1" -right- "0..*" ManagementReport : generates >
 
 @enduml
-

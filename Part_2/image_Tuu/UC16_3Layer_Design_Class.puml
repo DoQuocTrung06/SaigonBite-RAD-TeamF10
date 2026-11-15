@@ -1,0 +1,73 @@
+@startuml
+skinparam monochrome true
+skinparam shadowing false
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName Arial
+skinparam defaultFontSize 11
+skinparam roundCorner 0
+skinparam dpi 300
+skinparam linetype ortho
+hide circle
+
+package "View Layer" {
+  class ReportConsoleUI {
+    + renderFilterForm(hubs, presets)
+    + displayDashboard(reportSummary)
+    + onGenerateReportClicked()
+    + onExportPDFClicked()
+  }
+}
+
+package "Controller Layer" {
+  class ReportController {
+    + generateReport(hubId: String, start: Date, end: Date): ManagementReport
+    + exportToPDF(reportId: String): String
+  }
+}
+
+package "Domain Layer" {
+  class ManagementReport {
+    - reportId: String
+    - hubId: String
+    - reportType: String
+    - generatedDate: DateTime
+    - startDate: Date
+    - endDate: Date
+    - totalRevenue: Decimal
+    - totalOrders: Integer
+    - avgDeliveryMinutes: Decimal
+    - wasteCost: Decimal
+    + calculateKPIs(orders: List, tasks: List)
+    + getSummarySnapshot(): ReportSummary
+  }
+
+  class Hub {
+    - hubId: String
+    - hubName: String
+    + getActiveStationCount(): Integer
+  }
+}
+
+package "Data Access Layer" {
+  class ReportDAO {
+    + saveReport(report: ManagementReport): Boolean
+    + findReportById(reportId: String): ManagementReport
+  }
+
+  class OrderDAO {
+    + getOrdersByHubAndDate(hubId: String, start: Date, end: Date): List<Order>
+  }
+
+  class AuditLogDAO {
+    + recordAuditEntry(targetId: String, actor: String, action: String): Boolean
+  }
+}
+
+ReportConsoleUI ..> ReportController : invokes >
+ReportController ..> ManagementReport : creates & manages >
+ReportController ..> Hub : accesses >
+ReportController ..> ReportDAO : calls >
+ReportController ..> OrderDAO : calls >
+ReportController ..> AuditLogDAO : calls >
+
+@enduml

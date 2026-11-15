@@ -1,0 +1,58 @@
+@startuml
+skinparam monochrome true
+skinparam shadowing false
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName Arial
+skinparam defaultFontSize 11
+skinparam roundCorner 0
+skinparam dpi 300
+
+|Shipper|
+start
+:Receive ready order dispatch notification;
+:Proceed to Hub kitchen dispatch counter;
+:Scan package QR code;
+
+|SaigonBite System|
+:Validate package QR code;
+:Update order status to 'OutForDelivery';
+:Send live tracking link to Customer;
+
+|Shipper|
+:Navigate to customer delivery address;
+:Arrive at drop-off location;
+:Attempt contact with Customer via phone;
+
+if (Customer reachable within 10 minutes?) then (Yes)
+  :Hand over food package;
+  if (Order Payment Method is COD?) then (Yes)
+    :Collect Cash on Delivery (VND);
+  else (No - Online Paid)
+  endif
+  :Take handover proof photo;
+  :Click 'Confirm Delivery Success';
+  
+  |SaigonBite System|
+  :Update order status to 'Delivered';
+  :Update DeliveryTask record with photo & timestamp;
+  :Credit delivery fee earnings to Shipper wallet;
+  :Send electronic delivery receipt to Customer;
+  |Shipper|
+  stop
+else (No - Unreachable after 10 mins)
+  :Wait 10-minute timeout protocol (3 call attempts);
+  :Click 'Report Delivery Failure';
+  :Select mandatory reason 'Customer Unreachable';
+  :Take timestamped GPS location photo proof;
+  
+  |SaigonBite System|
+  :Update order status to 'Failed';
+  :Record delivery failure audit log;
+  :Credit full delivery fee to Shipper;
+  :Generate return food package task to Hub;
+  |Shipper|
+  :Return package to Hub kitchen;
+  stop
+endif
+
+@enduml

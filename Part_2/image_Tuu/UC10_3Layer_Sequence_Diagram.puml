@@ -1,0 +1,64 @@
+@startuml
+skinparam monochrome true
+skinparam shadowing false
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName Arial
+skinparam defaultFontSize 11
+skinparam roundCorner 0
+skinparam dpi 300
+
+actor ":Shipper" as Shipper
+participant ":ShipperMobileUI" as UI <<view>>
+participant ":DeliveryController" as Ctrl <<controller>>
+participant ":DeliveryTask" as Task <<entity>>
+participant ":Order" as Order <<entity>>
+participant ":DeliveryTaskDAO" as TaskDAO <<dataAccess>>
+participant ":OrderDAO" as OrderDAO <<dataAccess>>
+participant ":AuditLogDAO" as AuditDAO <<dataAccess>>
+
+Shipper -> UI: clickConfirmDeliverySuccess(orderId, codAmount, photo)
+activate UI
+UI -> Ctrl: recordDeliverySuccess(orderId, codAmount, photo)
+activate Ctrl
+
+Ctrl -> TaskDAO: findByOrderId(orderId)
+activate TaskDAO
+TaskDAO --> Ctrl: taskObj
+deactivate TaskDAO
+
+Ctrl -> OrderDAO: findById(orderId)
+activate OrderDAO
+OrderDAO --> Ctrl: orderObj
+deactivate OrderDAO
+
+Ctrl -> Task: completeDelivery(codAmount, photo)
+activate Task
+Task --> Ctrl: success
+deactivate Task
+
+Ctrl -> Order: updateStatus("Delivered")
+activate Order
+Order --> Ctrl: success
+deactivate Order
+
+Ctrl -> TaskDAO: update(taskObj)
+activate TaskDAO
+TaskDAO --> Ctrl: success
+deactivate TaskDAO
+
+Ctrl -> OrderDAO: updateStatus(orderId, "Delivered")
+activate OrderDAO
+OrderDAO --> Ctrl: success
+deactivate OrderDAO
+
+Ctrl -> AuditDAO: recordAuditEntry(orderId, "SHIPPER", "DELIVERED_SUCCESS")
+activate AuditDAO
+AuditDAO --> Ctrl: success
+deactivate AuditDAO
+
+Ctrl --> UI: deliveryCompleted(orderId, "Delivered")
+deactivate Ctrl
+UI --> Shipper: displaySuccessScreen(earningsEarned)
+deactivate UI
+
+@enduml

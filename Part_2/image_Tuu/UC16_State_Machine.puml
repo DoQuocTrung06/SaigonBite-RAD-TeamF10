@@ -1,0 +1,25 @@
+@startuml
+skinparam monochrome true
+skinparam shadowing false
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName Arial
+skinparam defaultFontSize 11
+skinparam roundCorner 0
+skinparam dpi 300
+skinparam linetype ortho
+
+[*] --> ConfiguringFilters : openConsole
+
+ConfiguringFilters --> AggregatingData : clickGenerateReport [validDateRange]
+AggregatingData --> ReportRendered : querySuccess & kpisCalculated
+AggregatingData --> GenerationFailed : noDataFound / dbTimeout
+
+GenerationFailed --> ConfiguringFilters : adjustFilters
+
+ReportRendered --> Exported : exportDocument(format=PDF)
+ReportRendered --> Archived : saveSnapshot / autoArchiveWeekly
+Exported --> Archived : archiveCopy
+
+Archived --> [*]
+
+@enduml

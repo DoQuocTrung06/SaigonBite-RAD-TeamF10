@@ -1,0 +1,84 @@
+@startuml
+skinparam monochrome true
+skinparam shadowing false
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName Arial
+skinparam defaultFontSize 11
+skinparam roundCorner 0
+skinparam dpi 300
+skinparam linetype ortho
+hide circle
+
+package "View Layer" {
+  class ShipperMobileUI {
+    + displayAssignedTrip(tripDetails)
+    + onScanPickupQRClicked()
+    + onConfirmDeliveryClicked()
+    + onReportFailureClicked()
+  }
+}
+
+package "Controller Layer" {
+  class DeliveryController {
+    + processPickupScan(orderId: String, qrCode: String): Boolean
+    + recordDeliverySuccess(orderId: String, codAmount: Decimal, photoUrl: String): Boolean
+    + recordDeliveryFailure(orderId: String, reason: String, photoUrl: String): Boolean
+  }
+}
+
+package "Domain Layer" {
+  class DeliveryTask {
+    - taskId: String
+    - orderId: String
+    - shipperId: String
+    - pickupTime: DateTime
+    - deliveredTime: DateTime
+    - deliveryStatus: String
+    - cashCollected: Decimal
+    - failureReason: String
+    + updatePickupStatus(timestamp: DateTime)
+    + completeDelivery(cod: Decimal, photo: String)
+    + markFailed(reason: String, photo: String)
+  }
+
+  class Order {
+    - orderId: String
+    - orderStatus: String
+    - finalTotal: Decimal
+    - paymentMethod: String
+    + updateStatus(newStatus: String)
+  }
+
+  class Payment {
+    - paymentId: String
+    - paymentAmount: Decimal
+    - paymentStatus: String
+    + confirmCODPayment(collectedAmount: Decimal)
+  }
+}
+
+package "Data Access Layer" {
+  class DeliveryTaskDAO {
+    + findByOrderId(orderId: String): DeliveryTask
+    + update(task: DeliveryTask): Boolean
+  }
+
+  class OrderDAO {
+    + findById(orderId: String): Order
+    + updateStatus(orderId: String, status: String): Boolean
+  }
+
+  class AuditLogDAO {
+    + recordAuditEntry(orderId: String, actor: String, action: String): Boolean
+  }
+}
+
+ShipperMobileUI ..> DeliveryController : invokes >
+DeliveryController ..> DeliveryTask : manages >
+DeliveryController ..> Order : updates >
+DeliveryController ..> Payment : verifies >
+DeliveryController ..> DeliveryTaskDAO : calls >
+DeliveryController ..> OrderDAO : calls >
+DeliveryController ..> AuditLogDAO : calls >
+
+@enduml
