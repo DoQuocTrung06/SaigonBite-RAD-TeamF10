@@ -1,0 +1,68 @@
+@startuml
+skinparam monochrome true
+skinparam shadowing false
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName Arial
+skinparam defaultFontSize 10
+skinparam roundcorner 0
+skinparam dpi 160
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+skinparam nodesep 50
+skinparam ranksep 50
+
+skinparam ClassBackgroundColor #FFFFFF
+skinparam ClassBorderColor #000000
+skinparam ClassBorderThickness 1.2
+skinparam ClassFontColor #000000
+skinparam ClassFontSize 11
+skinparam ClassFontStyle bold
+skinparam ClassAttributeFontColor #000000
+skinparam ClassAttributeFontSize 10
+skinparam ClassStereotypeFontColor #000000
+skinparam ClassStereotypeFontSize 9
+
+skinparam ArrowColor #000000
+skinparam ArrowThickness 1.1
+skinparam ArrowFontColor #000000
+
+hide circle
+show members
+top to bottom direction
+right header 524H0132
+
+class KitchenController <<controller>> {
+  --
+}
+
+class Order {
+  -orderId: string {key}
+  -orderTime: datetime
+  -orderStatus: string
+  -deliveryAddress: string
+  -distanceKm: decimal
+  -subtotal: decimal
+  -deliveryFee: decimal
+  -discountAmount: decimal
+  -finalTotal: decimal
+  -paymentMethod: string
+  -rejectionReason: string
+  --
+}
+
+class KitchenTicket {
+  -ticketId: string {key}
+  -stationId: string
+  -status: string
+  -printedTime: datetime
+  -completedTime: datetime
+  --
+}
+
+' Controller navigates to primary root entity Order
+KitchenController -down-> Order
+
+' Composition: Order contains KitchenTickets
+Order "1" *-- "1..*" KitchenTicket
+
+@enduml
