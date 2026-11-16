@@ -1,0 +1,70 @@
+@startuml
+skinparam monochrome true
+skinparam shadowing false
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName Arial
+skinparam defaultFontSize 12
+skinparam roundcorner 0
+skinparam dpi 190
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+skinparam nodesep 36
+skinparam ranksep 36
+
+skinparam ClassBackgroundColor #FFFFFF
+skinparam ClassBorderColor #000000
+skinparam ClassBorderThickness 1.8
+skinparam ClassFontColor #000000
+skinparam ClassFontSize 14
+skinparam ClassFontStyle bold
+skinparam ClassAttributeFontColor #000000
+skinparam ClassAttributeFontSize 12
+skinparam ClassAttributeFontStyle bold
+skinparam ClassStereotypeFontColor #000000
+skinparam ClassStereotypeFontSize 11
+
+skinparam ArrowColor #000000
+skinparam ArrowThickness 1.8
+skinparam ArrowFontColor #000000
+
+hide circle
+show members
+top to bottom direction
+right header 524H0136
+
+class DeliveryController <<controller>> {
+  --
+}
+
+class DeliveryTask {
+  -taskId: String
+  -orderId: String
+  -shipperId: String
+  -pickupTime: DateTime
+  -deliveredTime: DateTime
+  -deliveryStatus: String
+  -cashCollected: Decimal
+  -failureReason: String
+  --
+}
+
+class Order {
+  -orderId: String
+  -orderStatus: String
+  -finalTotal: Decimal
+  -paymentMethod: String
+  --
+}
+
+class Payment {
+  -paymentId: String
+  -paymentAmount: Decimal
+  -paymentStatus: String
+  --
+}
+
+DeliveryController --> DeliveryTask
+DeliveryController --> Order
+DeliveryController --> Payment
+
+@enduml
