@@ -6,10 +6,15 @@ skinparam defaultFontName Arial
 skinparam defaultFontSize 11
 skinparam classFontSize 12
 skinparam classFontStyle bold
+skinparam classAttributeIconSize 0
 skinparam roundCorner 0
-skinparam dpi 300
-skinparam linetype ortho
+skinparam dpi 160
+skinparam nodesep 70
+skinparam ranksep 65
 hide circle
+hide empty methods
+
+right header 524H0136, 524H0031, 524H0132
 
 ' --- CUSTOMER HIERARCHY ---
 abstract class Customer {
@@ -28,10 +33,10 @@ class ForeignTourist {
     + preferredLanguage: String
 }
 
-Customer <|-- LocalCustomer
-Customer <|-- ForeignTourist
+Customer <|-up- LocalCustomer
+Customer <|-right- ForeignTourist
 
-' --- HUB & KITCHEN STATIONS ---
+' --- HUB, STATIONS & REPORTING ---
 class Hub {
     + hubId: String
     + hubName: String
@@ -50,7 +55,18 @@ class KitchenStation {
     + capacityLimit: Integer
 }
 
-Hub *-- "1..*" KitchenStation : contains >
+class ManagementReport {
+    + reportId: String
+    + hubId: String
+    + reportType: String
+    + generatedDate: DateTime
+    + startDate: Date
+    + endDate: Date
+    + totalRevenue: Decimal
+    + totalOrders: Integer
+    + avgDeliveryMinutes: Decimal
+    + wasteCost: Decimal
+}
 
 ' --- BRAND & MENU ITEMS ---
 class Brand {
@@ -69,9 +85,7 @@ class MenuItem {
     + stationType: String
 }
 
-Brand "1" -- "1..*" MenuItem : offers >
-
-' --- ORDER & ORDER LINE ---
+' --- ORDER, VOUCHER & PAYMENT ---
 class Order {
     + orderId: String
     + orderTime: DateTime
@@ -131,34 +145,22 @@ class DeliveryTask {
     + failureReason: String
 }
 
-' --- REPORTING ---
-class ManagementReport {
-    + reportId: String
-    + hubId: String
-    + reportType: String
-    + generatedDate: DateTime
-    + startDate: Date
-    + endDate: Date
-    + totalRevenue: Decimal
-    + totalOrders: Integer
-    + avgDeliveryMinutes: Decimal
-    + wasteCost: Decimal
-}
-
 ' --- ASSOCIATIONS ---
-Customer "1" -down- "0..*" Order : places >
-Order "0..*" -right- "0..1" Voucher : applies >
-Order "1" -left- "1" Payment : paid via >
+Voucher "0..1" -down- "0..*" Order : < applies
+Payment "1" -down- "1" Order : < paid via
+Hub "1" -up- "0..*" ManagementReport : generates >
+Hub "1" -down- "0..*" Order : processes >
+Hub "1" *-- "1..*" KitchenStation : contains >
+
+Order "0..*" -right- "1" Customer : < places
+Order "1" -left- "1" DeliveryTask : fulfilled by >
 
 Order "1" -down- "1..*" OrderLine : contains >
-OrderLine "*" -right- "1" MenuItem : references >
-
 Order "1" -down- "1..*" KitchenTicket : routes to >
-KitchenStation "1" -right- "0..*" KitchenTicket : prepares >
+OrderLine -[hidden]right-> KitchenTicket
 
-Order "1" -right- "1" DeliveryTask : fulfilled by >
-
-Hub "1" -down- "0..*" Order : processes >
-Hub "1" -right- "0..*" ManagementReport : generates >
+KitchenTicket "0..*" -right- "1" KitchenStation : < prepares
+OrderLine "*" -down- "1" MenuItem : references >
+MenuItem "1..*" -left- "1" Brand : < offers
 
 @enduml

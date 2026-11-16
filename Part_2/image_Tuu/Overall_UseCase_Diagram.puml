@@ -5,77 +5,71 @@ skinparam backgroundColor #FFFFFF
 skinparam defaultFontName Arial
 skinparam defaultFontSize 11
 skinparam roundCorner 0
-skinparam dpi 300
-skinparam linetype ortho
+skinparam dpi 180
+skinparam PackageStyle rectangle
+skinparam nodesep 22
+skinparam ranksep 65
 
 left to right direction
+right header 524H0136, 524H0031, 524H0132
 
 actor "Customer" as Customer
+actor "Office Staff" as Office
+actor "Administrator" as Admin
 actor "Kitchen Staff" as Kitchen
 actor "Shipper" as Shipper
-actor "Administrator" as Admin
 actor "Hub Manager" as Manager
 
-rectangle "SaigonBite Platform" {
+rectangle "SaigonBite OFDH Platform" {
 
   package "(a) Ordering Subsystem" {
-    usecase "UC1: Register & Manage Profile" as UC1
-    usecase "UC2: Browse Hubs & Menus" as UC2
-    usecase "UC3: Place an Order" as UC3
-    usecase "UC4: Track Order Status" as UC4
+    usecase "UC2: Browse hubs, brands and menus" as UC2
+    usecase "UC3: Place an order" as UC3
+    usecase "UC6: Pay for an order" as UC6
+    usecase "UC4: Track an order" as UC4
+    usecase "UC5: Cancel or edit an order" as UC5
+    usecase "UC11: Rate an order" as UC11
+  }
+
+  package "(c) CRUD & Office Management" {
+    usecase "UC1: Register customer and manage addresses" as UC1
+    usecase "UC12: Handle a complaint and decide on a refund" as UC12
+    usecase "UC13: Manage hubs and kitchen capacity" as UC13
+    usecase "UC14: Manage brands and menu items" as UC14
+    usecase "UC15: Manage vouchers" as UC15
   }
 
   package "(b) Fulfilment & Logistics" {
-    usecase "UC5: Cancel Order" as UC5
-    usecase "UC6: Route Order to Hub" as UC6
-    usecase "UC7: Confirm / Reject Order" as UC7
-    usecase "UC8: Cook Station Tickets" as UC8
-    usecase "UC9: Dispatch Delivery Pool" as UC9
-    usecase "UC10: Deliver an Order" as UC10
+    usecase "UC7: Confirm or reject an incoming order" as UC7
+    usecase "UC8: Prepare an order and mark it ready" as UC8
+    usecase "UC9: Manage menu item availability at a hub" as UC9
+    usecase "UC10: Deliver an order" as UC10
   }
 
-  package "(c) CRUD Management" {
-    usecase "UC11: Manage Customer Profiles" as UC11
-    usecase "UC12: Manage Courier Profiles" as UC12
-    usecase "UC13: Manage Hubs & Stations" as UC13
-    usecase "UC14: Manage Brands & Menus" as UC14
-    usecase "UC15: Manage Vouchers" as UC15
-  }
-
-  package "(d) Reports & Analytics" {
-    usecase "UC16: Produce Management Reports" as UC16
+  package "(d) Management Reports" {
+    usecase "UC16: Produce management reports" as UC16
   }
 }
 
-' Customer associations
-Customer -- UC1
 Customer -- UC2
 Customer -- UC3
+Customer -- UC6
 Customer -- UC4
 Customer -- UC5
+Customer -- UC11
+Customer -- UC1
 
-' Kitchen Staff associations
-Kitchen -- UC7
-Kitchen -- UC8
-
-' Shipper associations
-Shipper -- UC9
-Shipper -- UC10
-
-' Administrator associations
-Admin -- UC11
-Admin -- UC12
+Office -- UC12
 Admin -- UC13
 Admin -- UC14
 Admin -- UC15
 
-' Hub Manager associations
+Kitchen -- UC7
+Kitchen -- UC8
+Kitchen -- UC9
+Shipper -- UC10
 Manager -- UC16
 
-' Internal includes/extends
-UC3 ..> UC6 : <<include>>
-UC7 ..> UC8 : <<include>>
-UC8 ..> UC9 : <<include>>
+UC3 .right.> UC6 : <<include>>
 
 @enduml
-
