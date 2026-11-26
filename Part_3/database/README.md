@@ -19,7 +19,7 @@ File SQL phải chứa đầy đủ 3 phần rõ ràng:
 
 ## 2. Danh Mục Các Bảng Cần Tạo
 
-1. `users` & `customers` (kế thừa phân loại `CorporateCustomer`, `IndividualCustomer`)
+1. `users` & `customers` (kế thừa chuyên biệt hóa: `LocalCustomer` với SĐT Việt Nam 10 số, `ForeignTourist` với Passport/Email quốc tế; trong CSDL quan hệ thiết kế bảng `customers` có `customer_type` ENUM/CHECK ('Local', 'Foreign') khớp 100% Mục 2.1.7 & Feedback Log A-04)
 2. `hubs` & `kitchen_stations` (Whole-Part Composition)
 3. `brands` & `menu_items` (Quản lý thực đơn ảo đa thương hiệu)
 4. `vouchers` (Quản lý mã giảm giá, quota, hạn sử dụng)
