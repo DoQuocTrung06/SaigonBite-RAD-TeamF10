@@ -40,10 +40,10 @@ namespace SaigonBite
             Console.WriteLine($"TC_UC7_01: {(tc7Confirm && ord1?.OrderStatus == "Confirmed" && ord1.IsLocked && ticketDao.FindByOrderId("ORD-001").Count == 1 ? "PASS" : "FAIL")}");
 
             // TC_UC7_02: Reject incoming order with reason & trigger refund
-            bool tc7Reject = kitchenController.RejectOrder("ORD-002", "Out of Beef Pho");
+            bool tc7Reject = kitchenController.RejectOrder("ORD-002", "Out of Ingredients");
             var ord2 = orderDao.FindById("ORD-002");
             kdsUi.DisplayOrderRejection("ORD-002", ord2?.CancellationReason ?? string.Empty, tc7Reject);
-            Console.WriteLine($"TC_UC7_02: {(tc7Reject && ord2?.OrderStatus == "Cancelled" && ord2.CancellationReason == "Out of Beef Pho" ? "PASS" : "FAIL")}");
+            Console.WriteLine($"TC_UC7_02: {(tc7Reject && ord2?.OrderStatus == "Cancelled" && ord2.CancellationReason == "Out of Ingredients" ? "PASS" : "FAIL")}");
         }
     }
 }

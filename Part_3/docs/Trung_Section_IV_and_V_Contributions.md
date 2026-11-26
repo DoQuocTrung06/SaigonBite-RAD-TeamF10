@@ -9,7 +9,7 @@
 
 Theo mô hình Miền (Domain Model Class Diagram – Mục 2.1.7) và Ma trận CRUD (Mục 2.3), toàn bộ các thực thể bền vững (Persistent Classes) được ánh xạ sang lược đồ cơ sở dữ liệu quan hệ `saigonbite_db` trong `Part_3/database/schema.sql` theo 4 quy tắc chuẩn hóa:
 
-1. **Ánh xạ Kế thừa (Generalization Mapping — Feedback Log A-04):** Lớp cha `Customer` được ánh xạ theo mô hình **Table-per-Subtype** thành bảng chính `customers` (`customer_id`, `full_name`, `customer_type`) và hai bảng con `local_customers` (`phone_number`, `preferred_language`) cùng `foreign_tourists` (`passport_number`, `email_address`, `preferred_language`), liên kết 1-1 qua `FOREIGN KEY (customer_id) REFERENCES customers(customer_id) ON DELETE CASCADE`.
+1. **Ánh xạ Kế thừa (Generalization Mapping — Feedback Log A-04):** Lớp cha `Customer` được ánh xạ theo mô hình **Table-per-Subtype** thành bảng chính `customers` (`customer_id`, `full_name`, `customer_type`) và hai bảng con `local_customers` (`phone_number`) cùng `foreign_tourists` (`passport_number`, `email_address`, `preferred_language`), liên kết 1-1 qua `FOREIGN KEY (customer_id) REFERENCES customers(customer_id) ON DELETE CASCADE`.
 2. **Ánh xạ Hợp thành (Whole-Part Composition):** Quan hệ Whole-Part giữa `Hub` và `KitchenStation`, giữa `Brand` và `MenuItem`, và giữa `Order` và `KitchenTicket` sử dụng khóa ngoại kèm `ON DELETE CASCADE` để đảm bảo vòng đời phụ thuộc chặt chẽ.
 3. **Ánh xạ Lớp kết hợp (Association Class Mapping):** Lớp `OrderLine` phân rã quan hệ nhiều-nhiều giữa `Order` và `MenuItem` thành bảng `order_lines` với `quantity > 0`, `unit_price > 0` và `subtotal`.
 4. **Ràng buộc nghiệp vụ (Business CHECK Constraints) & Xóa mềm:** Bảng `orders` khóa bán kính phục vụ `CHECK (distance_km > 0 AND distance_km <= 7.0)`; bảng `vouchers` dùng cột `status = 'Archived'` thay cho `DELETE` cứng nhằm bảo toàn khóa ngoại và nhật ký kiểm toán `audit_logs`.
@@ -55,7 +55,7 @@ Toàn bộ mã nguồn SQL được lưu tại thư mục `Part_3/database/` v�
 
 - `TC_UC15_01`: Tạo mới voucher `QUIET10` hợp lệ, xác minh lưu trạng thái `Active` và ghi `AuditLog` $\rightarrow$ **PASS**
 - `TC_UC7_01`: Bếp xác nhận `ORD-001` trong 45s ($\le$ 120s) $\rightarrow$ `Confirmed`, khóa cứng đơn `IsLocked = True`, sinh phiếu `KT_ORD-001` $\rightarrow$ **PASS**
-- `TC_UC7_02`: Bếp từ chối `ORD-002` kèm lý do `Out of Beef Pho` $\rightarrow$ `Cancelled`, lưu lý do và kích hoạt hoàn tiền $\rightarrow$ **PASS**
+- `TC_UC7_02`: Bếp từ chối `ORD-002` kèm lý do `Out of Ingredients` $\rightarrow$ `Cancelled`, lưu lý do và kích hoạt hoàn tiền $\rightarrow$ **PASS**
 
 ---
 

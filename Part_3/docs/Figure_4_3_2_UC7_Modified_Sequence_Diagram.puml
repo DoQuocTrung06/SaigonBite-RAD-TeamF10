@@ -21,7 +21,7 @@ control "KitchenTicketDAO\n(Data Access Layer)" as TicketDAO
 control "AuditLogDAO\n(Data Access Layer)" as AuditDAO
 database "Relational Database\n(saigonbite_db)" as DB
 
-== Phase 1: Confirm Incoming Order (Within 120s SLA) ==
+alt Within 120s SLA & Hub Capacity Available
 Staff -> UI: 1. tapConfirmOrder(orderId, stationId, elapsedSeconds)
 activate UI
 UI -> Ctrl: 1.1 ConfirmOrder(orderId, stationId, elapsedSeconds)
@@ -81,7 +81,7 @@ deactivate Ctrl
 UI --> Staff: 1.15 DisplayOrderConfirmation(orderId, true, true)
 deactivate UI
 
-== Phase 2: Reject Order or 120s SLA Timeout ==
+else Reject Order or 120s SLA Timeout
 Staff -> UI: 2. tapRejectOrder(orderId, reason)
 activate UI
 UI -> Ctrl: 2.1 RejectOrder(orderId, reason)
@@ -108,5 +108,6 @@ Ctrl --> UI: true
 deactivate Ctrl
 UI --> Staff: 2.7 DisplayOrderRejection(orderId, reason, true)
 deactivate UI
+end
 
 @enduml
