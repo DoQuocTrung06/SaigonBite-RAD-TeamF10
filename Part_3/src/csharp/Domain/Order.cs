@@ -16,12 +16,14 @@ namespace SaigonBite.Domain
         public DateTime OrderTime { get; set; } = DateTime.UtcNow;
         public DateTime? DeliveredAt { get; set; }
         public string? CancellationReason { get; set; }
+        public bool IsLocked { get; set; } = false;
 
         public void UpdateStatus(string newStatus, string? reason = null)
         {
             OrderStatus = newStatus;
+            if (newStatus == "Confirmed") IsLocked = true;
             if (newStatus == "Delivered") DeliveredAt = DateTime.UtcNow;
-            if (newStatus == "Delivery_Failed") CancellationReason = reason;
+            if (newStatus == "Delivery_Failed" || newStatus == "Cancelled" || newStatus == "Rejected") CancellationReason = reason;
         }
     }
 }
