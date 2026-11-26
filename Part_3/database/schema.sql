@@ -4,6 +4,10 @@
 -- Aligned 100% with Part 2 BRS/SRS Report (Section 2.1.7, Domain Model, Tables 19-28)
 -- ==============================================================================
 
+-- 0. Create and select database
+CREATE DATABASE IF NOT EXISTS saigonbite_db;
+USE saigonbite_db;
+
 -- 1. ENUMS / TYPES (or CHECK constraints)
 -- Supported Customer Types: LocalCustomer, ForeignTourist (Feedback Log A-04)
 
@@ -40,7 +44,7 @@ CREATE TABLE IF NOT EXISTS menu_items (
     brand_id VARCHAR(20) NOT NULL,
     item_name VARCHAR(150) NOT NULL,
     description TEXT,
-    unit_price DECIMAL(12, 2) NOT NULL,
+    unit_price DECIMAL(12, 2) NOT NULL CHECK (unit_price > 0),
     is_available BOOLEAN NOT NULL DEFAULT TRUE,
     station_type VARCHAR(50) NOT NULL,
     FOREIGN KEY (brand_id) REFERENCES brands(brand_id) ON DELETE CASCADE
@@ -72,7 +76,7 @@ CREATE TABLE IF NOT EXISTS foreign_tourists (
 
 CREATE TABLE IF NOT EXISTS vouchers (
     voucher_code VARCHAR(30) PRIMARY KEY,
-    discount_percent DECIMAL(5, 2) NOT NULL DEFAULT 0.00,
+    discount_percent DECIMAL(5, 2) NOT NULL DEFAULT 0.00 CHECK (discount_percent >= 0 AND discount_percent <= 100),
     max_discount_amount DECIMAL(12, 2) NOT NULL DEFAULT 0.00,
     min_order_amount DECIMAL(12, 2) NOT NULL DEFAULT 0.00,
     start_date TIMESTAMP NOT NULL,
@@ -99,7 +103,7 @@ CREATE TABLE IF NOT EXISTS orders (
     order_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     order_status VARCHAR(30) NOT NULL DEFAULT 'Pending_Kitchen',
     delivery_address VARCHAR(255) NOT NULL,
-    distance_km DECIMAL(6, 2) NOT NULL,
+    distance_km DECIMAL(6, 2) NOT NULL CHECK (distance_km > 0 AND distance_km <= 7.0),
     subtotal DECIMAL(12, 2) NOT NULL,
     delivery_fee DECIMAL(12, 2) NOT NULL,
     discount_amount DECIMAL(12, 2) NOT NULL DEFAULT 0.00,
@@ -116,8 +120,8 @@ CREATE TABLE IF NOT EXISTS order_lines (
     order_line_id VARCHAR(20) PRIMARY KEY,
     order_id VARCHAR(20) NOT NULL,
     item_id VARCHAR(20) NOT NULL,
-    quantity INT NOT NULL DEFAULT 1,
-    unit_price DECIMAL(12, 2) NOT NULL,
+    quantity INT NOT NULL DEFAULT 1 CHECK (quantity > 0),
+    unit_price DECIMAL(12, 2) NOT NULL CHECK (unit_price > 0),
     subtotal DECIMAL(12, 2) NOT NULL,
     FOREIGN KEY (order_id) REFERENCES orders(order_id) ON DELETE CASCADE,
     FOREIGN KEY (item_id) REFERENCES menu_items(item_id)
