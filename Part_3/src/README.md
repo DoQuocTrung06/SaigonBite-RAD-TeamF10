@@ -71,9 +71,12 @@ Part_3/src/
     └── AuditLogDAO.*
 ```
 
----
-
-## 4. Quy Định Commit Trên GitHub (Checklist Mục 39)
+> [!TIP]
+> **Hiện trạng triển khai mã nguồn:**
+> - Toàn bộ mã nguồn hướng đối tượng (OOP) cho **UC10 (Deliver an order)** và **UC16 (Produce management reports)** do Tựu (`524H0136`) phụ trách đã được hiện thực đầy đủ bằng cả **hai ngôn ngữ**:
+>   1. **Python:** tại `controllers/`, `models/`, `data_access/` (kèm kịch bản Live Run kết nối CSDL SQLite).
+>   2. **C# .NET:** tại `csharp/Views/`, `csharp/Controllers/`, `csharp/Domain/`, `csharp/DataAccess/` (đúng chuẩn Visual Studio / C# theo gợi ý của Thầy).
+> - Cả hai bộ mã nguồn đều khớp 100% từng tên lớp, tên thuộc tính và tên phương thức với Final DCD (Bảng 25 & 27). Nhóm có thể chọn nộp bất kỳ ngôn ngữ nào theo quyết định chung!
 
 - Barem yêu cầu **mỗi sinh viên phải có > 10 commits có ý nghĩa** trên GitHub.
 - Khi commit mã nguồn các lớp, hãy đặt commit message rõ ràng kèm mã SV, ví dụ:

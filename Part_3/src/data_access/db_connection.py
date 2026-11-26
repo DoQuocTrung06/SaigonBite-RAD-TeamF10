@@ -103,12 +103,27 @@ class DatabaseConnection:
         cursor.execute("""
         CREATE TABLE IF NOT EXISTS management_reports (
             report_id TEXT PRIMARY KEY,
+            hub_id TEXT NOT NULL DEFAULT 'HUB_01',
+            report_period TEXT NOT NULL,
             report_type TEXT NOT NULL,
-            generated_by TEXT NOT NULL,
-            generated_at TEXT NOT NULL,
-            date_from TEXT NOT NULL,
-            date_to TEXT NOT NULL,
-            summary_json TEXT NOT NULL
+            total_orders INTEGER NOT NULL DEFAULT 0,
+            completed_orders INTEGER NOT NULL DEFAULT 0,
+            failed_orders INTEGER NOT NULL DEFAULT 0,
+            gross_revenue REAL NOT NULL DEFAULT 0.0,
+            generated_at TEXT NOT NULL
+        );
+        """)
+
+        # 5. Audit logs table (NFR5 Security & Compliance)
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS audit_logs (
+            log_id INTEGER PRIMARY KEY AUTOINCREMENT,
+            action_name TEXT NOT NULL,
+            entity_name TEXT NOT NULL,
+            entity_id TEXT NOT NULL,
+            performed_by TEXT NOT NULL,
+            details TEXT,
+            timestamp TEXT NOT NULL
         );
         """)
 

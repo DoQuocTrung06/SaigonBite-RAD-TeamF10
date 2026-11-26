@@ -11,126 +11,225 @@ skinparam roundCorner 0
 hide circle
 
 package "View Layer (Presentation)" as ViewPkg {
-  class CustomerView {
-    +displayMenu()
-    +inputAddress()
-    +selectPayment()
+  class CheckoutWindow {
+    +displayMenuAndHub()
+    +inputDeliveryAddress()
+    +selectPaymentMethod()
+    +onPlaceOrderClicked()
   }
-  class KitchenStaffView {
-    +displayIncomingOrders()
-    +confirmOrder()
-    +rejectOrder()
+  class BrandCatalogWindow {
+    +displayBrandList()
+    +onEditMenuItemClicked()
+    +onAssignStationClicked()
   }
-  class ShipperView {
-    +scanPackageQR()
-    +displayNavigationMap()
-    +show10MinCountdown()
-    +confirmCODCollection()
+  class KDSConsoleUI {
+    +displayIncomingTickets()
+    +startCountdownTimer()
+    +onConfirmOrderClicked()
+    +onRejectOrderClicked()
   }
-  class HubManagerView {
-    +selectDateRange()
-    +displayRevenueReport()
-    +exportSLAStats()
+  class VoucherConsoleUI {
+    +renderVoucherForm()
+    +onSaveVoucherClicked()
+  }
+  class ShipperMobileUI {
+    +displayAssignedTrip(tripDetails)
+    +onScanPickupQRClicked()
+    +onConfirmDeliveryClicked()
+    +onReportFailureClicked()
+  }
+  class ReportConsoleUI {
+    +renderFilterForm(hubs, presets)
+    +displayDashboard(reportSummary)
+    +onGenerateReportClicked()
+    +onExportPDFClicked()
   }
 }
 
 package "Controller Layer (Application Logic)" as ControllerPkg {
-  class CheckoutController {
-    +validateAddress(addr)
-    +calculateDeliveryFee(dist)
-    +applyVoucher(code)
-    +createOrder(cart)
+  class OrderHandler {
+    +calculateDeliveryFee(distanceKm)
+    +validateVoucher(code, amount)
+    +processCheckout(orderData)
   }
-  class OrderConfirmationController {
+  class BrandCatalogHandler {
+    +updateMenuItem(itemData)
+    +assignKitchenStation(itemId, stationId)
+  }
+  class KitchenController {
     +confirmOrder(orderId)
     +rejectOrder(orderId, reason)
   }
+  class VoucherController {
+    +createVoucher(voucherData)
+    +validateQuota(code)
+  }
   class DeliveryController {
-    +scanPackageQR(taskId, qrToken)
-    +navigateGPS(taskId, lat, lng)
-    +start10MinTimer(taskId)
-    +confirmDeliveryAndCOD(taskId, amount)
-    +recordDeliveryFailure(taskId, reason)
+    +processPickupScan(orderId, qrCode): Boolean
+    +recordDeliverySuccess(orderId, codAmount, photoUrl): Boolean
+    +recordDeliveryFailure(orderId, reason, photoUrl): Boolean
   }
   class ReportController {
-    +generateSalesAndSLAReport(mgrId, fromDate, toDate)
+    +generateReport(hubId, startDate, endDate): ManagementReport
+    +exportToPDF(reportId): String
   }
 }
 
 package "Domain Layer (Business Entities)" as DomainPkg {
+  class Customer {
+    -customerId: String
+    -fullName: String
+    -customerType: String
+  }
+  class LocalCustomer {
+    -phoneNumber: String
+  }
+  class ForeignTourist {
+    -passportNumber: String
+    -emailAddress: String
+    -preferredLanguage: String
+  }
+  Customer <|-- LocalCustomer
+  Customer <|-- ForeignTourist
+
+  class Hub {
+    -hubId: String
+    -hubName: String
+    -address: String
+    -latitude: Decimal
+    -longitude: Decimal
+    +getActiveStationCount(): Integer
+  }
+  class KitchenStation {
+    -stationId: String
+    -stationName: String
+    -stationType: String
+  }
+  class Brand {
+    -brandId: String
+    -brandName: String
+    -cuisineType: String
+  }
+  class MenuItem {
+    -itemId: String
+    -itemName: String
+    -unitPrice: Decimal
+    -isAvailable: Boolean
+  }
   class Order {
     -orderId: String
     -orderStatus: String
-    -finalAmount: Double
+    -subtotal: Decimal
+    -deliveryFee: Decimal
+    -finalTotal: Decimal
     -paymentMethod: String
-    +transitionTo(newStatus)
+    +updateStatus(newStatus: String)
   }
-  class DeliveryTask {
-    -taskId: String
-    -qrCodeToken: String
-    -taskStatus: String
-    -codCollectedVnd: Double
-    +scanQRAndPickup(token)
-    +start10MinCountdown()
-    +confirmSuccessfulDelivery(cod)
-    +markDeliveryFailed(reason)
+  class OrderLine {
+    -orderLineId: String
+    -quantity: Integer
+    -unitPrice: Decimal
+  }
+  class KitchenTicket {
+    -ticketId: String
+    -ticketStatus: String
+    -estimatedCookTime: Integer
+  }
+  class Voucher {
+    -voucherCode: String
+    -discountPercent: Decimal
+    -usageLimit: Integer
+    -usedCount: Integer
   }
   class Shipper {
     -shipperId: String
     -fullName: String
-    -walletBalance: Double
-    +updateLocation(lat, lng)
-    +creditWallet(amount)
+    -walletBalance: Decimal
+    +creditWallet(amount: Decimal)
+  }
+  class DeliveryTask {
+    -taskId: String
+    -orderId: String
+    -deliveryStatus: String
+    -cashCollected: Decimal
+    -failureReason: String
+    +updatePickupStatus(timestamp: DateTime)
+    +completeDelivery(cod: Decimal, photo: String)
+    +markFailed(reason: String, photo: String)
+  }
+  class Payment {
+    -paymentId: String
+    -paymentAmount: Decimal
+    -paymentStatus: String
+    +confirmCODPayment(collectedAmount: Decimal)
   }
   class ManagementReport {
     -reportId: String
-    -reportType: String
-    -dateFrom: String
-    -dateTo: String
-    +toSummaryText()
-  }
-  class MenuItem {
-    -itemId: String
-    -name: String
-    -priceVnd: Double
-  }
-  class Voucher {
-    -voucherCode: String
-    -discountAmount: Double
-    -usageQuota: Integer
+    -reportPeriod: String
+    -totalRevenue: Decimal
+    -totalOrders: Integer
+    +calculateKPIs(orders, tasks)
+    +getSummarySnapshot(): ReportSummary
   }
 }
 
 package "Data Access Layer (Persistence & DAO)" as DataAccessPkg {
-  class DatabaseConnection {
-    +getInstance()
-    +getConnection()
+  class OrderDA {
+    +createOrder(order): Boolean
+    +updateOrderStatus(orderId, status): Boolean
   }
-  class DeliveryRepository {
-    +getTaskById(taskId): DeliveryTask
-    +getOrderById(orderId): Order
-    +getShipperById(shipperId): Shipper
-    +saveTask(task)
-    +updateOrderStatus(orderId, status)
-    +updateShipperWallet(shipperId, delta)
+  class HubDA {
+    +getHubById(hubId): Hub
   }
-  class ReportRepository {
-    +aggregateBrandRevenue(fromDate, toDate)
-    +aggregateShipperSLA(fromDate, toDate)
+  class VoucherDA {
+    +findByCode(code): Voucher
+    +incrementUsage(code): Boolean
   }
-  class OrderRepository {
-    +getOrder(orderId): Order
-    +saveOrder(order)
+  class MenuItemDA {
+    +getAvailableItemsByHub(hubId): List<MenuItem>
+  }
+  class BrandDA {
+    +updateBrand(brand): Boolean
+  }
+  class KitchenTicketDAO {
+    +createTicket(ticket): Boolean
+    +updateTicketStatus(ticketId, status): Boolean
+  }
+  class DeliveryTaskDAO {
+    +findByOrderId(orderId): DeliveryTask
+    +update(task): Boolean
+  }
+  class OrderDAO {
+    +findById(orderId): Order
+    +updateStatus(orderId, status): Boolean
+    +getOrdersByHubAndDate(hubId, start, end): List<Order>
+  }
+  class AuditLogDAO {
+    +recordAuditEntry(orderId, actor, action): Boolean
+  }
+  class ReportDAO {
+    +saveReport(report): Boolean
+    +findReportById(reportId): ManagementReport
   }
 }
 
-package "Relational Database (SQLite / MySQL)" as DBPkg <<Database>> {
-  entity "orders" as tbl_orders
-  entity "delivery_tasks" as tbl_delivery_tasks
-  entity "shippers" as tbl_shippers
-  entity "brand_sales" as tbl_brand_sales
+package "Relational Database (Schema & Tables)" as DBPkg <<Database>> {
+  entity "hubs" as tbl_hubs
+  entity "kitchen_stations" as tbl_kitchen_stations
+  entity "brands" as tbl_brands
   entity "menu_items" as tbl_menu_items
+  entity "customers" as tbl_customers
+  entity "local_customers" as tbl_local_customers
+  entity "foreign_tourists" as tbl_foreign_tourists
   entity "vouchers" as tbl_vouchers
+  entity "shippers" as tbl_shippers
+  entity "orders" as tbl_orders
+  entity "order_lines" as tbl_order_lines
+  entity "kitchen_tickets" as tbl_kitchen_tickets
+  entity "delivery_tasks" as tbl_delivery_tasks
+  entity "payments" as tbl_payments
+  entity "management_reports" as tbl_reports
+  entity "audit_logs" as tbl_audit_logs
 }
 
 ' Inter-package dependencies

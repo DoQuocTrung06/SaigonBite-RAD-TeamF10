@@ -15,6 +15,39 @@ class DeliveryRepository:
     def __init__(self, db_conn: Optional[DatabaseConnection] = None):
         self.db = db_conn or DatabaseConnection.get_instance()
 
+    def findById(self, task_id: str) -> Optional[DeliveryTask]:
+        return self.get_task_by_id(task_id)
+
+    def findByOrderId(self, order_id: str) -> Optional[DeliveryTask]:
+        conn = self.db.get_connection()
+        cur = conn.cursor()
+        cur.execute("SELECT * FROM delivery_tasks WHERE order_id = ?", (order_id,))
+        row = cur.fetchone()
+        conn.close()
+        if not row:
+            return None
+        return DeliveryTask(
+            task_id=row["task_id"],
+            order_id=row["order_id"],
+            shipper_id=row["shipper_id"],
+            qr_code_token=row["qr_code_token"],
+            task_status=row["task_status"],
+            assigned_at=datetime.fromisoformat(row["assigned_at"]),
+            picked_up_at=datetime.fromisoformat(row["picked_up_at"]) if row["picked_up_at"] else None,
+            arrived_dropoff_at=datetime.fromisoformat(row["arrived_dropoff_at"]) if row["arrived_dropoff_at"] else None,
+            wait_start_time=datetime.fromisoformat(row["wait_start_time"]) if row["wait_start_time"] else None,
+            completed_at=datetime.fromisoformat(row["completed_at"]) if row["completed_at"] else None,
+            cod_collected_vnd=row["cod_collected_vnd"],
+            failure_reason=row["failure_reason"]
+        )
+
+    def update(self, task: DeliveryTask) -> bool:
+        self.save_task(task)
+        return True
+
+    def updateStatus(self, order_id: str, status: str, reason: Optional[str] = None) -> bool:
+        return self.update_order_status(order_id, status, reason)
+
     def get_task_by_id(self, task_id: str) -> Optional[DeliveryTask]:
         conn = self.db.get_connection()
         cur = conn.cursor()

@@ -2,6 +2,7 @@
 Order Entity Model (Subsystem Perspective)
 Author: Nguyen Quang Tuu (524H0136)
 Course: RAD Sem01_2627 - SaigonBite Platform
+Aligned with Part 2 Final DCD Tables 20, 21, 25, 27
 """
 from dataclasses import dataclass
 from datetime import datetime
@@ -26,6 +27,11 @@ class Order:
     ready_at: Optional[datetime] = None
     delivered_at: Optional[datetime] = None
     cancellation_reason: Optional[str] = None
+
+    # DCD Official Method (Tables 20, 25)
+    def updateStatus(self, new_status: str, reason: Optional[str] = None):
+        """Official DCD Table 25 method: transitions order status."""
+        self.transition_to(new_status, reason)
 
     def transition_to(self, new_status: str, reason: Optional[str] = None):
         """State transition logic aligned with Order State Machine."""

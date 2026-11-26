@@ -11,166 +11,170 @@ skinparam roundCorner 0
 hide circle
 
 actor "Shipper" as S
-boundary "ShipperView\n(Mobile App)" as V
-control "DeliveryController" as C
-entity "DeliveryTask" as DT
-entity "Order" as O
-entity "Shipper" as SH
-control "DeliveryRepository" as R
+boundary "ShipperMobileUI\n(View Layer)" as UI
+control "DeliveryController\n(Controller Layer)" as Ctrl
+entity "DeliveryTask\n(Domain Entity)" as Task
+entity "Order\n(Domain Entity)" as Ord
+entity "Payment\n(Domain Entity)" as Pay
+control "DeliveryTaskDAO\n(Data Access Layer)" as TaskDAO
+control "OrderDAO\n(Data Access Layer)" as OrderDAO
+control "AuditLogDAO\n(Data Access Layer)" as AuditDAO
 database "SQLite Database\n(saigonbite_db)" as DB
 
-== Phase 1: Hub Pickup & QR Verification ==
-S -> V: 1. scanPackageQR(taskId, qrToken)
-activate V
-V -> C: 1.1 scanPackageQR(taskId, qrToken)
-activate C
-C -> R: 1.2 getTaskById(taskId)
-activate R
-R -> DB: 1.3 SELECT * FROM delivery_tasks WHERE task_id = ?
+== Phase 1: Hub Parcel QR Scanning & Pickup ==
+S -> UI: 1. onScanPickupQRClicked(orderId, qrToken)
+activate UI
+UI -> Ctrl: 1.1 processPickupScan(orderId, qrToken)
+activate Ctrl
+
+Ctrl -> TaskDAO: 1.2 findByOrderId(orderId)
+activate TaskDAO
+TaskDAO -> DB: 1.3 SELECT * FROM delivery_tasks WHERE order_id = ?
 activate DB
-DB --> R: task_row
+DB --> TaskDAO: taskRow
 deactivate DB
-R --> C: task: DeliveryTask
-deactivate R
+TaskDAO --> Ctrl: task: DeliveryTask
+deactivate TaskDAO
 
-C -> DT: 1.4 scanQRAndPickup(qrToken)
-activate DT
-DT --> C: success: true
-deactivate DT
+Ctrl -> Task: 1.4 updatePickupStatus(timestamp)
+activate Task
+Task --> Ctrl: success: true
+deactivate Task
 
-C -> R: 1.5 saveTask(task)
-activate R
-R -> DB: 1.6 UPDATE delivery_tasks SET task_status = 'Picked_Up' ...
+Ctrl -> TaskDAO: 1.5 update(task)
+activate TaskDAO
+TaskDAO -> DB: 1.6 UPDATE delivery_tasks SET delivery_status='Picked_Up', picked_up_at=?
 activate DB
-DB --> R: ok
+DB --> TaskDAO: ok
 deactivate DB
-deactivate R
+deactivate TaskDAO
 
-C -> R: 1.7 updateOrderStatus(orderId, 'Out_for_Delivery')
-activate R
-R -> DB: 1.8 UPDATE orders SET order_status = 'Out_for_Delivery' ...
+Ctrl -> OrderDAO: 1.7 updateStatus(orderId, "Out_for_Delivery")
+activate OrderDAO
+OrderDAO -> DB: 1.8 UPDATE orders SET order_status='Out_for_Delivery' WHERE order_id=?
 activate DB
-DB --> R: ok
+DB --> OrderDAO: ok
 deactivate DB
-deactivate R
+deactivate OrderDAO
 
-C --> V: 1.9 return {success: true, orderStatus: 'Out_for_Delivery'}
-deactivate C
-V --> S: 1.10 displayPickupConfirmedAndNavigationMap()
-deactivate V
-
-== Phase 2: Drop-Off Navigation & Arrival ==
-S -> V: 2. updateGPSLocation(lat, lng)
-activate V
-V -> C: 2.1 navigateGPS(taskId, lat, lng)
-activate C
-C -> SH: 2.2 updateLocation(lat, lng)
-C -> DT: 2.3 arriveAtDropoff()
-C -> R: 2.4 saveTask(task)
-activate R
-R -> DB: 2.5 UPDATE delivery_tasks SET arrived_dropoff_at = ? ...
+Ctrl -> AuditDAO: 1.9 recordAuditEntry(orderId, "Shipper", "SCAN_PICKUP_SUCCESS")
+activate AuditDAO
+AuditDAO -> DB: 1.10 INSERT INTO audit_logs VALUES (...)
 activate DB
-DB --> R: ok
+DB --> AuditDAO: ok
 deactivate DB
-deactivate R
-C --> V: 2.6 return {success: true, arrived: true}
-deactivate C
-V --> S: 2.7 showCustomerContactAndDropoffUI()
-deactivate V
+deactivate AuditDAO
 
-== Phase 3: Successful Delivery & Cash COD Settlement ==
-alt Normal Flow: Customer Receives and Pays Cash COD
-    S -> V: 3a. confirmDeliveryAndCOD(taskId, 127500 VND)
-    activate V
-    V -> C: 3a.1 confirmDeliveryAndCOD(taskId, 127500)
-    activate C
-    
-    C -> R: 3a.2 getOrderById(orderId)
-    activate R
-    R -> DB: 3a.3 SELECT * FROM orders WHERE order_id = ?
+Ctrl --> UI: 1.11 return {success: true, status: 'Out_for_Delivery'}
+deactivate Ctrl
+UI --> S: 1.12 displayNavigationMapAndDeliveryScreen()
+deactivate UI
+
+== Phase 2: Doorstep Drop-off (Alternative Flow: Success vs 10-Minute Timeout) ==
+alt [Normal Flow: Customer Accepts Food & Pays COD Cash]
+    S -> UI: 2a. onConfirmDeliveryClicked(orderId, codAmount, photoUrl)
+    activate UI
+    UI -> Ctrl: 2a.1 recordDeliverySuccess(orderId, codAmount, photoUrl)
+    activate Ctrl
+
+    Ctrl -> TaskDAO: 2a.2 findByOrderId(orderId)
+    activate TaskDAO
+    TaskDAO --> Ctrl: taskObj
+    deactivate TaskDAO
+
+    Ctrl -> Task: 2a.3 completeDelivery(codAmount, photoUrl)
+    activate Task
+    Task --> Ctrl: success
+    deactivate Task
+
+    Ctrl -> Ord: 2a.4 updateStatus("Delivered")
+    activate Ord
+    Ord --> Ctrl: success
+    deactivate Ord
+
+    Ctrl -> Pay: 2a.5 confirmCODPayment(codAmount)
+    activate Pay
+    Pay --> Ctrl: success
+    deactivate Pay
+
+    Ctrl -> TaskDAO: 2a.6 update(taskObj)
+    activate TaskDAO
+    TaskDAO -> DB: 2a.7 UPDATE delivery_tasks SET delivery_status='Delivered', cod_collected_vnd=? ...
     activate DB
-    DB --> R: order_row
+    DB --> TaskDAO: ok
     deactivate DB
-    R --> C: order: Order
-    deactivate R
+    deactivate TaskDAO
 
-    C -> DT: 3a.4 confirmSuccessfulDelivery(127500)
-    activate DT
-    DT --> C: taskStatus: 'Delivered'
-    deactivate DT
-
-    C -> R: 3a.5 saveTask(task)
-    activate R
-    R -> DB: 3a.6 UPDATE delivery_tasks SET task_status='Delivered', cod_collected_vnd=127500 ...
+    Ctrl -> OrderDAO: 2a.8 updateStatus(orderId, "Delivered")
+    activate OrderDAO
+    OrderDAO -> DB: 2a.9 UPDATE orders SET order_status='Delivered', delivered_at=? ...
     activate DB
-    DB --> R: ok
+    DB --> OrderDAO: ok
     deactivate DB
-    deactivate R
+    deactivate OrderDAO
 
-    C -> R: 3a.7 updateOrderStatus(orderId, 'Delivered')
-    activate R
-    R -> DB: 3a.8 UPDATE orders SET order_status='Delivered', delivered_at=? ...
+    Ctrl -> AuditDAO: 2a.10 recordAuditEntry(orderId, "Shipper", "DELIVERY_SUCCESS_COD_RECONCILED")
+    activate AuditDAO
+    AuditDAO -> DB: 2a.11 INSERT INTO audit_logs VALUES (...)
     activate DB
-    DB --> R: ok
+    DB --> AuditDAO: ok
     deactivate DB
-    deactivate R
+    deactivate AuditDAO
 
-    C -> R: 3a.9 updateShipperWallet(shipperId, +20000)
-    activate R
-    R -> DB: 3a.10 UPDATE shippers SET wallet_balance = wallet_balance + 20000 ...
+    Ctrl --> UI: 2a.12 return {success: true, message: 'Delivered & COD Collected'}
+    deactivate Ctrl
+    UI --> S: 2a.13 displayDeliverySuccessAndCreditedWallet(+20,000 VND)
+    deactivate UI
+
+else [Exception Flow: Customer Unreachable After 3 Calls & 10-Min Countdown Expiry]
+    S -> UI: 2b. onReportFailureClicked(orderId, "Customer unreachable after 10m countdown", photoUrl)
+    activate UI
+    UI -> Ctrl: 2b.1 recordDeliveryFailure(orderId, reason, photoUrl)
+    activate Ctrl
+
+    Ctrl -> TaskDAO: 2b.2 findByOrderId(orderId)
+    activate TaskDAO
+    TaskDAO --> Ctrl: taskObj
+    deactivate TaskDAO
+
+    Ctrl -> Task: 2b.3 markFailed(reason, photoUrl)
+    activate Task
+    Task --> Ctrl: success
+    deactivate Task
+
+    Ctrl -> Ord: 2b.4 updateStatus("Delivery_Failed")
+    activate Ord
+    Ord --> Ctrl: success
+    deactivate Ord
+
+    Ctrl -> TaskDAO: 2b.5 update(taskObj)
+    activate TaskDAO
+    TaskDAO -> DB: 2b.6 UPDATE delivery_tasks SET delivery_status='Failed_Returned', failure_reason=? ...
     activate DB
-    DB --> R: ok
+    DB --> TaskDAO: ok
     deactivate DB
-    deactivate R
+    deactivate TaskDAO
 
-    C --> V: 3a.11 return {success: true, orderStatus: 'Delivered', credited: 20000}
-    deactivate C
-    V --> S: 3a.12 displayDeliverySuccessScreenAndWalletBonus()
-    deactivate V
-
-else Exception Flow: Customer Unreachable after 10-Minute Countdown
-    S -> V: 3b. reportCustomerUnreachable()
-    activate V
-    V -> C: 3b.1 start10MinTimer(taskId)
-    activate C
-    C -> DT: 3b.2 start10MinCountdown()
-    C -> R: 3b.3 saveTask(task)
-    activate R
-    R -> DB: 3b.4 UPDATE delivery_tasks SET task_status='Waiting_Customer_10Min' ...
+    Ctrl -> OrderDAO: 2b.7 updateStatus(orderId, "Delivery_Failed")
+    activate OrderDAO
+    OrderDAO -> DB: 2b.8 UPDATE orders SET order_status='Delivery_Failed', cancellation_reason=? ...
     activate DB
-    DB --> R: ok
+    DB --> OrderDAO: ok
     deactivate DB
-    deactivate R
-    C --> V: 3b.5 return {timerStarted: true, durationMins: 10}
-    deactivate C
-    V --> S: 3b.6 display10MinCountdownClock()
-    deactivate V
+    deactivate OrderDAO
 
-    ... 10 minutes elapse without customer contact ...
+    Ctrl -> AuditDAO: 2b.9 recordAuditEntry(orderId, "Shipper", "DELIVERY_FAILED_10MIN_TIMEOUT")
+    activate AuditDAO
+    AuditDAO -> DB: 2b.10 INSERT INTO audit_logs VALUES (...)
+    activate DB
+    DB --> AuditDAO: ok
+    deactivate DB
+    deactivate AuditDAO
 
-    S -> V: 3c. confirmDeliveryFailure()
-    activate V
-    V -> C: 3c.1 recordDeliveryFailure(taskId, "Customer unreachable after 10m")
-    activate C
-    C -> DT: 3c.2 markDeliveryFailed(reason)
-    C -> R: 3c.3 saveTask(task)
-    activate R
-    R -> DB: 3c.4 UPDATE delivery_tasks SET task_status='Failed_Returned', failure_reason=? ...
-    activate DB
-    DB --> R: ok
-    deactivate DB
-    deactivate R
-    C -> R: 3c.5 updateOrderStatus(orderId, 'Delivery_Failed', reason)
-    activate R
-    R -> DB: 3c.6 UPDATE orders SET order_status='Delivery_Failed', cancellation_reason=? ...
-    activate DB
-    DB --> R: ok
-    deactivate DB
-    deactivate R
-    C --> V: 3c.7 return {success: true, orderStatus: 'Delivery_Failed'}
-    deactivate C
-    V --> S: 3c.8 displayReturnPackageToHubScreen()
-    deactivate V
+    Ctrl --> UI: 2b.11 return {success: true, returnManifestCreated: true}
+    deactivate Ctrl
+    UI --> S: 2b.12 displayReturnParcelToHubManifest()
+    deactivate UI
 end
 
 @enduml
