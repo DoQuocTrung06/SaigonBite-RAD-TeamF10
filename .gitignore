@@ -12,3 +12,10 @@ __pycache__/
 ~$*.xlsx
 ~$*.docx
 ~$*.pptx
+
+# Private individual presentation scripts & local helper scripts
+Part_3/Tuu_524H0136/Transcript*
+Part_3/Tuu_524H0136/build_*.py
+Part_3/Tuu_524H0136/demo_*.py
+Part_3/Tuu_524H0136/*.md
+!Part_3/Tuu_524H0136/README.md
