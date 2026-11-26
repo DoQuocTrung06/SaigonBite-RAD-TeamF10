@@ -1,0 +1,14 @@
+# Environment & IDE
+.vscode/
+.idea/
+__pycache__/
+*.pyc
+
+# Database files
+*.db
+*.sqlite3
+
+# Office temporary lock files
+~$*.xlsx
+~$*.docx
+~$*.pptx

@@ -1,0 +1,40 @@
+<mxfile host="Electron" modified="2026-11-26T15:58:00.000Z" agent="SaigonBite RAD Team F10" version="21.6.8" type="device">
+  <diagram id="saigonbite-package-diagram" name="Figure 4.2 Package Diagram">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" background="#ffffff" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="pkg_view" value="&lt;b&gt;View Layer (Presentation)&lt;/b&gt;&#xa;&#xa;+ CustomerView&#xa;+ KitchenStaffView&#xa;+ ShipperView&#xa;+ HubManagerView" style="shape=folder;fontStyle=0;spacingTop=10;tabWidth=150;tabHeight=25;tabPosition=left;html=1;whiteSpace=wrap;fillColor=#ffffff;strokeColor=#000000;fontColor=#000000;align=left;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="60" y="60" width="220" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="pkg_ctrl" value="&lt;b&gt;Controller Layer (Application Logic)&lt;/b&gt;&#xa;&#xa;+ CheckoutController&#xa;+ OrderConfirmationController&#xa;+ DeliveryController&#xa;+ ReportController" style="shape=folder;fontStyle=0;spacingTop=10;tabWidth=180;tabHeight=25;tabPosition=left;html=1;whiteSpace=wrap;fillColor=#ffffff;strokeColor=#000000;fontColor=#000000;align=left;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="340" y="60" width="240" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="pkg_domain" value="&lt;b&gt;Domain Layer (Business Entities)&lt;/b&gt;&#xa;&#xa;+ Order / OrderLine&#xa;+ DeliveryTask / Shipper&#xa;+ Hub / KitchenStation&#xa;+ MenuItem / Voucher&#xa;+ ManagementReport" style="shape=folder;fontStyle=0;spacingTop=10;tabWidth=180;tabHeight=25;tabPosition=left;html=1;whiteSpace=wrap;fillColor=#ffffff;strokeColor=#000000;fontColor=#000000;align=left;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="640" y="60" width="220" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="pkg_data" value="&lt;b&gt;Data Access Layer (Persistence / DAO)&lt;/b&gt;&#xa;&#xa;+ DatabaseConnection&#xa;+ DeliveryRepository&#xa;+ OrderRepository&#xa;+ ReportRepository" style="shape=folder;fontStyle=0;spacingTop=10;tabWidth=200;tabHeight=25;tabPosition=left;html=1;whiteSpace=wrap;fillColor=#ffffff;strokeColor=#000000;fontColor=#000000;align=left;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="490" y="270" width="240" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="pkg_db" value="&lt;b&gt;Relational Database (SQLite / MySQL)&lt;/b&gt;&#xa;&#xa;+ orders / order_lines&#xa;+ delivery_tasks / shippers&#xa;+ menu_items / vouchers&#xa;+ brand_sales" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#ffffff;strokeColor=#000000;fontColor=#000000;align=center;" vertex="1" parent="1">
+          <mxGeometry x="500" y="480" width="220" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="edge1" value="&amp;lt;&amp;lt;uses&amp;gt;&amp;gt;" style="html=1;verticalAlign=bottom;labelBackgroundColor=none;endArrow=open;endFill=0;dashed=1;strokeColor=#000000;fontColor=#000000;" edge="1" parent="1" source="pkg_view" target="pkg_ctrl">
+          <mxGeometry width="160" relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge2" value="&amp;lt;&amp;lt;coordinates&amp;gt;&amp;gt;" style="html=1;verticalAlign=bottom;labelBackgroundColor=none;endArrow=open;endFill=0;dashed=1;strokeColor=#000000;fontColor=#000000;" edge="1" parent="1" source="pkg_ctrl" target="pkg_domain">
+          <mxGeometry width="160" relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge3" value="&amp;lt;&amp;lt;delegates&amp;gt;&amp;gt;" style="html=1;verticalAlign=bottom;labelBackgroundColor=none;endArrow=open;endFill=0;dashed=1;strokeColor=#000000;fontColor=#000000;" edge="1" parent="1" source="pkg_ctrl" target="pkg_data">
+          <mxGeometry width="160" relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge4" value="&amp;lt;&amp;lt;maps entities&amp;gt;&amp;gt;" style="html=1;verticalAlign=bottom;labelBackgroundColor=none;endArrow=open;endFill=0;dashed=1;strokeColor=#000000;fontColor=#000000;" edge="1" parent="1" source="pkg_data" target="pkg_domain">
+          <mxGeometry width="160" relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge5" value="&amp;lt;&amp;lt;executes SQL&amp;gt;&amp;gt;" style="html=1;verticalAlign=bottom;labelBackgroundColor=none;endArrow=open;endFill=0;dashed=1;strokeColor=#000000;fontColor=#000000;" edge="1" parent="1" source="pkg_data" target="pkg_db">
+          <mxGeometry width="160" relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

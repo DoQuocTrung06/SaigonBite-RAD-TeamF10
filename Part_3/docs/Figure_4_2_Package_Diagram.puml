@@ -1,0 +1,143 @@
+@startuml Figure_4_2_Package_Diagram
+skinparam backgroundColor #FFFFFF
+skinparam handwritten false
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontName "Calibri"
+skinparam defaultFontSize 11
+skinparam defaultFontColor #000000
+skinparam linetype ortho
+skinparam roundCorner 0
+hide circle
+
+package "View Layer (Presentation)" as ViewPkg {
+  class CustomerView {
+    +displayMenu()
+    +inputAddress()
+    +selectPayment()
+  }
+  class KitchenStaffView {
+    +displayIncomingOrders()
+    +confirmOrder()
+    +rejectOrder()
+  }
+  class ShipperView {
+    +scanPackageQR()
+    +displayNavigationMap()
+    +show10MinCountdown()
+    +confirmCODCollection()
+  }
+  class HubManagerView {
+    +selectDateRange()
+    +displayRevenueReport()
+    +exportSLAStats()
+  }
+}
+
+package "Controller Layer (Application Logic)" as ControllerPkg {
+  class CheckoutController {
+    +validateAddress(addr)
+    +calculateDeliveryFee(dist)
+    +applyVoucher(code)
+    +createOrder(cart)
+  }
+  class OrderConfirmationController {
+    +confirmOrder(orderId)
+    +rejectOrder(orderId, reason)
+  }
+  class DeliveryController {
+    +scanPackageQR(taskId, qrToken)
+    +navigateGPS(taskId, lat, lng)
+    +start10MinTimer(taskId)
+    +confirmDeliveryAndCOD(taskId, amount)
+    +recordDeliveryFailure(taskId, reason)
+  }
+  class ReportController {
+    +generateSalesAndSLAReport(mgrId, fromDate, toDate)
+  }
+}
+
+package "Domain Layer (Business Entities)" as DomainPkg {
+  class Order {
+    -orderId: String
+    -orderStatus: String
+    -finalAmount: Double
+    -paymentMethod: String
+    +transitionTo(newStatus)
+  }
+  class DeliveryTask {
+    -taskId: String
+    -qrCodeToken: String
+    -taskStatus: String
+    -codCollectedVnd: Double
+    +scanQRAndPickup(token)
+    +start10MinCountdown()
+    +confirmSuccessfulDelivery(cod)
+    +markDeliveryFailed(reason)
+  }
+  class Shipper {
+    -shipperId: String
+    -fullName: String
+    -walletBalance: Double
+    +updateLocation(lat, lng)
+    +creditWallet(amount)
+  }
+  class ManagementReport {
+    -reportId: String
+    -reportType: String
+    -dateFrom: String
+    -dateTo: String
+    +toSummaryText()
+  }
+  class MenuItem {
+    -itemId: String
+    -name: String
+    -priceVnd: Double
+  }
+  class Voucher {
+    -voucherCode: String
+    -discountAmount: Double
+    -usageQuota: Integer
+  }
+}
+
+package "Data Access Layer (Persistence & DAO)" as DataAccessPkg {
+  class DatabaseConnection {
+    +getInstance()
+    +getConnection()
+  }
+  class DeliveryRepository {
+    +getTaskById(taskId): DeliveryTask
+    +getOrderById(orderId): Order
+    +getShipperById(shipperId): Shipper
+    +saveTask(task)
+    +updateOrderStatus(orderId, status)
+    +updateShipperWallet(shipperId, delta)
+  }
+  class ReportRepository {
+    +aggregateBrandRevenue(fromDate, toDate)
+    +aggregateShipperSLA(fromDate, toDate)
+  }
+  class OrderRepository {
+    +getOrder(orderId): Order
+    +saveOrder(order)
+  }
+}
+
+package "Relational Database (SQLite / MySQL)" as DBPkg <<Database>> {
+  entity "orders" as tbl_orders
+  entity "delivery_tasks" as tbl_delivery_tasks
+  entity "shippers" as tbl_shippers
+  entity "brand_sales" as tbl_brand_sales
+  entity "menu_items" as tbl_menu_items
+  entity "vouchers" as tbl_vouchers
+}
+
+' Inter-package dependencies
+ViewPkg ..> ControllerPkg : <<uses>>
+ControllerPkg ..> DomainPkg : <<coordinates>>
+ControllerPkg ..> DataAccessPkg : <<delegates queries>>
+DataAccessPkg ..> DomainPkg : <<maps entities>>
+DataAccessPkg ..> DBPkg : <<executes SQL>>
+
+@enduml
