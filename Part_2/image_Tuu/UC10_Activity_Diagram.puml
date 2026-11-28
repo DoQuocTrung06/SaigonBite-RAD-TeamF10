@@ -5,7 +5,8 @@ skinparam backgroundColor #FFFFFF
 skinparam defaultFontName Arial
 skinparam defaultFontSize 11
 skinparam roundCorner 0
-skinparam dpi 300
+skinparam dpi 160
+right header 524H0136
 
 |Shipper|
 start

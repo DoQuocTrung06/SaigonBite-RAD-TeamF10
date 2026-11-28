@@ -3,86 +3,112 @@ skinparam monochrome true
 skinparam shadowing false
 skinparam backgroundColor #FFFFFF
 skinparam defaultFontName Arial
-skinparam defaultFontSize 11
-skinparam roundCorner 0
-skinparam dpi 200
+skinparam defaultFontSize 10
+skinparam roundcorner 0
+skinparam dpi 160
+skinparam classAttributeIconSize 0
 skinparam linetype ortho
+skinparam nodesep 60
+skinparam ranksep 60
+
+skinparam ClassBackgroundColor #FFFFFF
+skinparam ClassBorderColor #000000
+skinparam ClassBorderThickness 1.2
+skinparam ClassFontColor #000000
+skinparam ClassFontSize 11
+skinparam ClassFontStyle bold
+skinparam ClassAttributeFontColor #000000
+skinparam ClassAttributeFontSize 10
+skinparam ClassStereotypeFontColor #000000
+skinparam ClassStereotypeFontSize 9
+
+skinparam ArrowColor #000000
+skinparam ArrowThickness 1.1
+skinparam ArrowFontColor #000000
+
 hide circle
+show members
+top to bottom direction
+right header 524H0136
 
-package "View Layer" {
-  class ShipperMobileUI {
-    + displayAssignedTrip(tripDetails)
-    + onScanPickupQRClicked()
-    + onConfirmDeliveryClicked()
-    + onReportFailureClicked()
-  }
+' Layer 1: View
+class ShipperMobileUI <<view>> {
+  --
+  +displayAssignedTrip(tripDetails: Map): void
+  +onScanPickupQRClicked(): void
+  +onConfirmDeliveryClicked(orderId: string, codAmount: decimal, photo: string): void
+  +onReportFailureClicked(orderId: string, reason: string, photo: string): void
 }
 
-package "Controller Layer" {
-  class DeliveryController {
-    + processPickupScan(orderId: String, qrCode: String): Boolean
-    + recordDeliverySuccess(orderId: String, codAmount: Decimal, photoUrl: String): Boolean
-    + recordDeliveryFailure(orderId: String, reason: String, photoUrl: String): Boolean
-  }
+' Layer 2: Controller
+class DeliveryController <<controller>> {
+  --
+  +processPickupScan(orderId: string, qrCode: string): boolean
+  +recordDeliverySuccess(orderId: string, codAmount: decimal, photoUrl: string): boolean
+  +recordDeliveryFailure(orderId: string, reason: string, photoUrl: string): boolean
+  -verifyPackageQR(orderId: string, scannedToken: string): boolean
 }
 
-package "Domain Layer" {
-  class DeliveryTask {
-    - taskId: String
-    - orderId: String
-    - shipperId: String
-    - pickupTime: DateTime
-    - deliveredTime: DateTime
-    - deliveryStatus: String
-    - cashCollected: Decimal
-    - failureReason: String
-    + updatePickupStatus(timestamp: DateTime)
-    + completeDelivery(cod: Decimal, photo: String)
-    + markFailed(reason: String, photo: String)
-  }
-
-  class Order {
-    - orderId: String
-    - orderStatus: String
-    - finalTotal: Decimal
-    - paymentMethod: String
-    + updateStatus(newStatus: String)
-  }
-
-  class Payment {
-    - paymentId: String
-    - paymentAmount: Decimal
-    - paymentStatus: String
-    + confirmCODPayment(collectedAmount: Decimal)
-  }
+' Layer 3: Data Access
+class DeliveryTaskDAO <<dataAccess>> {
+  --
+  +findByOrderId(orderId: string): DeliveryTask
+  +update(task: DeliveryTask): boolean
 }
 
-package "Data Access Layer" {
-  class DeliveryTaskDAO {
-    + findByOrderId(orderId: String): DeliveryTask
-    + update(task: DeliveryTask): Boolean
-  }
-
-  class OrderDAO {
-    + findById(orderId: String): Order
-    + updateStatus(orderId: String, status: String): Boolean
-  }
-
-  class AuditLogDAO {
-    + recordAuditEntry(orderId: String, actor: String, action: String): Boolean
-  }
+class OrderDAO <<dataAccess>> {
+  --
+  +findById(orderId: string): Order
+  +updateStatus(orderId: string, status: string): boolean
 }
 
-"View Layer" -[hidden]down-> "Controller Layer"
-"Controller Layer" -[hidden]down-> "Domain Layer"
-"Domain Layer" -[hidden]down-> "Data Access Layer"
+class AuditLogDAO <<dataAccess>> {
+  --
+  +recordAuditEntry(orderId: string, actor: string, action: string): boolean
+}
 
-ShipperMobileUI ..> DeliveryController : invokes >
-DeliveryController ..> DeliveryTask : manages >
-DeliveryController ..> Order : updates >
-DeliveryController ..> Payment : verifies >
-DeliveryController ..> DeliveryTaskDAO : calls >
-DeliveryController ..> OrderDAO : calls >
-DeliveryController ..> AuditLogDAO : calls >
+' Layer 4: Domain
+class DeliveryTask {
+  -taskId: string {key}
+  -orderId: string
+  -shipperId: string
+  -pickupTime: datetime
+  -deliveredTime: datetime
+  -deliveryStatus: string
+  -cashCollected: decimal
+  -failureReason: string
+  --
+  +updatePickupStatus(timestamp: datetime): void
+  +completeDelivery(cod: decimal, photo: string): void
+  +markFailed(reason: string, photo: string): void
+}
+
+class Order {
+  -orderId: string {key}
+  -orderStatus: string
+  -finalTotal: decimal
+  -paymentMethod: string
+  --
+  +updateStatus(newStatus: string): void
+}
+
+class Payment {
+  -paymentId: string {key}
+  -paymentAmount: decimal
+  -paymentStatus: string
+  --
+  +confirmCODPayment(collectedAmount: decimal): boolean
+}
+
+' Hierarchy & Layout
+ShipperMobileUI -down-> DeliveryController
+
+DeliveryController -left-> DeliveryTaskDAO
+DeliveryController -right-> AuditLogDAO
+DeliveryController -down-> OrderDAO
+
+DeliveryController -down-> DeliveryTask
+DeliveryTask "1" --> "1" Order
+Order "1" --> "0..1" Payment
 
 @enduml

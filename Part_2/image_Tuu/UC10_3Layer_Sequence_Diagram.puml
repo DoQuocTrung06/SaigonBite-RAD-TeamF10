@@ -5,9 +5,10 @@ skinparam backgroundColor #FFFFFF
 skinparam defaultFontName Arial
 skinparam defaultFontSize 11
 skinparam roundCorner 0
-skinparam dpi 200
+skinparam dpi 160
 skinparam ParticipantPadding 10
 skinparam BoxPadding 10
+right header 524H0136
 
 actor ":Shipper" as Shipper
 participant ":ShipperMobileUI" as UI <<view>>

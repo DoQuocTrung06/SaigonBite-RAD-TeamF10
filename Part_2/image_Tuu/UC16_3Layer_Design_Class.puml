@@ -3,74 +3,99 @@ skinparam monochrome true
 skinparam shadowing false
 skinparam backgroundColor #FFFFFF
 skinparam defaultFontName Arial
-skinparam defaultFontSize 11
-skinparam roundCorner 0
-skinparam dpi 200
+skinparam defaultFontSize 10
+skinparam roundcorner 0
+skinparam dpi 160
+skinparam classAttributeIconSize 0
 skinparam linetype ortho
+skinparam nodesep 60
+skinparam ranksep 60
+
+skinparam ClassBackgroundColor #FFFFFF
+skinparam ClassBorderColor #000000
+skinparam ClassBorderThickness 1.2
+skinparam ClassFontColor #000000
+skinparam ClassFontSize 11
+skinparam ClassFontStyle bold
+skinparam ClassAttributeFontColor #000000
+skinparam ClassAttributeFontSize 10
+skinparam ClassStereotypeFontColor #000000
+skinparam ClassStereotypeFontSize 9
+
+skinparam ArrowColor #000000
+skinparam ArrowThickness 1.1
+skinparam ArrowFontColor #000000
+
 hide circle
+show members
+top to bottom direction
+right header 524H0136
 
-package "View Layer" {
-  class ReportConsoleUI {
-    + renderFilterForm(hubs, presets)
-    + displayDashboard(reportSummary)
-    + onGenerateReportClicked()
-    + onExportPDFClicked()
-  }
+' Layer 1: View
+class ReportConsoleUI <<view>> {
+  --
+  +renderFilterForm(hubs: List, presets: List): void
+  +displayDashboard(reportSummary: ReportSummary): void
+  +onGenerateReportClicked(): void
+  +onExportPDFClicked(): void
 }
 
-package "Controller Layer" {
-  class ReportController {
-    + generateReport(hubId: String, start: Date, end: Date): ManagementReport
-    + exportToPDF(reportId: String): String
-  }
+' Layer 2: Controller
+class ReportController <<controller>> {
+  --
+  +generateReport(hubId: string, start: date, end: date): ManagementReport
+  +exportToPDF(reportId: string): string
 }
 
-package "Domain Layer" {
-  class ManagementReport {
-    - reportId: String
-    - hubId: String
-    - reportType: String
-    - generatedDate: DateTime
-    - startDate: Date
-    - endDate: Date
-    - totalRevenue: Decimal
-    - totalOrders: Integer
-    - avgDeliveryMinutes: Decimal
-    - wasteCost: Decimal
-    + calculateKPIs(orders: List, tasks: List)
-    + getSummarySnapshot(): ReportSummary
-  }
-
-  class Hub {
-    - hubId: String
-    - hubName: String
-    + getActiveStationCount(): Integer
-  }
+' Layer 3: Data Access
+class ReportDAO <<dataAccess>> {
+  --
+  +saveReport(report: ManagementReport): boolean
+  +findReportById(reportId: string): ManagementReport
 }
 
-package "Data Access Layer" {
-  class ReportDAO {
-    + saveReport(report: ManagementReport): Boolean
-    + findReportById(reportId: String): ManagementReport
-  }
-
-  class OrderDAO {
-    + getOrdersByHubAndDate(hubId: String, start: Date, end: Date): List<Order>
-  }
-
-  class DeliveryTaskDAO {
-    + getTasksByHubAndDate(hubId: String, start: Date, end: Date): List<DeliveryTask>
-  }
+class OrderDAO <<dataAccess>> {
+  --
+  +getOrdersByHubAndDate(hubId: string, start: date, end: date): List<Order>
 }
 
-"View Layer" -[hidden]down-> "Controller Layer"
-"Controller Layer" -[hidden]down-> "Domain Layer"
-"Domain Layer" -[hidden]down-> "Data Access Layer"
+class DeliveryTaskDAO <<dataAccess>> {
+  --
+  +getTasksByHubAndDate(hubId: string, start: date, end: date): List<DeliveryTask>
+}
 
-ReportConsoleUI ..> ReportController : invokes >
-ReportController ..> ManagementReport : generates >
-ReportController ..> ReportDAO : calls >
-ReportController ..> OrderDAO : calls >
-ReportController ..> DeliveryTaskDAO : calls >
+' Layer 4: Domain
+class ManagementReport {
+  -reportId: string {key}
+  -hubId: string
+  -reportType: string
+  -generatedDate: datetime
+  -startDate: date
+  -endDate: date
+  -totalRevenue: decimal
+  -totalOrders: int
+  -avgDeliveryMinutes: decimal
+  -wasteCost: decimal
+  --
+  +calculateKPIs(orders: List, tasks: List): void
+  +getSummarySnapshot(): ReportSummary
+}
+
+class Hub {
+  -hubId: string {key}
+  -hubName: string
+  --
+  +getActiveStationCount(): int
+}
+
+' Hierarchy & Layout
+ReportConsoleUI -down-> ReportController
+
+ReportController -left-> ReportDAO
+ReportController -right-> DeliveryTaskDAO
+ReportController -down-> OrderDAO
+
+ReportController -down-> ManagementReport
+ManagementReport "1" --> "1" Hub
 
 @enduml
