@@ -1,0 +1,113 @@
+@startuml Figure_4_3_2_UC7_Modified_Sequence_Diagram
+skinparam backgroundColor #FFFFFF
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontName "Calibri"
+skinparam defaultFontSize 11
+skinparam defaultFontColor #000000
+skinparam linetype ortho
+skinparam roundCorner 0
+hide circle
+
+actor "Kitchen Staff" as Staff
+boundary "KDSConsoleUI\n(View Layer)" as UI
+control "KitchenController\n(Controller Layer)" as Ctrl
+entity "Order\n(Domain Entity)" as Ord
+entity "Hub\n(Domain Entity)" as Hub
+entity "KitchenTicket\n(Domain Entity)" as Ticket
+control "OrderDAO\n(Data Access Layer)" as OrderDAO
+control "HubDAO\n(Data Access Layer)" as HubDAO
+control "KitchenTicketDAO\n(Data Access Layer)" as TicketDAO
+control "AuditLogDAO\n(Data Access Layer)" as AuditDAO
+database "Relational Database\n(saigonbite_db)" as DB
+
+alt Within 120s SLA & Hub Capacity Available
+Staff -> UI: 1. tapConfirmOrder(orderId, stationId, elapsedSeconds)
+activate UI
+UI -> Ctrl: 1.1 ConfirmOrder(orderId, stationId, elapsedSeconds)
+activate Ctrl
+
+Ctrl -> OrderDAO: 1.2 FindById(orderId)
+activate OrderDAO
+OrderDAO -> DB: 1.3 SELECT * FROM orders WHERE order_id = ?
+activate DB
+DB --> OrderDAO: orderRow
+deactivate DB
+OrderDAO --> Ctrl: order: Order
+deactivate OrderDAO
+
+Ctrl -> HubDAO: 1.4 FindById(order.HubId)
+activate HubDAO
+HubDAO -> DB: 1.5 SELECT * FROM hubs WHERE hub_id = ?
+activate DB
+DB --> HubDAO: hubRow
+deactivate DB
+HubDAO --> Ctrl: hub: Hub
+deactivate HubDAO
+
+Ctrl -> Hub: 1.6 IsOverloaded() [check >= 85% load]
+activate Hub
+Hub --> Ctrl: isBusy
+deactivate Hub
+
+Ctrl -> OrderDAO: 1.7 UpdateStatus(orderId, "Confirmed")
+activate OrderDAO
+OrderDAO -> Ord: 1.8 UpdateStatus("Confirmed") [IsLocked = true]
+OrderDAO -> DB: 1.9 UPDATE orders SET order_status = 'Confirmed' WHERE order_id = ?
+activate DB
+DB --> OrderDAO: ok
+deactivate DB
+deactivate OrderDAO
+
+Ctrl -> Ticket: 1.10 new KitchenTicket(ticketId, orderId, stationId, "COOKING")
+Ctrl -> TicketDAO: 1.11 Save(ticket)
+activate TicketDAO
+TicketDAO -> DB: 1.12 INSERT INTO kitchen_tickets (...) VALUES (...)
+activate DB
+DB --> TicketDAO: ok
+deactivate DB
+deactivate TicketDAO
+
+Ctrl -> AuditDAO: 1.13 RecordAuditEntry(orderId, "KitchenStaff", "ORDER_CONFIRMED_AND_LOCKED")
+activate AuditDAO
+AuditDAO -> DB: 1.14 INSERT INTO audit_logs (...) VALUES (...)
+activate DB
+DB --> AuditDAO: ok
+deactivate DB
+deactivate AuditDAO
+
+Ctrl --> UI: true
+deactivate Ctrl
+UI --> Staff: 1.15 DisplayOrderConfirmation(orderId, true, true)
+deactivate UI
+
+else Reject Order or 120s SLA Timeout
+Staff -> UI: 2. tapRejectOrder(orderId, reason)
+activate UI
+UI -> Ctrl: 2.1 RejectOrder(orderId, reason)
+activate Ctrl
+
+Ctrl -> OrderDAO: 2.2 UpdateStatus(orderId, "Cancelled", reason)
+activate OrderDAO
+OrderDAO -> Ord: 2.3 UpdateStatus("Cancelled", reason)
+OrderDAO -> DB: 2.4 UPDATE orders SET order_status = 'Cancelled' WHERE order_id = ?
+activate DB
+DB --> OrderDAO: ok
+deactivate DB
+deactivate OrderDAO
+
+Ctrl -> AuditDAO: 2.5 RecordAuditEntry(orderId, "KitchenStaff", "ORDER_REJECTED_REFUND_TRIGGERED")
+activate AuditDAO
+AuditDAO -> DB: 2.6 INSERT INTO audit_logs (...) VALUES (...)
+activate DB
+DB --> AuditDAO: ok
+deactivate DB
+deactivate AuditDAO
+
+Ctrl --> UI: true
+deactivate Ctrl
+UI --> Staff: 2.7 DisplayOrderRejection(orderId, reason, true)
+deactivate UI
+end
+
+@enduml
