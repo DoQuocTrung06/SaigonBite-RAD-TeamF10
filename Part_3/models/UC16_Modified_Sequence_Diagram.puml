@@ -1,0 +1,88 @@
+@startuml
+skinparam style strictuml
+skinparam monochrome true
+skinparam shadowing false
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName Arial
+skinparam defaultFontSize 10
+skinparam roundcorner 0
+skinparam dpi 150
+hide footbox
+
+skinparam SequenceLifeLineBorderColor #000000
+skinparam SequenceLifeLineBackgroundColor #FFFFFF
+skinparam ParticipantBackgroundColor #FFFFFF
+skinparam ParticipantBorderColor #000000
+skinparam ParticipantBorderThickness 1.2
+skinparam ParticipantFontColor #000000
+skinparam ParticipantFontSize 9
+skinparam ActorBackgroundColor #FFFFFF
+skinparam ActorBorderColor #000000
+skinparam ActorFontColor #000000
+skinparam ArrowColor #000000
+skinparam ArrowThickness 1.1
+skinparam ArrowFontColor #000000
+skinparam ArrowFontSize 9
+
+right header 524H0136
+
+actor "Hub Manager" as Mgr
+participant "<<view>>\n__:ReportConsoleUI__" as UI
+participant "<<controller>>\n__:ReportController__" as Ctrl
+participant "__aR:ManagementReport__" as Rep
+participant "<<dataAccess>>\n__:OrderDAO__" as OrderDAO
+participant "<<dataAccess>>\n__:DeliveryTaskDAO__" as TaskDAO
+participant "<<dataAccess>>\n__:ReportDAO__" as RepDAO
+participant "<<dataAccess>>\n__:AuditLogDAO__" as AuditDAO
+
+Mgr -> UI: onGenerateReportClicked(hubId, startDate, endDate)
+activate UI
+UI -> Ctrl: generateReport(hubId, startDate, endDate)
+activate Ctrl
+
+Ctrl -> OrderDAO: getOrdersByHubAndDate(hubId, startDate, endDate)
+activate OrderDAO
+OrderDAO --> Ctrl: orderList
+deactivate OrderDAO
+
+Ctrl -> TaskDAO: getTasksByHubAndDate(hubId, startDate, endDate)
+activate TaskDAO
+TaskDAO --> Ctrl: deliveryTaskList
+deactivate TaskDAO
+
+Ctrl -> Rep ** : create(reportId, hubId, startDate, endDate)
+Ctrl -> Rep: calculateKPIs(orderList, deliveryTaskList)
+activate Rep
+Rep --> Ctrl: kpiSummary (totalOrders, grossRevenue, slaRate)
+deactivate Rep
+
+Ctrl -> RepDAO: saveReport(aR)
+activate RepDAO
+RepDAO --> Ctrl: reportSaved
+deactivate RepDAO
+
+Ctrl -> AuditDAO: recordAuditEntry(reportId, "HubManager", "GENERATE_MANAGEMENT_REPORT")
+activate AuditDAO
+AuditDAO --> Ctrl: logged
+deactivate AuditDAO
+
+Ctrl --> UI: aR (kpiSummary)
+deactivate Ctrl
+UI --> Mgr: displayDashboard(reportSummary)
+deactivate UI
+
+opt Export Report to PDF
+  Mgr -> UI: onExportPDFClicked(reportId)
+  activate UI
+  UI -> Ctrl: exportToPDF(reportId)
+  activate Ctrl
+  Ctrl -> AuditDAO: recordAuditEntry(reportId, "HubManager", "EXPORT_REPORT_PDF")
+  activate AuditDAO
+  AuditDAO --> Ctrl: logged
+  deactivate AuditDAO
+  Ctrl --> UI: pdfFilePath
+  deactivate Ctrl
+  UI --> Mgr: downloadLink(pdfFilePath)
+  deactivate UI
+end
+@enduml

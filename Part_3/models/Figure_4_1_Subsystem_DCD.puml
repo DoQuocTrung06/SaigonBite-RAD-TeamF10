@@ -61,6 +61,19 @@ class DeliveryController <<controller>> {
   +recordDeliveryFailure(orderId, reason, photoUrl): boolean
 }
 
+class VoucherController <<controller>> {
+  --
+  +createVoucher(code, pct, maxD, minO, start, end, quota): boolean
+  +updateVoucherQuota(code, newQuota): boolean
+  +archiveVoucher(code): boolean
+}
+
+class ReportController <<controller>> {
+  --
+  +generateReport(hubId, startDate, endDate): ManagementReport
+  +exportToPDF(reportId): string
+}
+
 class Brand {
   -brandId: string {key}
   -brandName: string
@@ -206,6 +219,18 @@ class DeliveryTask {
   +markFailed(reason, photoUrl): void
 }
 
+class ManagementReport {
+  -reportId: string {key}
+  -hubId: string
+  -reportType: string
+  -startDate: date
+  -endDate: date
+  -totalRevenue: currency
+  -totalOrders: int
+  --
+  +calculateKPIs(orders, tasks): void
+}
+
 BrandCatalogHandler --> Brand
 BrandCatalogHandler --> Hub
 Brand --> Hub
@@ -222,6 +247,10 @@ KitchenController --> Order
 KitchenController --> KitchenTicket
 DeliveryController --> DeliveryTask
 DeliveryController --> Order
+VoucherController --> Voucher
+ReportController --> ManagementReport
+ReportController --> Order
+Hub --> ManagementReport
 
 Order --> Voucher
 Order --> Payment

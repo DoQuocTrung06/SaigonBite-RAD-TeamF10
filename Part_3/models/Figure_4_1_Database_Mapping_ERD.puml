@@ -149,6 +149,16 @@ class "payments" as payments <<Table>> {
   authorization_code : VARCHAR(100)
 }
 
+class "shippers" as shippers <<Table>> {
+  + shipper_id : VARCHAR(20) {PK}
+  --
+  full_name : VARCHAR(100)
+  phone_number : VARCHAR(15)
+  vehicle_plate : VARCHAR(20)
+  current_status : VARCHAR(20)
+  wallet_balance : DECIMAL(12,2)
+}
+
 class "delivery_tasks" as tasks <<Table>> {
   + task_id : VARCHAR(20) {PK}
   --
@@ -170,6 +180,17 @@ class "management_reports" as reports <<Table>> {
   total_orders : INT
 }
 
+class "audit_logs" as audit_logs <<Table>> {
+  + log_id : INT {PK}
+  --
+  action_name : VARCHAR(100)
+  entity_name : VARCHAR(50)
+  entity_id : VARCHAR(50)
+  performed_by : VARCHAR(50)
+  details : TEXT
+  timestamp : TIMESTAMP
+}
+
 hubs "1" -up- "0..*" reports
 hubs "1" *-- "1..*" stations
 hubs "1" -left- "0..*" brand_hubs
@@ -185,6 +206,7 @@ hubs "1" -down- "0..*" orders
 
 orders "1" -left- "1" payments
 orders "1" -right- "0..1" tasks
+shippers "1" -left- "0..*" tasks
 orders "1" -down- "1..*" lines
 orders "1" -down- "1..*" tickets
 lines "*" -left- "1" items
