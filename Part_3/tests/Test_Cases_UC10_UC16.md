@@ -5,7 +5,7 @@
 
 ---
 
-## 1. Nguyên Tắc Thiết Kế Test Cases (Theo Rubric Tiêu Chí 4)
+## 1. Nguyên Tắc Thiết Kế Test Cases
 
 Các Test Cases dưới đây được **sinh trực tiếp từ các Post-conditions** trong bản đặc tả Use Case (Section 2.2):
 - **UC10 (Deliver an order):**

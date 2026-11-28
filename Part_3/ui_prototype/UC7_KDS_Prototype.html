@@ -88,8 +88,8 @@
 <body>
   <div class="topbar">
     <div class="brand">
-      <div class="brand-title">SAIGONBITE KDS CONSOLE — KITCHEN ORDER DISPATCH (UC7)</div>
-      <div class="brand-sub">Hub H01: District 1 Central Kitchen | Author: Do Quoc Trung (524H0132)</div>
+      <div class="brand-title">SAIGONBITE KITCHEN DISPLAY SYSTEM (KDS)</div>
+      <div class="brand-sub">Hub H01: District 1 Central Kitchen</div>
     </div>
     <div class="top-controls">
       <span id="liveClock" class="clock">00:00:00</span>
@@ -119,15 +119,15 @@
         <button id="tab-Ready_for_Pickup" type="button" class="tab" onclick="setFilter('Ready_for_Pickup', this)">Ready for Pickup (0)</button>
         <button id="tab-Cancelled" type="button" class="tab" onclick="setFilter('Cancelled', this)">Cancelled (0)</button>
       </div>
-      <div style="font-size: 12px; color: #64748b;">2-Tap Touchscreen Interface (NFR4) | 120s Confirmation SLA</div>
+      <div style="font-size: 12px; color: #64748b;">Touchscreen Station Monitor | 120s Confirmation SLA</div>
     </div>
 
     <div id="ordersGrid" class="tickets-grid"></div>
 
     <div class="audit-panel">
       <div class="audit-header">
-        <span>Kitchen Activity &amp; Audit Trail (NFR5 &lt; 1s)</span>
-        <span style="font-weight: 400; color: #64748b;">Synced with saigonbite_db.audit_logs</span>
+        <span>Kitchen Activity &amp; Audit Log</span>
+        <span style="font-weight: 400; color: #64748b;">Real-Time Station Event Log</span>
       </div>
       <ul id="auditLog"></ul>
     </div>
@@ -157,10 +157,10 @@
     const initialOrders = () => ([
       {
         orderId: "ORD-001",
-        customer: "Nguyen Minh Anh (LocalCustomer)",
+        customer: "Nguyen Minh Anh",
         phoneOrId: "+84 901 234 567",
         address: "45 Le Loi, District 1, HCMC",
-        distance: "3.2 km (<= 7.0 km)",
+        distance: "3.2 km",
         payment: "Card (Paid) — 187,500 VND",
         items: [
           { qty: 1, name: "Pho Bo Dac Biet (BR-01)", station: "ST-H01-GRILL" },
@@ -175,10 +175,10 @@
       },
       {
         orderId: "ORD-002",
-        customer: "John Miller (ForeignTourist)",
+        customer: "John Miller",
         phoneOrId: "Passport US8942105",
         address: "Rex Hotel, 141 Nguyen Hue, D1",
-        distance: "1.5 km (<= 7.0 km)",
+        distance: "1.5 km",
         payment: "COD (Pending) — 165,000 VND",
         items: [
           { qty: 1, name: "Pho Bo Dac Biet (BR-01)", station: "ST-H01-GRILL" },
@@ -192,10 +192,10 @@
       },
       {
         orderId: "ORD-003",
-        customer: "Tran Thu Ha (LocalCustomer)",
+        customer: "Tran Thu Ha",
         phoneOrId: "+84 938 776 543",
         address: "88 Pasteur, District 1, HCMC",
-        distance: "2.1 km (<= 7.0 km)",
+        distance: "2.1 km",
         payment: "MoMo (Paid) — 100,000 VND",
         items: [
           { qty: 1, name: "Spicy Chicken Kimbap (BR-02)", station: "ST-H01-GRILL" },
@@ -209,10 +209,10 @@
       },
       {
         orderId: "ORD-004",
-        customer: "Elena Rostova (ForeignTourist)",
+        customer: "Elena Rostova",
         phoneOrId: "Passport RU4412098",
         address: "Caravelle Hotel, 19 Lam Son, D1",
-        distance: "1.8 km (<= 7.0 km)",
+        distance: "1.8 km",
         payment: "Card (Paid) — 205,000 VND",
         items: [
           { qty: 2, name: "Pho Bo Dac Biet (BR-01)", station: "ST-H01-GRILL" },
@@ -383,7 +383,7 @@
               <div class="meta-item"><strong>Customer</strong>${o.customer}<br/>${o.phoneOrId}</div>
               <div class="meta-item"><strong>Delivery Radius</strong>${o.address}<br/>${o.distance}</div>
               <div class="meta-item"><strong>Payment</strong>${o.payment}</div>
-              <div class="meta-item"><strong>Address &amp; Items Lock</strong>${o.locked ? "LOCKED (FR7/FR8)" : "Unlocked"}</div>
+              <div class="meta-item"><strong>Address &amp; Items Lock</strong>${o.locked ? "LOCKED" : "Unlocked"}</div>
             </div>
             <table class="items-table">
               <thead><tr><th>Qty</th><th>Dish</th><th>Station</th></tr></thead>

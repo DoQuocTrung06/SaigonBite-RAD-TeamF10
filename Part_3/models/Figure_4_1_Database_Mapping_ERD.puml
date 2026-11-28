@@ -1,0 +1,192 @@
+@startuml
+skinparam monochrome true
+skinparam shadowing false
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName Arial
+skinparam defaultFontSize 10
+skinparam classFontSize 11
+skinparam classFontStyle bold
+skinparam classAttributeIconSize 0
+skinparam roundCorner 0
+skinparam dpi 155
+skinparam nodesep 55
+skinparam ranksep 50
+hide circle
+hide empty methods
+
+right header 524H0132, 524H0031, 524H0136
+
+class "hubs" as hubs <<Table>> {
+  + hub_id : VARCHAR(20) {PK}
+  --
+  hub_name : VARCHAR(100)
+  address : VARCHAR(255)
+  latitude : DECIMAL(10,7)
+  longitude : DECIMAL(10,7)
+  max_capacity_orders : INT
+  hub_status : VARCHAR(20)
+  is_busy : BOOLEAN
+}
+
+class "kitchen_stations" as stations <<Table>> {
+  + station_id : VARCHAR(20) {PK}
+  --
+  # hub_id : VARCHAR(20) {FK}
+  station_name : VARCHAR(100)
+  station_type : VARCHAR(50)
+  current_load_orders : INT
+  capacity_limit : INT
+}
+
+class "brands" as brands <<Table>> {
+  + brand_id : VARCHAR(20) {PK}
+  --
+  brand_name : VARCHAR(100) {UQ}
+  cuisine_type : VARCHAR(50)
+  status : VARCHAR(20)
+}
+
+class "brand_hubs" as brand_hubs <<Table>> {
+  + brand_id : VARCHAR(20) {PK,FK}
+  + hub_id : VARCHAR(20) {PK,FK}
+  --
+  assigned_at : TIMESTAMP
+}
+
+class "menu_items" as items <<Table>> {
+  + item_id : VARCHAR(20) {PK}
+  --
+  # brand_id : VARCHAR(20) {FK}
+  item_name_vi : VARCHAR(150)
+  item_name_en : VARCHAR(150)
+  description : TEXT
+  unit_price : DECIMAL(12,2)
+  station_type : VARCHAR(50)
+  status : VARCHAR(20)
+}
+
+class "customers" as customers <<Table>> {
+  + customer_id : VARCHAR(20) {PK}
+  --
+  full_name : VARCHAR(100)
+  customer_type : VARCHAR(20)
+  date_registered : TIMESTAMP
+}
+
+class "local_customers" as local_c <<Table>> {
+  + customer_id : VARCHAR(20) {PK,FK}
+  --
+  phone_number : VARCHAR(15) {UQ}
+}
+
+class "foreign_tourists" as foreign_c <<Table>> {
+  + customer_id : VARCHAR(20) {PK,FK}
+  --
+  passport_number : VARCHAR(30) {UQ}
+  email_address : VARCHAR(100)
+  preferred_language : VARCHAR(10)
+}
+
+class "vouchers" as vouchers <<Table>> {
+  + voucher_code : VARCHAR(30) {PK}
+  --
+  discount_percent : DECIMAL(5,2)
+  max_discount_amount : DECIMAL(12,2)
+  min_order_amount : DECIMAL(12,2)
+  start_date : TIMESTAMP
+  end_date : TIMESTAMP
+  usage_quota : INT
+  used_count : INT
+  status : VARCHAR(20)
+}
+
+class "orders" as orders <<Table>> {
+  + order_id : VARCHAR(20) {PK}
+  --
+  # customer_id : VARCHAR(20) {FK}
+  # hub_id : VARCHAR(20) {FK}
+  # voucher_code : VARCHAR(30) {FK}
+  order_date_time : TIMESTAMP
+  order_status : VARCHAR(30)
+  delivery_address : VARCHAR(255)
+  is_address_locked : BOOLEAN
+  distance_km : DECIMAL(6,2)
+  subtotal : DECIMAL(12,2)
+  delivery_fee : DECIMAL(12,2)
+  discount_amount : DECIMAL(12,2)
+  final_total : DECIMAL(12,2)
+  payment_method : VARCHAR(30)
+}
+
+class "order_lines" as lines <<Table>> {
+  + order_line_id : VARCHAR(20) {PK}
+  --
+  # order_id : VARCHAR(20) {FK}
+  # item_id : VARCHAR(20) {FK}
+  quantity : INT
+  item_price : DECIMAL(12,2)
+  line_total : DECIMAL(12,2)
+  special_notes : VARCHAR(255)
+}
+
+class "kitchen_tickets" as tickets <<Table>> {
+  + ticket_id : VARCHAR(20) {PK}
+  --
+  # order_id : VARCHAR(20) {FK}
+  # station_id : VARCHAR(20) {FK}
+  station_type : VARCHAR(50)
+  status : VARCHAR(20)
+  printed_time : TIMESTAMP
+}
+
+class "payments" as payments <<Table>> {
+  + payment_id : VARCHAR(20) {PK}
+  --
+  # order_id : VARCHAR(20) {FK,UQ}
+  payment_method : VARCHAR(30)
+  payment_amount : DECIMAL(12,2)
+  payment_status : VARCHAR(20)
+  authorization_code : VARCHAR(100)
+}
+
+class "delivery_tasks" as tasks <<Table>> {
+  + task_id : VARCHAR(20) {PK}
+  --
+  # order_id : VARCHAR(20) {FK,UQ}
+  # shipper_id : VARCHAR(20) {FK}
+  delivery_status : VARCHAR(30)
+  cash_collected : DECIMAL(12,2)
+  failure_reason : VARCHAR(255)
+}
+
+class "management_reports" as reports <<Table>> {
+  + report_id : VARCHAR(20) {PK}
+  --
+  # hub_id : VARCHAR(20) {FK}
+  report_type : VARCHAR(50)
+  start_date : DATE
+  end_date : DATE
+  total_revenue : DECIMAL(14,2)
+  total_orders : INT
+}
+
+hubs "1" -up- "0..*" reports
+hubs "1" *-- "1..*" stations
+hubs "1" -left- "0..*" brand_hubs
+brands "1" -right- "0..*" brand_hubs
+brands "1" -down- "1..*" items
+
+customers "1" -up- "0..1" local_c
+customers "1" -right- "0..1" foreign_c
+customers "1" -left- "0..*" orders
+
+vouchers "0..1" -down- "0..*" orders
+hubs "1" -down- "0..*" orders
+
+orders "1" -left- "1" payments
+orders "1" -right- "0..1" tasks
+orders "1" -down- "1..*" lines
+orders "1" -down- "1..*" tickets
+lines "*" -left- "1" items
+tickets "0..*" -right- "1" stations
+@enduml

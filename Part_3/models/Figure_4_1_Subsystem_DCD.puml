@@ -1,0 +1,232 @@
+@startuml
+skinparam monochrome true
+skinparam shadowing false
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName Arial
+skinparam defaultFontSize 10
+skinparam roundcorner 0
+skinparam dpi 105
+skinparam classAttributeIconSize 0
+skinparam nodesep 24
+skinparam ranksep 28
+
+skinparam ClassBackgroundColor #FFFFFF
+skinparam ClassBorderColor #000000
+skinparam ClassBorderThickness 1.2
+skinparam ClassFontColor #000000
+skinparam ClassFontSize 11
+skinparam ClassFontStyle bold
+skinparam ClassAttributeFontColor #000000
+skinparam ClassAttributeFontSize 10
+skinparam ClassStereotypeFontColor #000000
+skinparam ClassStereotypeFontSize 9
+skinparam ArrowColor #000000
+skinparam ArrowThickness 1.1
+skinparam dpi 145
+skinparam nodesep 34
+skinparam ranksep 38
+
+hide circle
+top to bottom direction
+right header 524H0031, 524H0132, 524H0136
+
+class BrandCatalogHandler <<controller>> {
+  --
+  +openBrandCatalog(): List
+  +selectBrand(brandId): Brand
+  +saveBrandDetails(brandName, cuisineType, assignedHubs): string
+  +saveMenuItem(itemCode, nameVi, nameEn, unitPrice, stationType): string
+  +discontinueMenuItem(itemCode): string
+}
+
+class OrderHandler <<controller>> {
+  --
+  +requestCheckout(basketItems): string
+  +enterDeliveryAddress(deliveryAddress): string
+  +applyVoucher(voucherCode): currency
+  +authorizeOnlinePayment(paymentDetails): string
+  +submitOrder(paymentMethod): Order
+}
+
+class KitchenController <<controller>> {
+  --
+  +confirmOrder(orderId, stationId, elapsedSeconds): boolean
+  +rejectOrder(orderId, reason): boolean
+}
+
+class DeliveryController <<controller>> {
+  --
+  +processPickupScan(orderId, qrCode): boolean
+  +recordDeliverySuccess(orderId, codAmount, photoUrl): boolean
+  +recordDeliveryFailure(orderId, reason, photoUrl): boolean
+}
+
+class Brand {
+  -brandId: string {key}
+  -brandName: string
+  -cuisineType: string
+  -status: string
+  --
+  +getAllBrands(): List
+  +getBrandCatalog(brandId): Brand
+  +saveBrandProfile(brandName, cuisineType, assignedHubs): string
+  +saveBrandMenuItem(itemCode, nameVi, nameEn, unitPrice, stationType): string
+  +discontinueBrandItem(itemCode): string
+}
+
+class MenuItem {
+  -itemId: string {key}
+  -itemNameVi: string
+  -itemNameEn: string
+  -description: string
+  -unitPrice: currency
+  -stationType: string
+  -status: string
+  --
+  +getBrandMenuItems(brandId): List
+  +publishMenuItem(itemCode, nameVi, nameEn, unitPrice, stationType): MenuItem
+  +discontinueItem(itemCode): boolean
+  +checkAvailability(): boolean
+}
+
+class Hub {
+  -hubId: string {key}
+  -hubName: string
+  -address: string
+  -latitude: decimal
+  -longitude: decimal
+  -maxCapacityOrders: int
+  -hubStatus: string
+  --
+  +getActiveHubs(): List
+  +getAvailableStations(brandId): List
+  +verifyStationSupport(stationType): boolean
+  +verifyHubCapacity(basketItems): boolean
+  +calculateDistance(deliveryAddress): decimal
+  +checkQuietKitchenDiscount(): boolean
+}
+
+class KitchenStation {
+  -stationId: string {key}
+  -stationName: string
+  -stationType: string
+  -currentLoad: int
+  -capacityLimit: int
+  --
+  +checkStationType(stationType): boolean
+}
+
+class Customer {
+  -customerId: string {key}
+  -fullName: string
+  -phoneNumber: string
+  -emailAddress: string
+  -dateRegistered: date
+  --
+}
+
+class Order {
+  -orderId: string {key}
+  -orderDateTime: date
+  -orderStatus: string
+  -deliveryAddress: string
+  -distanceKm: decimal
+  -subtotal: currency
+  -deliveryFee: currency
+  -discountAmount: currency
+  -finalTotal: currency
+  -paymentMethod: string
+  --
+  +addOrderLine(item, qty, notes): OrderLine
+  +calculateSubtotal(): currency
+  +calculateDeliveryAndTotal(address, distanceKm, quietEligible): currency
+  +applyVoucherDiscount(voucherCode): currency
+  +authorizePayment(paymentDetails): string
+  +completeOrder(paymentMethod): string
+  +updateStatus(newStatus, reason): void
+}
+
+class OrderLine {
+  -quantity: int
+  -itemPrice: currency
+  -lineTotal: currency
+  -specialNotes: string
+  --
+  +calculateLineTotal(item, qty): currency
+}
+
+class Voucher {
+  -voucherCode: string {key}
+  -discountPercent: decimal
+  -maxDiscountAmount: currency
+  -minOrderAmount: currency
+  -startDate: date
+  -endDate: date
+  -usageQuota: int
+  -status: string
+  --
+  +calculateDiscount(voucherCode, subtotal): currency
+  +redeemVoucher(): void
+}
+
+class Payment {
+  -paymentId: string {key}
+  -paymentMethod: string
+  -paymentAmount: currency
+  -paymentStatus: string
+  -authorizationCode: string
+  -paymentDateTime: date
+  --
+  +authorizeOnlinePayment(paymentDetails, amount): string
+  +recordPayment(paymentMethod, amount): Payment
+  +confirmCODPayment(collectedAmount): boolean
+}
+
+class KitchenTicket {
+  -ticketId: string {key}
+  -stationType: string
+  -status: string
+  -printedTime: date
+  -completedTime: date
+  --
+  +createStationTicket(stationType): KitchenTicket
+}
+
+class DeliveryTask {
+  -taskId: string {key}
+  -shipperId: string
+  -pickupTime: date
+  -deliveredTime: date
+  -deliveryStatus: string
+  -cashCollected: currency
+  -failureReason: string
+  --
+  +updatePickupStatus(timestamp): void
+  +completeDelivery(codAmount, photoUrl): void
+  +markFailed(reason, photoUrl): void
+}
+
+BrandCatalogHandler --> Brand
+BrandCatalogHandler --> Hub
+Brand --> Hub
+Brand --> MenuItem
+Hub --> KitchenStation
+
+OrderHandler --> Customer
+OrderHandler --> Hub
+OrderHandler --> Order
+Customer --> Order
+Hub --> Order
+
+KitchenController --> Order
+KitchenController --> KitchenTicket
+DeliveryController --> DeliveryTask
+DeliveryController --> Order
+
+Order --> Voucher
+Order --> Payment
+Order --> OrderLine
+Order --> KitchenTicket
+Order --> DeliveryTask
+OrderLine --> MenuItem
+@enduml

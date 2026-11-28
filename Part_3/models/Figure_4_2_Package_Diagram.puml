@@ -1,242 +1,101 @@
-@startuml Figure_4_2_Package_Diagram
-skinparam backgroundColor #FFFFFF
-skinparam handwritten false
+@startuml
 skinparam monochrome true
 skinparam shadowing false
-skinparam defaultFontName "Calibri"
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName Arial
 skinparam defaultFontSize 11
-skinparam defaultFontColor #000000
-skinparam linetype ortho
-skinparam roundCorner 0
+skinparam roundcorner 0
+skinparam dpi 160
+skinparam PackageStyle folder
+skinparam nodesep 36
+skinparam ranksep 52
+
+skinparam ClassBackgroundColor #FFFFFF
+skinparam ClassBorderColor #000000
+skinparam ClassBorderThickness 1.2
+skinparam ClassFontColor #000000
+skinparam ClassFontSize 11
+skinparam ClassFontStyle bold
+
+skinparam PackageBackgroundColor #FFFFFF
+skinparam PackageBorderColor #000000
+skinparam PackageBorderThickness 1.4
+skinparam PackageFontColor #000000
+skinparam PackageFontSize 12
+skinparam PackageFontStyle bold
+
+skinparam ArrowColor #000000
+skinparam ArrowThickness 1.2
+
 hide circle
+hide members
+top to bottom direction
+right header 524H0136, 524H0031, 524H0132
 
-package "View Layer (Presentation)" as ViewPkg {
-  class CheckoutWindow {
-    +displayMenuAndHub()
-    +inputDeliveryAddress()
-    +selectPaymentMethod()
-    +onPlaceOrderClicked()
-  }
-  class BrandCatalogWindow {
-    +displayBrandList()
-    +onEditMenuItemClicked()
-    +onAssignStationClicked()
-  }
-  class KDSConsoleUI {
-    +displayIncomingTickets()
-    +startCountdownTimer()
-    +onConfirmOrderClicked()
-    +onRejectOrderClicked()
-  }
-  class VoucherConsoleUI {
-    +renderVoucherForm()
-    +onSaveVoucherClicked()
-  }
-  class ShipperMobileUI {
-    +displayAssignedTrip(tripDetails)
-    +onScanPickupQRClicked()
-    +onConfirmDeliveryClicked()
-    +onReportFailureClicked()
-  }
-  class ReportConsoleUI {
-    +renderFilterForm(hubs, presets)
-    +displayDashboard(reportSummary)
-    +onGenerateReportClicked()
-    +onExportPDFClicked()
-  }
+package "View Layer" as ViewLayer {
+  class CheckoutWindow
+  class BrandCatalogWindow
+  class VoucherConsoleUI
+  class KDSConsoleUI
+  class ShipperMobileUI
+  class ReportConsoleUI
 }
 
-package "Controller Layer (Application Logic)" as ControllerPkg {
-  class OrderHandler {
-    +calculateDeliveryFee(distanceKm)
-    +validateVoucher(code, amount)
-    +processCheckout(orderData)
-  }
-  class BrandCatalogHandler {
-    +updateMenuItem(itemData)
-    +assignKitchenStation(itemId, stationId)
-  }
-  class KitchenController {
-    +confirmOrder(orderId)
-    +rejectOrder(orderId, reason)
-  }
-  class VoucherController {
-    +createVoucher(voucherData)
-    +validateQuota(code)
-  }
-  class DeliveryController {
-    +processPickupScan(orderId, qrCode): Boolean
-    +recordDeliverySuccess(orderId, codAmount, photoUrl): Boolean
-    +recordDeliveryFailure(orderId, reason, photoUrl): Boolean
-  }
-  class ReportController {
-    +generateReport(hubId, startDate, endDate): ManagementReport
-    +exportToPDF(reportId): String
-  }
+package "Domain Layer" as DomainLayer {
+  class OrderHandler <<controller>>
+  class BrandCatalogHandler <<controller>>
+  class VoucherController <<controller>>
+  class KitchenController <<controller>>
+  class DeliveryController <<controller>>
+  class ReportController <<controller>>
+
+  class Customer
+  class LocalCustomer
+  class ForeignTourist
+  class Hub
+  class KitchenStation
+  class Brand
+  class MenuItem
+  class Order
+  class OrderLine
+  class Voucher
+  class Payment
+  class KitchenTicket
+  class Shipper
+  class DeliveryTask
+  class ManagementReport
+
+  OrderHandler -[hidden]down-> Customer
+  BrandCatalogHandler -[hidden]down-> Brand
+  VoucherController -[hidden]down-> Voucher
+  KitchenController -[hidden]down-> Hub
+  DeliveryController -[hidden]down-> DeliveryTask
+  ReportController -[hidden]down-> ManagementReport
+
+  Customer -[hidden]down-> LocalCustomer
+  LocalCustomer -[hidden]right-> ForeignTourist
+  Brand -[hidden]down-> MenuItem
+  Hub -[hidden]down-> KitchenStation
+  Voucher -[hidden]down-> Order
+  Order -[hidden]right-> OrderLine
+  DeliveryTask -[hidden]down-> Payment
+  ManagementReport -[hidden]down-> KitchenTicket
+  KitchenTicket -[hidden]right-> Shipper
 }
 
-package "Domain Layer (Business Entities)" as DomainPkg {
-  class Customer {
-    -customerId: String
-    -fullName: String
-    -customerType: String
-  }
-  class LocalCustomer {
-    -phoneNumber: String
-  }
-  class ForeignTourist {
-    -passportNumber: String
-    -emailAddress: String
-    -preferredLanguage: String
-  }
-  Customer <|-- LocalCustomer
-  Customer <|-- ForeignTourist
-
-  class Hub {
-    -hubId: String
-    -hubName: String
-    -address: String
-    -latitude: Decimal
-    -longitude: Decimal
-    +getActiveStationCount(): Integer
-  }
-  class KitchenStation {
-    -stationId: String
-    -stationName: String
-    -stationType: String
-  }
-  class Brand {
-    -brandId: String
-    -brandName: String
-    -cuisineType: String
-  }
-  class MenuItem {
-    -itemId: String
-    -itemName: String
-    -unitPrice: Decimal
-    -isAvailable: Boolean
-  }
-  class Order {
-    -orderId: String
-    -orderStatus: String
-    -subtotal: Decimal
-    -deliveryFee: Decimal
-    -finalTotal: Decimal
-    -paymentMethod: String
-    +updateStatus(newStatus: String)
-  }
-  class OrderLine {
-    -orderLineId: String
-    -quantity: Integer
-    -unitPrice: Decimal
-  }
-  class KitchenTicket {
-    -ticketId: String
-    -ticketStatus: String
-    -estimatedCookTime: Integer
-  }
-  class Voucher {
-    -voucherCode: String
-    -discountPercent: Decimal
-    -usageLimit: Integer
-    -usedCount: Integer
-  }
-  class Shipper {
-    -shipperId: String
-    -fullName: String
-    -walletBalance: Decimal
-    +creditWallet(amount: Decimal)
-  }
-  class DeliveryTask {
-    -taskId: String
-    -orderId: String
-    -deliveryStatus: String
-    -cashCollected: Decimal
-    -failureReason: String
-    +updatePickupStatus(timestamp: DateTime)
-    +completeDelivery(cod: Decimal, photo: String)
-    +markFailed(reason: String, photo: String)
-  }
-  class Payment {
-    -paymentId: String
-    -paymentAmount: Decimal
-    -paymentStatus: String
-    +confirmCODPayment(collectedAmount: Decimal)
-  }
-  class ManagementReport {
-    -reportId: String
-    -reportPeriod: String
-    -totalRevenue: Decimal
-    -totalOrders: Integer
-    +calculateKPIs(orders, tasks)
-    +getSummarySnapshot(): ReportSummary
-  }
+package "Data Access Layer" as DALayer {
+  class OrderDA
+  class BrandDA
+  class MenuItemDA
+  class HubDA
+  class VoucherDA
+  class PaymentDA
+  class KitchenTicketDAO
+  class DeliveryTaskDAO
+  class ReportDAO
+  class AuditLogDAO
 }
 
-package "Data Access Layer (Persistence & DAO)" as DataAccessPkg {
-  class OrderDA {
-    +createOrder(order): Boolean
-    +updateOrderStatus(orderId, status): Boolean
-  }
-  class HubDA {
-    +getHubById(hubId): Hub
-  }
-  class VoucherDA {
-    +findByCode(code): Voucher
-    +incrementUsage(code): Boolean
-  }
-  class MenuItemDA {
-    +getAvailableItemsByHub(hubId): List<MenuItem>
-  }
-  class BrandDA {
-    +updateBrand(brand): Boolean
-  }
-  class KitchenTicketDAO {
-    +createTicket(ticket): Boolean
-    +updateTicketStatus(ticketId, status): Boolean
-  }
-  class DeliveryTaskDAO {
-    +findByOrderId(orderId): DeliveryTask
-    +update(task): Boolean
-  }
-  class OrderDAO {
-    +findById(orderId): Order
-    +updateStatus(orderId, status): Boolean
-    +getOrdersByHubAndDate(hubId, start, end): List<Order>
-  }
-  class AuditLogDAO {
-    +recordAuditEntry(orderId, actor, action): Boolean
-  }
-  class ReportDAO {
-    +saveReport(report): Boolean
-    +findReportById(reportId): ManagementReport
-  }
-}
-
-package "Relational Database (Schema & Tables)" as DBPkg <<Database>> {
-  entity "hubs" as tbl_hubs
-  entity "kitchen_stations" as tbl_kitchen_stations
-  entity "brands" as tbl_brands
-  entity "menu_items" as tbl_menu_items
-  entity "customers" as tbl_customers
-  entity "local_customers" as tbl_local_customers
-  entity "foreign_tourists" as tbl_foreign_tourists
-  entity "vouchers" as tbl_vouchers
-  entity "shippers" as tbl_shippers
-  entity "orders" as tbl_orders
-  entity "order_lines" as tbl_order_lines
-  entity "kitchen_tickets" as tbl_kitchen_tickets
-  entity "delivery_tasks" as tbl_delivery_tasks
-  entity "payments" as tbl_payments
-  entity "management_reports" as tbl_reports
-  entity "audit_logs" as tbl_audit_logs
-}
-
-' Inter-package dependencies
-ViewPkg ..> ControllerPkg : <<uses>>
-ControllerPkg ..> DomainPkg : <<coordinates>>
-ControllerPkg ..> DataAccessPkg : <<delegates queries>>
-DataAccessPkg ..> DomainPkg : <<maps entities>>
-DataAccessPkg ..> DBPkg : <<executes SQL>>
-
+ViewLayer ..> DomainLayer
+DomainLayer ..> DALayer
 @enduml

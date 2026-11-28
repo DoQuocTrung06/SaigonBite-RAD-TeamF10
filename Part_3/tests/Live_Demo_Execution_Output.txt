@@ -1,0 +1,65 @@
+﻿================================================================================
+ SAIGONBITE CLOUD KITCHEN OFDH - PART 3 INTEGRATED 6-UC LIVE DEMO & TEST RUNNER
+================================================================================
+
+--- [1] UC14: Manage brands and menu items (Author: 524H0031) ---
+[BrandCatalogWindow] Loaded 0 virtual brands and active hub assignments.
+[BrandCatalogWindow] Selected brand '' (BR-01) with 0 menu items.
+[BrandCatalogWindow] Brand 'Pho Saigon Heritage' (BR-01) assigned to hubs [H01, H02].
+[BrandCatalogWindow] MenuItem 'PHO-01' (Phở Bò Đặc Biệt / Special Wagyu Beef Pho) saved in state Active.
+[BrandCatalogWindow] MenuItem 'PHO-99' (Phở Gà Lá Chanh / Lime Leaf Chicken Pho) saved in state Active.
+[BrandCatalogWindow] Selected brand '' (BR-02) with 0 menu items.
+[BrandCatalogWindow] Brand 'Saigon Crispy Banh Mi & Rolls' (BR-02) assigned to hubs [H01].
+[BrandCatalogWindow] MenuItem 'BM-02' (Chả Giò Hải Sản Giòn / Crispy Seafood Spring Rolls) saved in state Active.
+[BrandCatalogWindow] Selected brand '' (BR-03) with 0 menu items.
+[BrandCatalogWindow] Brand 'GreenBowl Tropical Salads & Tea' (BR-03) assigned to hubs [H01, H02].
+[BrandCatalogWindow] MenuItem 'TEA-01' (Trà Đào Cam Sả / Peach Lemongrass Iced Tea) saved in state Active.
+TC_UC14_01 (Publish valid bilingual MenuItem -> state Active): PASS
+[Expected Exception Caught] 4.1b Invalid unit price (<= 0 VND): Unit price must be greater than 0 VND.
+TC_UC14_02 (Reject invalid unitPrice <= 0 VND): PASS
+[Expected Exception Caught] 4.1c Incompatible preparation station: Station 'WoodfireOven' is unsupported at assigned hubs.
+TC_UC14_03 (Reject incompatible preparation station): PASS
+[BrandCatalogWindow] MenuItem 'PHO-99' transitioned to state Discontinued.
+TC_UC14_04 (Discontinue MenuItem -> state Discontinued): PASS
+
+--- [2] UC15: Manage vouchers (Author: 524H0132) ---
+[AUDIT LOG] 2026-11-28T08:04:10 | Entity: SBWELCOME10 | Actor: Administrator | Action: CREATE_VOUCHER
+[VoucherConsoleUI] Voucher 'SBWELCOME10' persisted in Active status.
+TC_UC15_01 (Create promotional voucher SBWELCOME10 -> state Active): PASS
+
+--- [3] UC3: Place an order (Author: 524H0031) ---
+[CheckoutWindow] Checkout initialized at SaigonBite Hub District 1 (H01): 3 items, Subtotal = 165.000 VND.
+[CheckoutWindow] Distance = 3,2 km | Delivery Fee = 25.000 VND | Quiet-Kitchen 10% = 16.500 VND | Payable = 173.500 VND.
+[CheckoutWindow] Voucher 'SBWELCOME10' applied -> Voucher Discount = 16.500 VND, Total Discount = 33.000 VND, Updated Total = 157.000 VND.
+[CheckoutWindow] Online payment authorized -> AuthCode = AUTH-20261128-4353.
+[CheckoutWindow] RECEIPT | Order #ORD-001 | State: Placed | Subtotal=165.000 VND, DeliveryFee=25.000 VND, Discount=33.000 VND, FinalTotal=157.000 VND, Payment=Paid, Tickets=3 | ETA: 25 mins
+TC_UC3_01 (Multi-brand order created in state Placed with fee, discounts & 3 station tickets): PASS
+[Expected Exception Caught] 1.1a Cross-hub basket conflict: All basket items must belong to a single cloud kitchen hub.
+TC_UC3_02 (Reject cross-hub basket conflict 1.1a): PASS
+[CheckoutWindow] Checkout initialized at SaigonBite Hub District 1 (H01): 3 items, Subtotal = 165.000 VND.
+[Expected Exception Caught] 2.1a Delivery distance (8,5 km) exceeds maximum 7.0 km delivery radius.
+TC_UC3_03 (Reject delivery address exceeding 7.0 km radius 2.1a): PASS
+[CheckoutWindow] Checkout initialized at SaigonBite Hub District 1 (H01): 3 items, Subtotal = 165.000 VND.
+[CheckoutWindow] Distance = 1,5 km | Delivery Fee = 15.000 VND | Quiet-Kitchen 10% = 16.500 VND | Payable = 163.500 VND.
+[CheckoutWindow] Voucher 'EXPIRED_CODE_999' applied -> Voucher Discount = 0 VND, Total Discount = 16.500 VND, Updated Total = 163.500 VND.
+[CheckoutWindow] RECEIPT | Order #ORD-002 | State: Placed | Subtotal=165.000 VND, DeliveryFee=15.000 VND, Discount=16.500 VND, FinalTotal=163.500 VND, Payment=Unpaid, Tickets=3 | ETA: 25 mins
+TC_UC3_04 (Invalid voucher retains pre-voucher total & COD recorded as Unpaid): PASS
+
+--- [4] UC7: Confirm or reject an incoming order (Author: 524H0132) ---
+[AUDIT LOG] 2026-11-28T08:04:10 | Entity: ORD-001 | Actor: KitchenStaff | Action: ORDER_CONFIRMED_AND_LOCKED
+[KDSConsoleUI] Order 'ORD-001' CONFIRMED. Address & items locked: True.
+TC_UC7_01 (Confirm order within 120s SLA & lock delivery address): PASS
+
+--- [5] UC10: Deliver an order (Author: 524H0136) ---
+[AUDIT LOG] 2026-11-28T08:04:10 | Entity: ORD-001 | Actor: Shipper | Action: SCAN_PICKUP_SUCCESS
+[AUDIT LOG] 2026-11-28T08:04:10 | Entity: ORD-001 | Actor: Shipper | Action: DELIVERY_SUCCESS_COD_RECONCILED
+TC_UC10_01 (Scan QR pickup, settle VND COD & mark order Delivered): PASS
+
+--- [6] UC16: Produce management reports (Author: 524H0136) ---
+[AUDIT LOG] 2026-11-28T08:04:10 | Entity: REP_H01_20261128080410 | Actor: HubManager | Action: GENERATE_MANAGEMENT_REPORT
+[UI] Dashboard: ReportId=REP_H01_20261128080410 | Hub=H01 | TotalOrders=1 | GrossRevenue=157.000 VND
+TC_UC16_01 (Compile hub KPI management report): PASS
+
+================================================================================
+ ALL 6 USE CASES & TEST SUITES EXECUTED SUCCESSFULLY (100% PASS)
+================================================================================

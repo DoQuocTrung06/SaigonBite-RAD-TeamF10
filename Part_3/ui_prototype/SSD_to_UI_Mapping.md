@@ -1,87 +1,67 @@
-# SSD-to-UI MAPPING FOR UC7: CONFIRM OR REJECT AN INCOMING ORDER
-**Author:** Đỗ Quốc Trung (`524H0132`)  
-**Prototype File:** `Part_3/ui_prototype/UC7_KDS_Prototype.html`  
-**Controller Reference:** `Part_3/src/csharp/Controllers/KitchenController.cs`
+# SSD-TO-UI TRACEABILITY SPECIFICATION (SECTION 4.3.3 UI DESIGN)
+**Project:** SaigonBite Cloud-Kitchen Multi-Brand Food Delivery Hub (OFDH)  
+**Team:** Team F10 (`524H0132`, `524H0031`, `524H0136`)  
 
 ---
 
-## Traceability Matrix: UC7 System Sequence Diagram (SSD) to KDSConsoleUI
+## 1. UC3: Place an order — `CheckoutWindow` (Author: `524H0031` — Ngô Tấn Thành)
+**Prototype File:** `Part_3/ui_prototype/UC3_UC14_Checkout_Catalog_UI.html` (`#uc3-window`)  
+**View & Controller Classes:** `Part_3/src/Views/CheckoutWindow.cs` $\rightarrow$ `Part_3/src/Controllers/OrderHandler.cs`
 
-| Step | SSD Message (Section 2.2.2) | Message Type | Mapped UI Component in `UC7_KDS_Prototype.html` | Mapped C# Controller / Domain Call |
-| :---: | :--- | :---: | :--- | :--- |
-| **1** | `displayIncomingOrders(hubId)` | System Return | Order cards grid (`#ordersGrid`) showing `ORD-001`, `ORD-002`, items, station routing, and live **120s SLA Timer** badge. | `OrderDAO.FindById(orderId)` |
-| **2** | `checkHubWorkload(hubId)` | System Check | Top Hub Capacity Bar (`#hubBar`) showing `Active Capacity: X / 50 (%)` and `BUSY (>= 85% Throttled)` indicator. | `Hub.IsOverloaded()` (`>= 0.85`) |
-| **3** | `confirmOrder(orderId, stationId)` | Actor Input | Single-tap **Confirm Order** button on the order card (satisfies NFR4 <= 2-tap KDS rule). | `KitchenController.ConfirmOrder(orderId, stationId, elapsedSeconds)` |
-| **4** | `orderConfirmedAndTicketPrinted(orderId, ticketId)` | System Return | Status box updates to `Status: Confirmed | Address Locked: true | Ticket: KT_ORD-001` and appends entry to `#auditLog`. | `Order.UpdateStatus("Confirmed")` (`IsLocked = true`) & `KitchenTicketDAO.Save(ticket)` |
-| **5** | `rejectOrder(orderId, reason)` | Actor Input | 2-tap workflow: Tap **Reject Order** button -> Select preset reason radio option in Modal (`#rejectModal`) -> Tap **Confirm Reject**. | `KitchenController.RejectOrder(orderId, reason)` |
-| **6** | `orderCancelledAndRefundTriggered(orderId, reason)` | System Return | Status box updates to `Status: Cancelled | Rejection Reason: ... (Auto Refund Triggered)` and logs audit trail. | `Order.UpdateStatus("Cancelled", reason)` & `AuditLogDAO.RecordAuditEntry(...)` |
-| **7** | `autoTimeoutOrder(orderId)` (120s elapsed) | Exception Event | Live countdown reaches `0s` -> card auto-transitions to `Cancelled` with timeout reason and audit log. | `elapsedSeconds > 120` branch in `KitchenController.ConfirmOrder(...)` |
-
----
-
-# ĐẶC TẢ GIAO DIỆN UI & BẢNG ÁNH XẠ SSD SANG UI (SSD-TO-UI MAPPING)
-**Use Case 10:** Deliver an order (Giao hàng, định vị GPS, đợi 10 phút, thu COD)  
-**Tác giả:** Nguyễn Quang Tựu (MSSV: `524H0136`) — Logistics & Reporting Lead  
-**Dự án:** SaigonBite – Nền tảng Cloud Kitchen & Đặt món đa thương hiệu  
-**Ứng dụng:** SaigonBite Shipper Mobile App (iOS / Android)  
-
----
-
-## 1. Bảng Ánh Xạ Chi Tiết Giữa Thông Điệp SSD Và Giao Diện UI
-
-Bảng dưới đây chứng minh tính truy vết 100% (Full Traceability) từ các thông điệp trong **System Sequence Diagram (SSD Figure 2.10)** sang các thành phần giao diện thực tế trên ứng dụng di động của Shipper:
-
-| STT | Thông điệp trên SSD (Message Name & Parameters) | Hướng gửi | Màn hình UI tương ứng | Thành phần giao diện (UI Widget / Element) | Mô tả hành vi & Kiểm tra nghiệp vụ |
+| Step | SSD Message (Figure 2.4) | Direction | UI Component in `CheckoutWindow` | Mapped C# View & Controller Method | Business Rule Enforced on UI |
 | :---: | :--- | :---: | :--- | :--- | :--- |
-| **1** | `scanPackageQR(taskId, qrToken)` | Shipper -> System | **SCR-01: Hub Package Pickup** | Camera Viewfinder + Nút "Quét mã QR kiện hàng" | Camera tự động nhận diện mã QR in trên tem dán hộp đồ ăn tại Hub. Hệ thống đối chiếu token với `qr_code_token` trong DB. |
-| **2** | `pickupConfirmed(orderId, dropoffAddress, distanceKm)` | System -> Shipper | **SCR-01: Hub Package Pickup** | Popup Modal màu xanh lá + Thông tin tóm tắt đơn | Hiển thị: "Xác nhận nhận hàng thành công!", mã đơn hàng `ORD_1001`, địa chỉ drop-off và nút "Bắt đầu điều hướng GPS". |
-| **3** | `updateGPSLocation(taskId, lat, lng)` | Shipper -> System | **SCR-02: Live Navigation** | Bản đồ GPS (Map SDK) + Marker vị trí tài xế | Ứng dụng tự động gửi tọa độ GPS định kỳ mỗi 5 giây, vẽ tuyến đường ngắn nhất từ Hub đến vị trí khách. |
-| **4** | `navigationRoute(routePolyline, estimatedMins)` | System -> Shipper | **SCR-02: Live Navigation** | Thanh chỉ đường Turn-by-Turn + Thời gian dự kiến | Hiển thị: "Còn 1.2 km (khoảng 6 phút)", chỉ dẫn rẽ trái/phải trên đường Nguyễn Hữu Thọ. |
-| **5** | `arriveAtDropoff(taskId)` | Shipper -> System | **SCR-02: Live Navigation** | Nút gạt "Tôi đã đến nơi" (Swipe to Arrive) | Khi tài xế đến cách địa chỉ giao hàng < 50m, nút chuyển màu xanh, tài xế gạt để chuyển sang màn hình giao hàng. |
-| **6** | `start10MinTimer(taskId)` | Shipper -> System | **SCR-03: Customer Contact & 10m Wait** | Nút bấm "Khách không nghe máy (Bắt đầu đợi 10p)" | Khi tài xế gọi điện 3 lần không liên lạc được, ấn nút này để kích hoạt đếm ngược 10 phút. |
-| **7** | `waitingTimerStarted(remainingSeconds: 600)` | System -> Shipper | **SCR-03: Customer Contact & 10m Wait** | Đồng hồ đếm ngược vòng tròn (Circular Timer 10:00) | Đồng hồ đếm lùi từng giây: `09:59`, `09:58`... Kèm nút gọi lại "Gọi lại cho khách". Nếu khách bắt máy, ấn "Khách đã ra nhận". |
-| **8** | `confirmDeliveryAndCOD(taskId, amountPaid)` | Shipper -> System | **SCR-04: Settlement & Completion** | Form nhập số tiền COD thu được + Nút "Xác nhận giao & Thu COD" | Đối với đơn COD: Hiển thị số tiền cần thu e.g. `127,500 VND`. Ô nhập tiền mặt tài xế nhận. Bắt buộc số tiền >= `final_amount`. |
-| **9** | `deliveryCompleted(orderStatus, creditedWallet)` | System -> Shipper | **SCR-04: Settlement & Completion** | Màn hình Hoàn tất chuyến giao (Success Screen) | Thông báo: "Đơn hàng hoàn tất!". Cộng tiền công giao hàng (+20,000 VND) vào ví tài xế, hiển thị số dư ví mới. |
-| **10** | `recordDeliveryFailure(taskId, failureReason)` | Shipper -> System | **SCR-03: Customer Contact & 10m Wait** | Nút màu đỏ "Xác nhận Giao thất bại" (mở sau khi hết 10p) | Khi đồng hồ đếm về `00:00`, nút này sáng lên. Tài xế ấn xác nhận hủy đơn, chọn lý do "Khách không nghe máy sau 10p". Hệ thống tạo mã hoàn hàng về Hub. |
+| **1** | `requestCheckout(basketItems)` | Customer $\rightarrow$ System | **Multi-Brand Basket Table** & **Proceed to Checkout** trigger | `CheckoutWindow.requestCheckout(basketItems)` $\rightarrow$ `OrderHandler.requestCheckout(basketItems)` | Verifies single-hub rule (`1.1a`) and hub active load `< 85%` (`A-02`). |
+| **1.1** | `checkout summary` | System $\rightarrow$ Customer | **Hub Status Header** (`Hub H01 — Load 30% < 85%`) & item line totals (`165,000 VND`) | `Order.addOrderLine(...)` & `Order.calculateSubtotal()` | Displays bilingual item names, preparation station tags, and initial subtotal. |
+| **2** | `enterDeliveryAddress(deliveryAddress)` | Customer $\rightarrow$ System | **Delivery Address Input Box** (`45 Le Loi, District 1, HCMC`) | `CheckoutWindow.enterDeliveryAddress(address)` $\rightarrow$ `OrderHandler.enterDeliveryAddress(address)` | Calculates route distance from preparing hub (`3.2 km`) and checks `<= 7.0 km` (`2.1a`, `A-01`). |
+| **2.1** | `distance, delivery fee, price summary` | System $\rightarrow$ Customer | **Price Breakdown Table** (`+25,000 VND` delivery fee; `-16,500 VND` Quiet-Kitchen 10% discount) | `Hub.calculateDistance(...)`, `Hub.checkQuietKitchenDiscount()` & `Order.calculateDeliveryAndTotal(...)` | Applies `15,000 VND` (first 2 km) + `5,000 VND/km` formula and automatic `10%` Quiet-Kitchen discount when hub load `< 40%` (`A-03`). |
+| **3** | `applyVoucher(voucherCode)` (`opt`) | Customer $\rightarrow$ System | **Promo Voucher Input Field** (`SBWELCOME10`) & **Apply Voucher** button | `CheckoutWindow.applyVoucher(code)` $\rightarrow$ `OrderHandler.applyVoucher(code)` | Enforces at most 1 promotional voucher per order; retains pre-voucher total without blocking checkout if invalid (`3.1a`). |
+| **3.1** | `discount amount, updated total` | System $\rightarrow$ Customer | **Voucher Discount Row** (`-16,500 VND`) & **Final Payable Total** (`157,000 VND`) | `Order.applyVoucherDiscount(code)` $\rightarrow$ `Voucher.calculateDiscount(code, subtotal)` | Displays updated total after combining Quiet-Kitchen and single voucher discounts. |
+| **4** | `authorizeOnlinePayment(paymentDetails)` (`opt`) | Customer $\rightarrow$ System | **Payment Method Selector** (`Online Payment`) & **Authorize Online Card** button | `CheckoutWindow.authorizeOnlinePayment(details)` $\rightarrow$ `OrderHandler.authorizeOnlinePayment(details)` | Requests payment gateway authorization; offers retry or COD switch if declined (`4.1a`). |
+| **4.1** | `payment authorization` | System $\rightarrow$ Customer | **Authorization Badge** (`AUTH-20261128-8841 — Paid`) | `Order.authorizePayment(details)` $\rightarrow$ `Payment.authorizeOnlinePayment(details, amount)` | Displays authorization code before order submission. |
+| **5** | `submitOrder(paymentMethod)` | Customer $\rightarrow$ System | **Submit Order** primary action button | `CheckoutWindow.submitOrder(method)` $\rightarrow$ `OrderHandler.submitOrder(method)` | Creates `Order` in state `Placed`, records `Paid` or `Unpaid` (COD in VND, `A-04`), redeems voucher, and queues station tickets. |
+| **5.1** | `order number, state Placed, receipt, ETA` | System $\rightarrow$ Customer | **Order Confirmation Receipt Panel** (`#ORD-001`, state `Placed`, tickets `KT-001..003`, `ETA: 25 mins`) | `CheckoutWindow.displayOrderReceipt(orderId, receipt, eta)` | Displays immutable receipt with station ticket breakdown and estimated arrival time. |
 
 ---
 
-## 2. Mô Tả Chi Tiết 4 Màn Hình Giao Diện Shipper Mobile App
+## 2. UC14: Manage brands and menu items — `BrandCatalogWindow` (Author: `524H0031` — Ngô Tấn Thành)
+**Prototype File:** `Part_3/ui_prototype/UC3_UC14_Checkout_Catalog_UI.html` (`#uc14-window`)  
+**View & Controller Classes:** `Part_3/src/Views/BrandCatalogWindow.cs` $\rightarrow$ `Part_3/src/Controllers/BrandCatalogHandler.cs`
 
-```text
-+-----------------------------+  +-----------------------------+
-| SCR-01: HUB PICKUP & QR     |  | SCR-02: GPS NAVIGATION      |
-| [SaigonBite Shipper]        |  | [SaigonBite Navigation]     |
-| Task: TASK_01               |  | Don hang: ORD_1001          |
-| Hub: District 7 Central Hub |  | Khach: Nguyen Van A         |
-| +-------------------------+ |  | Dia chi: 19 Nguyen Huu Tho  |
-| |                         | |  | +-------------------------+ |
-| |   [ SCAN CAMERA QR ]    | |  | |  [ MAP: HUB -> DROP ]   | |
-| |                         | |  | |    Shipper Marker (GPS) | |
-| +-------------------------+ |  | +-------------------------+ |
-| Ma don: ORD_1001            |  | Con: 1.2 km (5 phut)        |
-| [ NUT: XAC NHAN QUET QR ]   |  | [ GAT: TOI DA DEN NOI ]     |
-+-----------------------------+  +-----------------------------+
-
-+-----------------------------+  +-----------------------------+
-| SCR-03: 10-MIN COUNTDOWN    |  | SCR-04: COD & COMPLETION    |
-| [Lien he khach hang]        |  | [Xac nhan thu tien COD]     |
-| Goi dien khach khong nghe!  |  | Ma don: ORD_1001            |
-|       +-------------+       |  | Phuong thuc: TIEN MAT (COD) |
-|      /   10:00       \      |  | --------------------------- |
-|     |  DANG DEM LUI   |     |  | So tien can thu: 127,500 đ  |
-|      \   09:42       /      |  | Tien thuc thu:  [127,500 đ] |
-|       +-------------+       |  | Chu ky khach hang: [Sign Pad|
-| [ NUT: GOI LAI CHO KHACH ]  |  | --------------------------- |
-| [ NUT: KHACH DA RA NHAN ]   |  | Tien cong cong vi: +20,000 đ|
-| (Het 10p: Xac nhan huy don) |  | [ NUT: XAC NHAN HOAN TAT ]  |
-+-----------------------------+  +-----------------------------+
-```
+| Step | SSD Message (Figure 2.7) | Direction | UI Component in `BrandCatalogWindow` | Mapped C# View & Controller Method | Business Rule Enforced on UI |
+| :---: | :--- | :---: | :--- | :--- | :--- |
+| **1** | `openBrandCatalog()` | Administrator $\rightarrow$ System | **Virtual Brand Directory Table** & **Hub Assignment Columns** | `BrandCatalogWindow.openBrandCatalog()` $\rightarrow$ `BrandCatalogHandler.openBrandCatalog()` | Loads all virtual brands and active cloud kitchen hubs (`H01`, `H02`). |
+| **1.1** | `brand list, hub assignments` | System $\rightarrow$ Administrator | **Brand Directory Rows** (`BR-01`, `BR-02`, `BR-03` with hub tags) | `Brand.getAllBrands()` & `Hub.getActiveHubs()` | Shows live brand statuses and assigned operational hubs. |
+| **2** | `selectBrand(brandId)` | Administrator $\rightarrow$ System | **Selectable Brand Row** (`BR-01: Pho Saigon Heritage`) | `BrandCatalogWindow.selectBrand(brandId)` $\rightarrow$ `BrandCatalogHandler.selectBrand(brandId)` | Populates brand profile editor, bilingual menu items table, and supported kitchen stations. |
+| **2.1** | `brand details, menu items, available stations` | System $\rightarrow$ Administrator | **Brand Profile Form** & **Live Bilingual Catalog Table** | `Brand.getBrandCatalog(brandId)` & `Hub.getAvailableStations(brandId)` | Displays bilingual VI/EN item names, prices, and available hub stations (`Wok, Fryer, Assembly, Beverage`). |
+| **3** | `saveBrandDetails(brandName, cuisineType, assignedHubs)` | Administrator $\rightarrow$ System | **Brand Name / Cuisine Inputs**, **Hub Checkboxes**, & **Save Brand Details** button | `BrandCatalogWindow.saveBrandDetails(...)` $\rightarrow$ `BrandCatalogHandler.saveBrandDetails(...)` | Validates brand name uniqueness (`3.1a`) and requires at least one operational hub (`3.1b`). |
+| **3.1** | `brand confirmation` | System $\rightarrow$ Administrator | **Brand Saved Status Banner** | `Brand.saveBrandProfile(...)` $\rightarrow$ `BrandDA.saveBrand(...)` | Confirms brand profile and hub assignments in `brands` and `brand_hubs`. |
+| **4** | `saveMenuItem(itemCode, nameVi, nameEn, unitPrice, stationType)` | Administrator $\rightarrow$ System | **Bilingual Dish Form** (`PHO-01`, `Phở Bò Đặc Biệt`, `Special Wagyu Beef Pho`, `85,000 VND`, `Wok`) & **Publish Menu Item** button | `BrandCatalogWindow.saveMenuItem(...)` $\rightarrow$ `BrandCatalogHandler.saveMenuItem(...)` | Enforces unique item code (`4.1a`), positive price `> 0 VND` (`4.1b`), and station compatibility at assigned hubs (`4.1c`). |
+| **4.1** | `updated menu catalog, state Active` | System $\rightarrow$ Administrator | **Catalog Row Badge** (`State: Active`) | `Hub.verifyStationSupport(...)` & `MenuItem.publishMenuItem(...)` | Persists dish in state `Active` (linked to `MenuItem` State Machine Figure 2.8). |
+| **5** | `discontinueMenuItem(itemCode)` (`opt`) | Administrator $\rightarrow$ System | **Discontinue Selected Item** button on catalog row (`PHO-99`) | `BrandCatalogWindow.discontinueMenuItem(itemCode)` $\rightarrow$ `BrandCatalogHandler.discontinueMenuItem(itemCode)` | Retires menu item from customer ordering while preserving historical order records. |
+| **5.1** | `confirmation, state Discontinued` | System $\rightarrow$ Administrator | **Catalog Row Badge** (`State: Discontinued`) | `Brand.discontinueBrandItem(itemCode)` $\rightarrow$ `MenuItem.discontinueItem(itemCode)` | Transitions dish state to `Discontinued` in `menu_items`. |
 
 ---
 
-## 3. Quy Tắc Chống Lỗi Giao Diện & Trải Nghiệm Người Dùng (UX Rules)
+## 3. UC7: Confirm or reject an incoming order — `KDSConsoleUI` (Author: `524H0132` — Đỗ Quốc Trung)
+**Prototype File:** `Part_3/ui_prototype/UC7_KDS_Prototype.html`  
+**View & Controller Classes:** `Part_3/src/Views/KDSConsoleUI.cs` $\rightarrow$ `Part_3/src/Controllers/KitchenController.cs`
 
-1. **Khóa nút thu COD khi chưa nhận đủ tiền:** Nút "Xác nhận hoàn tất" bị vô hiệu hóa (disabled) nếu ô số tiền thực thu nhỏ hơn số tiền trên đơn hàng.
-2. **Bảo vệ đếm ngược 10 phút:** Khi màn hình đếm ngược đang chạy, tài xế không thể vô tình bấm hủy đơn; nút "Giao thất bại" chỉ mở khóa khi đồng hồ đếm về đúng `00:00`.
-3. **Chế độ Ngoại tuyến tạm thời:** Nếu mất sóng GPS tạm thời, app lưu tọa độ cuối cùng và gửi bù ngay khi có kết nối trở lại.
+| Step | SSD Message (Section 2.2.2) | Direction | UI Component in `KDSConsoleUI` | Mapped C# Controller / Domain Call |
+| :---: | :--- | :---: | :--- | :--- |
+| **1** | `displayIncomingOrders(hubId)` | System $\rightarrow$ Kitchen Staff | Order cards grid (`#ordersGrid`) with station tags & live **120s SLA Timer** | `OrderDAO.FindById(orderId)` |
+| **2** | `checkHubWorkload(hubId)` | System Check | Top Hub Capacity Bar (`#hubBar`) showing `Active Capacity (%)` & `85% Busy` badge | `Hub.IsOverloaded()` (`>= 0.85`) |
+| **3** | `confirmOrder(orderId, stationId)` | Kitchen Staff $\rightarrow$ System | Single-tap **Confirm Order** button (48x48px touch target, `<= 2` taps per NFR4) | `KitchenController.ConfirmOrder(orderId, stationId, elapsedSeconds)` |
+| **4** | `orderConfirmedAndTicketPrinted(...)` | System $\rightarrow$ Kitchen Staff | Status box updates to `Confirmed | Address Locked: true` & prints station ticket | `Order.UpdateStatus("Confirmed")` & `KitchenTicketDAO.Save(ticket)` |
+| **5** | `rejectOrder(orderId, reason)` | Kitchen Staff $\rightarrow$ System | **Reject Order** button $\rightarrow$ Mandatory reason modal (`#rejectModal`) | `KitchenController.RejectOrder(orderId, reason)` |
+
+---
+
+## 4. UC10: Deliver an order — `ShipperMobileUI` (Author: `524H0136` — Nguyễn Quang Tựu)
+**Prototype Image:** `Part_3/ui_prototype/UC10_Shipper_App_UI.png`  
+**View & Controller Classes:** `Part_3/src/Views/ShipperMobileUI.cs` $\rightarrow$ `Part_3/src/Controllers/DeliveryController.cs`
+
+| Step | SSD Message (Figure 2.10) | Direction | UI Component in `ShipperMobileUI` | Mapped C# Controller / Domain Call |
+| :---: | :--- | :---: | :--- | :--- |
+| **1** | `scanPackageQR(orderId, qrCode)` | Shipper $\rightarrow$ System | **SCR-01: Hub Package Pickup** QR Scanner viewfinder & Confirm button | `ShipperMobileUI.OnScanPickupQRClicked(...)` $\rightarrow$ `DeliveryController.ProcessPickupScan(...)` |
+| **2** | `confirmDeliveryAndCOD(orderId, codAmount)` | Shipper $\rightarrow$ System | **SCR-04: COD Settlement** VND cash input box & **Confirm Delivery** button | `ShipperMobileUI.OnConfirmDeliveryClicked(...)` $\rightarrow$ `DeliveryController.RecordDeliverySuccess(...)` |
+| **3** | `recordDeliveryFailure(orderId, reason)` | Shipper $\rightarrow$ System | **SCR-03: 10-Min Wait Timer** (`00:00` unlocked) **Report Failed Delivery** button | `ShipperMobileUI.OnReportFailureClicked(...)` $\rightarrow$ `DeliveryController.RecordDeliveryFailure(...)` |

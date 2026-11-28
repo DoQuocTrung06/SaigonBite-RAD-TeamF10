@@ -1,103 +1,85 @@
-@startuml Figure_4_3_2_UC15_Modified_Sequence_Diagram
-skinparam backgroundColor #FFFFFF
+@startuml
+skinparam style strictuml
 skinparam monochrome true
 skinparam shadowing false
-skinparam defaultFontName "Calibri"
-skinparam defaultFontSize 11
-skinparam defaultFontColor #000000
-skinparam linetype ortho
-skinparam roundCorner 0
-hide circle
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName Arial
+skinparam defaultFontSize 10
+skinparam roundcorner 0
+skinparam dpi 150
+hide footbox
+
+skinparam SequenceLifeLineBorderColor #000000
+skinparam SequenceLifeLineBackgroundColor #FFFFFF
+skinparam ParticipantBackgroundColor #FFFFFF
+skinparam ParticipantBorderColor #000000
+skinparam ParticipantBorderThickness 1.2
+skinparam ParticipantFontColor #000000
+skinparam ParticipantFontSize 9
+skinparam ActorBackgroundColor #FFFFFF
+skinparam ActorBorderColor #000000
+skinparam ActorFontColor #000000
+skinparam ArrowColor #000000
+skinparam ArrowThickness 1.1
+skinparam ArrowFontColor #000000
+skinparam ArrowFontSize 9
+
+right header 524H0132
 
 actor "Administrator" as Admin
-boundary "VoucherConsoleUI\n(View Layer)" as UI
-control "VoucherController\n(Controller Layer)" as Ctrl
-entity "Voucher\n(Domain Entity)" as Vch
-control "VoucherDAO\n(Data Access Layer)" as VDAO
-control "AuditLogDAO\n(Data Access Layer)" as AuditDAO
-database "Relational Database\n(saigonbite_db)" as DB
+participant "<<view>>\n__:VoucherConsoleUI__" as UI
+participant "<<controller>>\n__:VoucherController__" as Ctrl
+participant "__aV:Voucher__" as Vch
+participant "<<dataAccess>>\n__:VoucherDAO__" as VDAO
+participant "<<dataAccess>>\n__:AuditLogDAO__" as AuditDAO
 
-== Phase 1: Create Promotional Voucher ==
-Admin -> UI: 1. submitNewVoucherForm(code, discountPercent, maxDiscount, minOrder, dates, quota)
+Admin -> UI: createVoucher(code, discountPercent, maxDiscount, minOrder, start, end, quota)
 activate UI
-UI -> Ctrl: 1.1 CreateVoucher(code, discountPercent, maxDiscount, minOrder, start, end, quota)
+UI -> Ctrl: createVoucher(code, discountPercent, maxDiscount, minOrder, start, end, quota)
 activate Ctrl
-
-Ctrl -> VDAO: 1.2 FindByCode(code)
+Ctrl -> VDAO: findByCode(code)
 activate VDAO
-VDAO -> DB: 1.3 SELECT * FROM vouchers WHERE voucher_code = ?
-activate DB
-DB --> VDAO: null (unique)
-deactivate DB
 VDAO --> Ctrl: null
 deactivate VDAO
-
-Ctrl -> Vch: 1.4 new Voucher() & Validate()
+Ctrl -> Vch: validate()
 activate Vch
 Vch --> Ctrl: valid = true
 deactivate Vch
-
-Ctrl -> VDAO: 1.5 Save(voucher)
+Ctrl -> VDAO: [valid] save(aV)
 activate VDAO
-VDAO -> DB: 1.6 INSERT INTO vouchers (...) VALUES (...)
-activate DB
-DB --> VDAO: 1 row inserted
-deactivate DB
-VDAO --> Ctrl: true
+VDAO --> Ctrl: saved = true
 deactivate VDAO
-
-Ctrl -> AuditDAO: 1.7 RecordAuditEntry(code, "Administrator", "CREATE_VOUCHER")
+Ctrl -> AuditDAO: recordAuditEntry(code, "Administrator", "CREATE_VOUCHER")
 activate AuditDAO
-AuditDAO -> DB: 1.8 INSERT INTO audit_logs (...) VALUES (...)
-activate DB
-DB --> AuditDAO: ok (< 1s NFR5)
-deactivate DB
+AuditDAO --> Ctrl: logged
 deactivate AuditDAO
-
-Ctrl --> UI: true
+Ctrl --> UI: confirmation, state Active
 deactivate Ctrl
-UI --> Admin: 1.9 DisplayCreateResult(code, true)
+UI --> Admin: displayCreateResult(code, true)
 deactivate UI
 
-== Phase 2: Archive Voucher (Soft Delete) ==
-Admin -> UI: 2. clickArchiveVoucher(code)
+Admin -> UI: [archive voucher] archiveVoucher(code)
 activate UI
-UI -> Ctrl: 2.1 ArchiveVoucher(code)
+UI -> Ctrl: archiveVoucher(code)
 activate Ctrl
-
-Ctrl -> VDAO: 2.2 FindByCode(code)
+Ctrl -> VDAO: findByCode(code)
 activate VDAO
-VDAO -> DB: 2.3 SELECT * FROM vouchers WHERE voucher_code = ?
-activate DB
-DB --> VDAO: voucherRow
-deactivate DB
-VDAO --> Ctrl: voucher: Voucher
+VDAO --> Ctrl: aV
 deactivate VDAO
-
-Ctrl -> Vch: 2.4 Archive()
+Ctrl -> Vch: archive()
 activate Vch
-Vch --> Ctrl: Status = "Archived"
+Vch --> Ctrl: state Archived
 deactivate Vch
-
-Ctrl -> VDAO: 2.5 Update(voucher)
+Ctrl -> VDAO: update(aV)
 activate VDAO
-VDAO -> DB: 2.6 UPDATE vouchers SET status = 'Archived' WHERE voucher_code = ?
-activate DB
-DB --> VDAO: ok
-deactivate DB
+VDAO --> Ctrl: updated = true
 deactivate VDAO
-
-Ctrl -> AuditDAO: 2.7 RecordAuditEntry(code, "Administrator", "ARCHIVE_VOUCHER")
+Ctrl -> AuditDAO: recordAuditEntry(code, "Administrator", "ARCHIVE_VOUCHER")
 activate AuditDAO
-AuditDAO -> DB: 2.8 INSERT INTO audit_logs (...) VALUES (...)
-activate DB
-DB --> AuditDAO: ok
-deactivate DB
+AuditDAO --> Ctrl: logged
 deactivate AuditDAO
-
-Ctrl --> UI: true
+Ctrl --> UI: confirmation, state Archived
 deactivate Ctrl
-UI --> Admin: 2.9 DisplayArchiveResult(code, true)
+UI --> Admin: displayArchiveResult(code, true)
 deactivate UI
-
 @enduml
