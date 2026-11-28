@@ -9,16 +9,23 @@ skinparam dpi 300
 skinparam linetype ortho
 
 [*] --> ReadyForPickup : kitchenReady
-
 ReadyForPickup --> Assigned : assignShipper
 Assigned --> OutForDelivery : scanHubPickupQR
 OutForDelivery --> ArrivedAtCustomer : arriveAtAddress
 
-ArrivedAtCustomer -right-> Delivered : confirmHandover & codPaid
-ArrivedAtCustomer -left-> FailedDelivery : timeoutUnreachable > 10m
+state DeliveryChoice <<choice>>
 
-Delivered --> [*]
+ArrivedAtCustomer --> DeliveryChoice
+
+DeliveryChoice --> Delivered : [Handover & COD Paid]\nconfirmHandover
+DeliveryChoice --> FailedDelivery : [Unreachable > 10m]\ntimeoutCountdown
+
 FailedDelivery --> ReturningToHub : initiateReturnTrip
-ReturningToHub --> [*] : packageReturned
+
+state " " as endSuccess <<end>>
+state " " as endReturned <<end>>
+
+Delivered --> endSuccess
+ReturningToHub --> endReturned : packageReturned
 
 @enduml

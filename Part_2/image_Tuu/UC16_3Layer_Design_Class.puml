@@ -5,7 +5,7 @@ skinparam backgroundColor #FFFFFF
 skinparam defaultFontName Arial
 skinparam defaultFontSize 11
 skinparam roundCorner 0
-skinparam dpi 300
+skinparam dpi 200
 skinparam linetype ortho
 hide circle
 
@@ -58,16 +58,19 @@ package "Data Access Layer" {
     + getOrdersByHubAndDate(hubId: String, start: Date, end: Date): List<Order>
   }
 
-  class AuditLogDAO {
-    + recordAuditEntry(targetId: String, actor: String, action: String): Boolean
+  class DeliveryTaskDAO {
+    + getTasksByHubAndDate(hubId: String, start: Date, end: Date): List<DeliveryTask>
   }
 }
 
+"View Layer" -[hidden]down-> "Controller Layer"
+"Controller Layer" -[hidden]down-> "Domain Layer"
+"Domain Layer" -[hidden]down-> "Data Access Layer"
+
 ReportConsoleUI ..> ReportController : invokes >
-ReportController ..> ManagementReport : creates & manages >
-ReportController ..> Hub : accesses >
+ReportController ..> ManagementReport : generates >
 ReportController ..> ReportDAO : calls >
 ReportController ..> OrderDAO : calls >
-ReportController ..> AuditLogDAO : calls >
+ReportController ..> DeliveryTaskDAO : calls >
 
 @enduml

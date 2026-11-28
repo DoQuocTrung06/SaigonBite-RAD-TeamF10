@@ -5,7 +5,7 @@ skinparam backgroundColor #FFFFFF
 skinparam defaultFontName Arial
 skinparam defaultFontSize 11
 skinparam roundCorner 0
-skinparam dpi 300
+skinparam dpi 200
 skinparam linetype ortho
 hide circle
 
@@ -72,6 +72,10 @@ package "Data Access Layer" {
     + recordAuditEntry(orderId: String, actor: String, action: String): Boolean
   }
 }
+
+"View Layer" -[hidden]down-> "Controller Layer"
+"Controller Layer" -[hidden]down-> "Domain Layer"
+"Domain Layer" -[hidden]down-> "Data Access Layer"
 
 ShipperMobileUI ..> DeliveryController : invokes >
 DeliveryController ..> DeliveryTask : manages >
