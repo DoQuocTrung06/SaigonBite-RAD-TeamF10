@@ -3,213 +3,406 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SaigonBite — Customer Checkout &amp; Brand Catalog Administration</title>
+  <title>SaigonBite — Order Checkout &amp; Brand Catalog</title>
   <style>
     :root {
       --navy: #1F3A5F;
       --blue-hdr: #DCE6F2;
       --border: #B7C3D3;
-      --text: #1A202C;
-      --muted: #4A5568;
-      --green: #1B7F4B;
-      --green-bg: #E8F6EE;
-      --amber: #B45309;
-      --amber-bg: #FEF3C7;
-      --red: #B91C1C;
-      --red-bg: #FEE2E2;
-      --bg: #F7F9FC;
+      --text: #111827;
+      --muted: #4B5563;
+      --green: #166534;
+      --red: #991B1B;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Calibri", "Segoe UI", Arial, sans-serif; }
-    body { background: var(--bg); color: var(--text); padding: 18px; }
-    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-    .window-card {
-      background: #fff; border: 2px solid var(--navy); border-radius: 4px; overflow: hidden;
+    html, body {
+      width: 1400px;
+      background: #FFFFFF;
+      color: var(--text);
+      overflow: hidden;
     }
-    .window-titlebar {
-      background: var(--navy); color: #fff; padding: 10px 16px;
-      border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;
-      font-weight: 700; font-size: 15px;
+    .canvas {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px;
+      padding: 16px;
+      background: #FFFFFF;
     }
-    .window-titlebar span.sub {
-      font-size: 12px; font-weight: 400; background: rgba(255,255,255,0.16); padding: 3px 8px; border-radius: 3px;
+    .window {
+      border: 1.5px solid var(--navy);
+      background: #FFFFFF;
+      display: flex;
+      flex-direction: column;
     }
-    .window-body { padding: 16px; }
-    .section-box {
-      border: 1px solid var(--border); padding: 12px; margin-bottom: 12px; background: #fff;
+    .titlebar {
+      background: var(--navy);
+      color: #FFFFFF;
+      padding: 8px 14px;
+      font-size: 14.5px;
+      font-weight: 700;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
-    .section-title {
-      font-size: 13px; font-weight: 700; color: var(--navy); margin-bottom: 8px;
-      display: flex; justify-content: space-between; align-items: center;
+    .titlebar-sub {
+      font-size: 12px;
+      font-weight: 400;
+      color: #E2E8F0;
     }
-    .hub-tag {
-      font-size: 11px; font-weight: 700; background: var(--blue-hdr); color: var(--navy);
-      padding: 2px 8px; border: 1px solid var(--border);
+    .body {
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
     }
-    table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
-    th { background: var(--blue-hdr); color: var(--navy); text-align: left; padding: 6px 8px; border: 1px solid var(--border); }
-    td { padding: 6px 8px; border: 1px solid var(--border); }
-    .badge { padding: 2px 6px; font-size: 11px; font-weight: 700; border-radius: 2px; display: inline-block; }
-    .badge-ok { background: var(--green-bg); color: var(--green); border: 1px solid var(--green); }
-    .badge-warn { background: var(--amber-bg); color: var(--amber); border: 1px solid var(--amber); }
-    .badge-off { background: var(--red-bg); color: var(--red); border: 1px solid var(--red); }
-    .form-row { display: grid; grid-template-columns: 140px 1fr; gap: 8px; align-items: center; margin-bottom: 8px; font-size: 12.5px; }
-    input, select {
-      width: 100%; padding: 5px 8px; border: 1px solid var(--border); font-size: 12.5px; color: var(--text);
+    .group {
+      border: 1px solid var(--border);
+      padding: 10px 12px;
     }
-    .btn-row { display: flex; gap: 8px; margin-top: 8px; }
+    .group-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 7px;
+      padding-bottom: 4px;
+      border-bottom: 1px solid var(--blue-hdr);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+    th {
+      background: var(--blue-hdr);
+      color: var(--navy);
+      text-align: left;
+      padding: 5px 8px;
+      border: 1px solid var(--border);
+      font-weight: 700;
+    }
+    td {
+      padding: 5px 8px;
+      border: 1px solid var(--border);
+    }
+    .num { text-align: right; }
+    .form-grid {
+      display: grid;
+      grid-template-columns: 120px 1fr;
+      gap: 6px 10px;
+      align-items: center;
+      font-size: 12px;
+    }
+    .form-grid-2col {
+      display: grid;
+      grid-template-columns: 110px 1fr 95px 1fr;
+      gap: 6px 10px;
+      align-items: center;
+      font-size: 12px;
+    }
+    label { font-weight: 700; color: var(--text); }
+    input[type="text"], select {
+      width: 100%;
+      padding: 4px 8px;
+      border: 1px solid var(--border);
+      font-size: 12px;
+      color: var(--text);
+      background: #FFFFFF;
+    }
+    .inline-input {
+      display: flex;
+      gap: 6px;
+    }
+    .checkbox-group {
+      display: flex;
+      gap: 16px;
+      font-size: 12px;
+      align-items: center;
+    }
+    .checkbox-group label {
+      font-weight: 400;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 8px;
+    }
     .btn {
-      padding: 6px 12px; font-size: 12.5px; font-weight: 700; border: 1px solid var(--navy);
-      cursor: pointer; background: var(--navy); color: #fff;
+      padding: 5px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      border: 1px solid var(--navy);
+      background: var(--navy);
+      color: #FFFFFF;
     }
-    .btn-secondary { background: var(--blue-hdr); color: var(--navy); }
-    .btn-danger { background: var(--red-bg); color: var(--red); border-color: var(--red); }
-    .receipt-box {
-      background: #F8FAFC; border: 1.5px solid var(--navy); padding: 10px 12px; font-size: 12.5px;
+    .btn-alt {
+      background: var(--blue-hdr);
+      color: var(--navy);
+    }
+    .btn-danger {
+      background: #FFFFFF;
+      color: var(--red);
+      border-color: var(--red);
+    }
+    .status-active { color: var(--green); font-weight: 700; }
+    .status-off { color: var(--red); font-weight: 700; }
+    .receipt {
+      background: #F8FAFC;
+      border: 1px solid var(--navy);
+      padding: 8px 12px;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+    .receipt-title {
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 3px;
     }
   </style>
 </head>
 <body>
-  <div class="grid-2">
-    <!-- LEFT: Customer Checkout Window -->
-    <div class="window-card" id="uc3-window">
-      <div class="window-titlebar">
+  <div class="canvas">
+    <!-- LEFT: UC3 Customer Checkout Window -->
+    <div class="window" id="uc3-window">
+      <div class="titlebar">
         <span>SaigonBite — Order Checkout</span>
-        <span class="sub">District 1 Cloud Kitchen Hub (H01)</span>
+        <span class="titlebar-sub">Hub H01: District 1 Kitchen</span>
       </div>
-      <div class="window-body">
-        <div class="section-box">
-          <div class="section-title">
-            <span>Selected Order Basket</span>
-            <span class="hub-tag">Kitchen Status: Normal (30% Load)</span>
-          </div>
+      <div class="body">
+        <div class="group">
+          <div class="group-title">1. Order Items</div>
           <table>
             <thead>
-              <tr><th>Code</th><th>Dish Name (VI / EN) &amp; Virtual Brand</th><th>Station</th><th>Qty</th><th>Line Total</th></tr>
+              <tr>
+                <th style="width:64px;">Code</th>
+                <th>Item Name (VI / EN)</th>
+                <th style="width:110px;">Brand</th>
+                <th style="width:68px;">Station</th>
+                <th style="width:38px;" class="num">Qty</th>
+                <th style="width:92px;" class="num">Amount</th>
+              </tr>
             </thead>
             <tbody>
-              <tr><td>PHO-01</td><td>Phở Bò Đặc Biệt / Special Wagyu Beef Pho (Pho Saigon)</td><td>Wok</td><td>1</td><td>85,000 VND</td></tr>
-              <tr><td>BM-02</td><td>Chả Giò Hải Sản Giòn / Crispy Spring Rolls (Saigon Crispy)</td><td>Fryer</td><td>1</td><td>45,000 VND</td></tr>
-              <tr><td>TEA-01</td><td>Trà Đào Cam Sả / Peach Lemongrass Tea (GreenBowl)</td><td>Beverage</td><td>1</td><td>35,000 VND</td></tr>
-            </tbody>
-          </table>
-        </div>
-
-        <div class="section-box">
-          <div class="section-title">
-            <span>Delivery Address &amp; Promotional Voucher</span>
-            <span class="hub-tag">Distance: 3.2 km</span>
-          </div>
-          <div class="form-row">
-            <label>Delivery Address:</label>
-            <input type="text" value="45 Le Loi, Ben Nghe Ward, District 1, HCMC" readonly />
-          </div>
-          <div class="form-row">
-            <label>Promo Voucher:</label>
-            <div style="display:flex; gap:6px;">
-              <input type="text" value="SBWELCOME10" readonly />
-              <button class="btn btn-secondary">Apply Voucher</button>
-            </div>
-          </div>
-          <table>
-            <tbody>
-              <tr><td>Food Subtotal (3 items)</td><td style="text-align:right; font-weight:700;">165,000 VND</td></tr>
-              <tr><td>Delivery Fee (3.2 km from District 1 Hub)</td><td style="text-align:right;">+25,000 VND</td></tr>
-              <tr><td>Off-Peak Kitchen Discount (10%)</td><td style="text-align:right; color:var(--green);">-16,500 VND</td></tr>
-              <tr><td>Promotional Voucher (<code>SBWELCOME10</code> — 10%)</td><td style="text-align:right; color:var(--green);">-16,500 VND</td></tr>
-              <tr style="background:var(--blue-hdr); color:var(--navy); font-weight:700;">
-                <td>Total Payable Amount</td><td style="text-align:right;">157,000 VND</td>
+              <tr>
+                <td>PHO-01</td>
+                <td>Phở Bò Đặc Biệt / Special Wagyu Beef Pho</td>
+                <td>Pho Saigon</td>
+                <td>Wok</td>
+                <td class="num">1</td>
+                <td class="num">85,000 VND</td>
+              </tr>
+              <tr>
+                <td>BM-02</td>
+                <td>Chả Giò Hải Sản Giòn / Crispy Spring Rolls</td>
+                <td>Saigon Crispy</td>
+                <td>Fryer</td>
+                <td class="num">1</td>
+                <td class="num">45,000 VND</td>
+              </tr>
+              <tr>
+                <td>TEA-01</td>
+                <td>Trà Đào Cam Sả / Peach Lemongrass Tea</td>
+                <td>GreenBowl</td>
+                <td>Beverage</td>
+                <td class="num">1</td>
+                <td class="num">35,000 VND</td>
               </tr>
             </tbody>
           </table>
         </div>
 
-        <div class="section-box">
-          <div class="section-title">
-            <span>Payment Method</span>
-            <span class="hub-tag">Authorized: AUTH-20261128-8841</span>
-          </div>
-          <div class="form-row">
-            <label>Payment Option:</label>
-            <select><option selected>Online Card Payment — Visa / Mastercard (VND)</option><option>Cash on Delivery (VND)</option></select>
-          </div>
-          <div class="btn-row">
-            <button class="btn btn-secondary">Authorize Online Card</button>
-            <button class="btn">Place Order</button>
-          </div>
-        </div>
-
-        <div class="receipt-box">
-          <strong>Order Confirmation Receipt</strong><br/>
-          Order Number: <strong>#ORD-001</strong> | Status: <span class="badge badge-ok">Placed</span> | Payment: <span class="badge badge-ok">Paid (157,000 VND)</span><br/>
-          Kitchen Tickets Dispatched: <code>KT-001 (Wok)</code>, <code>KT-002 (Fryer)</code>, <code>KT-003 (Beverage)</code> | Estimated Delivery: <strong>25 mins</strong>
-        </div>
-      </div>
-    </div>
-
-    <!-- RIGHT: Brand & Menu Catalog Administration Window -->
-    <div class="window-card" id="uc14-window">
-      <div class="window-titlebar">
-        <span>SaigonBite Admin — Brand &amp; Menu Catalog</span>
-        <span class="sub">Administrator Console</span>
-      </div>
-      <div class="window-body">
-        <div class="section-box">
-          <div class="section-title">
-            <span>Virtual Brand Directory</span>
-            <span class="hub-tag">3 Active Brands</span>
+        <div class="group">
+          <div class="group-title">2. Delivery &amp; Promotional Voucher</div>
+          <div class="form-grid" style="margin-bottom:8px;">
+            <label>Delivery Address:</label>
+            <input type="text" value="45 Le Loi, Ben Nghe Ward, District 1, HCMC (3.2 km)" readonly />
+            <label>Voucher Code:</label>
+            <div class="inline-input">
+              <input type="text" value="SBWELCOME10" readonly />
+              <button class="btn btn-alt" style="white-space:nowrap;">Apply Voucher</button>
+            </div>
           </div>
           <table>
-            <thead>
-              <tr><th>Brand ID</th><th>Virtual Brand Name</th><th>Cuisine Type</th><th>Assigned Hubs</th><th>Status</th></tr>
-            </thead>
             <tbody>
-              <tr style="background:#F0F6FF; font-weight:700;"><td>BR-01</td><td>Pho Saigon Heritage</td><td>Vietnamese Traditional</td><td>H01 (D1), H02 (D7)</td><td><span class="badge badge-ok">Active</span></td></tr>
-              <tr><td>BR-02</td><td>Saigon Crispy Banh Mi &amp; Rolls</td><td>Vietnamese Street Food</td><td>H01 (D1)</td><td><span class="badge badge-ok">Active</span></td></tr>
-              <tr><td>BR-03</td><td>GreenBowl Tropical Salads &amp; Tea</td><td>Healthy &amp; Beverage</td><td>H01 (D1), H02 (D7)</td><td><span class="badge badge-ok">Active</span></td></tr>
+              <tr>
+                <td>Food Subtotal (3 items)</td>
+                <td class="num" style="width:120px; font-weight:700;">165,000 VND</td>
+              </tr>
+              <tr>
+                <td>Delivery Fee (3.2 km)</td>
+                <td class="num">+25,000 VND</td>
+              </tr>
+              <tr>
+                <td>Quiet-Kitchen Discount (10%)</td>
+                <td class="num" style="color:var(--green);">-16,500 VND</td>
+              </tr>
+              <tr>
+                <td>Voucher Discount (SBWELCOME10 — 10%)</td>
+                <td class="num" style="color:var(--green);">-16,500 VND</td>
+              </tr>
+              <tr style="background:var(--blue-hdr); color:var(--navy); font-weight:700;">
+                <td>Total Payable</td>
+                <td class="num">157,000 VND</td>
+              </tr>
             </tbody>
           </table>
         </div>
 
-        <div class="section-box">
-          <div class="section-title">
-            <span>Brand Profile &amp; Hub Allocation</span>
-            <span class="hub-tag">Selected: BR-01</span>
+        <div class="group">
+          <div class="group-title">3. Payment &amp; Order Submission</div>
+          <div class="form-grid">
+            <label>Payment Method:</label>
+            <select>
+              <option selected>Online Card — Visa **** 8841 (Auth: AUTH-20261128-8841)</option>
+              <option>Cash on Delivery (VND)</option>
+            </select>
           </div>
-          <div class="form-row"><label>Brand Name:</label><input type="text" value="Pho Saigon Heritage" readonly /></div>
-          <div class="form-row"><label>Cuisine Category:</label><input type="text" value="Vietnamese Traditional" readonly /></div>
-          <div class="form-row"><label>Assigned Hubs:</label><input type="text" value="[x] H01 (District 1 Hub)   [x] H02 (District 7 Hub)" readonly /></div>
-          <div class="btn-row"><button class="btn btn-secondary">Save Brand Details</button></div>
-        </div>
-
-        <div class="section-box">
-          <div class="section-title">
-            <span>Bilingual Menu Item Details &amp; Kitchen Station</span>
-            <span class="hub-tag">Item Editor</span>
-          </div>
-          <div class="form-row"><label>Item Code:</label><input type="text" value="PHO-01" readonly /></div>
-          <div class="form-row"><label>Vietnamese Name:</label><input type="text" value="Phở Bò Đặc Biệt" readonly /></div>
-          <div class="form-row"><label>English Name:</label><input type="text" value="Special Wagyu Beef Pho" readonly /></div>
-          <div class="form-row"><label>Unit Price (VND):</label><input type="text" value="85,000 VND" readonly /></div>
-          <div class="form-row"><label>Preparation Station:</label><select><option selected>Wok Station (H01, H02)</option><option>Fryer Station</option><option>Assembly Station</option><option>Beverage Bar</option></select></div>
-          <div class="btn-row">
-            <button class="btn">Save &amp; Publish Item</button>
-            <button class="btn btn-danger">Discontinue Item</button>
+          <div class="actions">
+            <button class="btn btn-alt">Authorize Card</button>
+            <button class="btn">Submit Order</button>
           </div>
         </div>
 
-        <div class="section-box" style="margin-bottom:0;">
-          <div class="section-title">
-            <span>Brand Menu Items (Pho Saigon Heritage)</span>
-            <span class="hub-tag">Bilingual VI / EN</span>
-          </div>
+        <div class="receipt">
+          <div class="receipt-title">4. Order Confirmation Receipt</div>
+          <div><strong>Order ID:</strong> #ORD-001 &nbsp;|&nbsp; <strong>Order Status:</strong> <span class="status-active">Placed</span> &nbsp;|&nbsp; <strong>Payment:</strong> <span class="status-active">Paid (157,000 VND)</span></div>
+          <div><strong>Station Tickets:</strong> KT-001 (Wok), KT-002 (Fryer), KT-003 (Beverage) &nbsp;|&nbsp; <strong>Estimated Delivery:</strong> 25 mins</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: UC14 Brand & Menu Catalog Window -->
+    <div class="window" id="uc14-window">
+      <div class="titlebar">
+        <span>SaigonBite — Brand &amp; Menu Catalog Management</span>
+        <span class="titlebar-sub">Administrator</span>
+      </div>
+      <div class="body">
+        <div class="group">
+          <div class="group-title">1. Virtual Brand Directory</div>
           <table>
             <thead>
-              <tr><th>Code</th><th>Vietnamese / English Name</th><th>Unit Price</th><th>Station</th><th>Status</th></tr>
+              <tr>
+                <th style="width:68px;">Brand ID</th>
+                <th>Brand Name</th>
+                <th style="width:155px;">Cuisine Type</th>
+                <th style="width:110px;">Assigned Hubs</th>
+                <th style="width:68px;">Status</th>
+              </tr>
             </thead>
             <tbody>
-              <tr><td>PHO-01</td><td>Phở Bò Đặc Biệt / Special Wagyu Beef Pho</td><td>85,000 VND</td><td>Wok</td><td><span class="badge badge-ok">Active</span></td></tr>
-              <tr><td>BM-02</td><td>Chả Giò Hải Sản Giòn / Crispy Spring Rolls</td><td>45,000 VND</td><td>Fryer</td><td><span class="badge badge-ok">Active</span></td></tr>
-              <tr><td>PHO-99</td><td>Phở Gà Lá Chanh / Lime Leaf Chicken Pho</td><td>75,000 VND</td><td>Wok</td><td><span class="badge badge-off">Discontinued</span></td></tr>
+              <tr style="background:#F0F6FF; font-weight:700;">
+                <td>BR-01</td>
+                <td>Pho Saigon Heritage</td>
+                <td>Vietnamese Traditional</td>
+                <td>H01, H02</td>
+                <td class="status-active">Active</td>
+              </tr>
+              <tr>
+                <td>BR-02</td>
+                <td>Saigon Crispy Banh Mi &amp; Rolls</td>
+                <td>Vietnamese Street Food</td>
+                <td>H01</td>
+                <td class="status-active">Active</td>
+              </tr>
+              <tr>
+                <td>BR-03</td>
+                <td>GreenBowl Tropical Salads &amp; Tea</td>
+                <td>Healthy &amp; Beverage</td>
+                <td>H01, H02</td>
+                <td class="status-active">Active</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="group">
+          <div class="group-title">2. Brand Profile &amp; Hub Assignment</div>
+          <div class="form-grid-2col">
+            <label>Brand Name:</label>
+            <input type="text" value="Pho Saigon Heritage" readonly />
+            <label>Cuisine Type:</label>
+            <input type="text" value="Vietnamese Traditional" readonly />
+          </div>
+          <div class="form-grid" style="margin-top:6px;">
+            <label>Assigned Hubs:</label>
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <div class="checkbox-group">
+                <label><input type="checkbox" checked onclick="return false;" /> H01 (District 1)</label>
+                <label><input type="checkbox" checked onclick="return false;" /> H02 (District 7)</label>
+              </div>
+              <button class="btn btn-alt">Save Brand Details</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="group">
+          <div class="group-title">3. Menu Item Details</div>
+          <div class="form-grid-2col">
+            <label>Item Code:</label>
+            <input type="text" value="PHO-01" readonly />
+            <label>Unit Price:</label>
+            <input type="text" value="85,000 VND" readonly />
+            <label>Name (VI):</label>
+            <input type="text" value="Phở Bò Đặc Biệt" readonly />
+            <label>Name (EN):</label>
+            <input type="text" value="Special Wagyu Beef Pho" readonly />
+          </div>
+          <div class="form-grid" style="margin-top:6px;">
+            <label>Kitchen Station:</label>
+            <div style="display:flex; gap:8px; align-items:center;">
+              <select style="flex:1;">
+                <option selected>Wok Station</option>
+                <option>Fryer Station</option>
+                <option>Assembly Station</option>
+                <option>Beverage Bar</option>
+              </select>
+              <button class="btn">Save Menu Item</button>
+              <button class="btn btn-danger">Discontinue Item</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="group">
+          <div class="group-title">4. Menu Items of Selected Brand (BR-01: Pho Saigon Heritage)</div>
+          <table>
+            <thead>
+              <tr>
+                <th style="width:68px;">Code</th>
+                <th>Vietnamese Name</th>
+                <th>English Name</th>
+                <th style="width:88px;" class="num">Unit Price</th>
+                <th style="width:68px;">Station</th>
+                <th style="width:84px;">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>PHO-01</td>
+                <td>Phở Bò Đặc Biệt</td>
+                <td>Special Wagyu Beef Pho</td>
+                <td class="num">85,000 VND</td>
+                <td>Wok</td>
+                <td class="status-active">Active</td>
+              </tr>
+              <tr>
+                <td>PHO-02</td>
+                <td>Phở Tái Nạm Gầu</td>
+                <td>Sliced Brisket &amp; Flank Pho</td>
+                <td class="num">80,000 VND</td>
+                <td>Wok</td>
+                <td class="status-active">Active</td>
+              </tr>
+              <tr>
+                <td>PHO-99</td>
+                <td>Phở Gà Lá Chanh</td>
+                <td>Lime Leaf Chicken Pho</td>
+                <td class="num">75,000 VND</td>
+                <td>Wok</td>
+                <td class="status-off">Discontinued</td>
+              </tr>
             </tbody>
           </table>
         </div>

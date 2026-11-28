@@ -23,7 +23,8 @@ namespace SaigonBite.Views
         public string selectBrand(string brandId)
         {
             var brand = _handler.selectBrand(brandId);
-            string msg = $"[BrandCatalogWindow] Selected brand '{brand.BrandName}' ({brand.BrandId}) with {brand.MenuItems.Count} menu items.";
+            string label = string.IsNullOrWhiteSpace(brand.BrandName) ? brand.BrandId : $"{brand.BrandName} ({brand.BrandId})";
+            string msg = $"[BrandCatalogWindow] Selected brand {label} with {brand.MenuItems.Count} menu items.";
             Console.WriteLine(msg);
             return msg;
         }
