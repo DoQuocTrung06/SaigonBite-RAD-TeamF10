@@ -7,8 +7,8 @@ skinparam defaultFontSize 11
 skinparam roundcorner 0
 skinparam dpi 160
 skinparam PackageStyle folder
-skinparam nodesep 36
-skinparam ranksep 52
+skinparam nodesep 22
+skinparam ranksep 28
 
 skinparam ClassBackgroundColor #FFFFFF
 skinparam ClassBorderColor #000000
@@ -39,23 +39,29 @@ package "View Layer" as ViewLayer {
   class KDSConsoleUI
   class ShipperMobileUI
   class ReportConsoleUI
+
+  CheckoutWindow -[hidden]right-> BrandCatalogWindow
+  BrandCatalogWindow -[hidden]right-> VoucherConsoleUI
+  CheckoutWindow -[hidden]down-> KDSConsoleUI
+  BrandCatalogWindow -[hidden]down-> ShipperMobileUI
+  VoucherConsoleUI -[hidden]down-> ReportConsoleUI
 }
 
 package "Domain Layer" as DomainLayer {
-  class OrderHandler <<controller>>
-  class BrandCatalogHandler <<controller>>
-  class VoucherController <<controller>>
-  class KitchenController <<controller>>
-  class DeliveryController <<controller>>
-  class ReportController <<controller>>
+  class OrderHandler
+  class BrandCatalogHandler
+  class VoucherController
+  class KitchenController
+  class DeliveryController
+  class ReportController
 
   class Customer
   class LocalCustomer
   class ForeignTourist
-  class Hub
-  class KitchenStation
   class Brand
   class MenuItem
+  class Hub
+  class KitchenStation
   class Order
   class OrderLine
   class Voucher
@@ -65,22 +71,29 @@ package "Domain Layer" as DomainLayer {
   class DeliveryTask
   class ManagementReport
 
+  OrderHandler -[hidden]right-> BrandCatalogHandler
+  BrandCatalogHandler -[hidden]right-> VoucherController
+  VoucherController -[hidden]right-> KitchenController
+  KitchenController -[hidden]right-> DeliveryController
+  DeliveryController -[hidden]right-> ReportController
+
   OrderHandler -[hidden]down-> Customer
   BrandCatalogHandler -[hidden]down-> Brand
-  VoucherController -[hidden]down-> Voucher
-  KitchenController -[hidden]down-> Hub
-  DeliveryController -[hidden]down-> DeliveryTask
-  ReportController -[hidden]down-> ManagementReport
+  VoucherController -[hidden]down-> Hub
+  KitchenController -[hidden]down-> Order
+  DeliveryController -[hidden]down-> Voucher
+  ReportController -[hidden]down-> Payment
 
   Customer -[hidden]down-> LocalCustomer
-  LocalCustomer -[hidden]right-> ForeignTourist
-  Brand -[hidden]down-> MenuItem
-  Hub -[hidden]down-> KitchenStation
-  Voucher -[hidden]down-> Order
-  Order -[hidden]right-> OrderLine
-  DeliveryTask -[hidden]down-> Payment
-  ManagementReport -[hidden]down-> KitchenTicket
-  KitchenTicket -[hidden]right-> Shipper
+  Brand -[hidden]down-> ForeignTourist
+  Hub -[hidden]down-> MenuItem
+  Order -[hidden]down-> KitchenStation
+  Voucher -[hidden]down-> OrderLine
+  Payment -[hidden]down-> KitchenTicket
+
+  LocalCustomer -[hidden]down-> Shipper
+  ForeignTourist -[hidden]down-> DeliveryTask
+  MenuItem -[hidden]down-> ManagementReport
 }
 
 package "Data Access Layer" as DALayer {
@@ -94,8 +107,22 @@ package "Data Access Layer" as DALayer {
   class DeliveryTaskDAO
   class ReportDAO
   class AuditLogDAO
+
+  OrderDA -[hidden]right-> BrandDA
+  BrandDA -[hidden]right-> MenuItemDA
+  MenuItemDA -[hidden]right-> HubDA
+  HubDA -[hidden]right-> VoucherDA
+
+  OrderDA -[hidden]down-> PaymentDA
+  BrandDA -[hidden]down-> KitchenTicketDAO
+  MenuItemDA -[hidden]down-> DeliveryTaskDAO
+  HubDA -[hidden]down-> ReportDAO
+  VoucherDA -[hidden]down-> AuditLogDAO
 }
 
-ViewLayer ..> DomainLayer
-DomainLayer ..> DALayer
+ViewLayer -down..> DomainLayer
+DomainLayer -down..> DALayer
+Shipper -[hidden]down-> OrderDA
+DeliveryTask -[hidden]down-> BrandDA
+ManagementReport -[hidden]down-> MenuItemDA
 @enduml

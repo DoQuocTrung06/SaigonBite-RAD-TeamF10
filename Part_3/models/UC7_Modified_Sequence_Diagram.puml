@@ -30,10 +30,10 @@ actor "Kitchen Staff" as Staff
 participant "<<view>>\n__:KDSConsoleUI__" as UI
 participant "<<controller>>\n__:KitchenController__" as Ctrl
 participant "__aO:Order__" as Ord
-participant "<<dataAccess>>\n__:OrderDAO__" as OrderDAO
 participant "__aH:Hub__" as Hub
-participant "<<dataAccess>>\n__:HubDAO__" as HubDAO
 participant "__aKT:KitchenTicket__" as Ticket
+participant "<<dataAccess>>\n__:OrderDAO__" as OrderDAO
+participant "<<dataAccess>>\n__:HubDAO__" as HubDAO
 participant "<<dataAccess>>\n__:KitchenTicketDAO__" as TicketDAO
 participant "<<dataAccess>>\n__:AuditLogDAO__" as AuditDAO
 

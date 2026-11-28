@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>SaigonBite — CheckoutWindow</title>
+  <style>
+    :root {
+      --navy: #1F3A5F;
+      --blue-hdr: #DCE6F2;
+      --border: #B7C3D3;
+      --text: #111827;
+      --muted: #4B5563;
+      --green: #166534;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Calibri", "Segoe UI", Arial, sans-serif; }
+    html, body {
+      width: 1360px;
+      background: #FFFFFF;
+      color: var(--text);
+      overflow: hidden;
+    }
+    .flow {
+      display: grid;
+      grid-template-columns: 1.32fr 36px 0.88fr;
+      align-items: stretch;
+      padding: 14px;
+      background: #FFFFFF;
+    }
+    .arrow-col {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--navy);
+    }
+    .window {
+      border: 1.5px solid var(--navy);
+      background: #FFFFFF;
+      display: flex;
+      flex-direction: column;
+    }
+    .titlebar {
+      background: var(--navy);
+      color: #FFFFFF;
+      padding: 7px 14px;
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .navbar {
+      display: flex;
+      background: #F1F5F9;
+      border-bottom: 1px solid var(--border);
+      font-size: 12px;
+    }
+    .nav-tab {
+      padding: 6px 14px;
+      color: var(--muted);
+      border-right: 1px solid var(--border);
+    }
+    .nav-tab.active {
+      background: var(--blue-hdr);
+      color: var(--navy);
+      font-weight: 700;
+    }
+    .body {
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      flex: 1;
+    }
+    .panel {
+      border: 1px solid var(--border);
+      padding: 8px 10px;
+    }
+    .panel-title {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 6px;
+      padding-bottom: 3px;
+      border-bottom: 1px solid var(--blue-hdr);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11.8px;
+    }
+    th {
+      background: var(--blue-hdr);
+      color: var(--navy);
+      text-align: left;
+      padding: 4px 7px;
+      border: 1px solid var(--border);
+      font-weight: 700;
+    }
+    td {
+      padding: 4px 7px;
+      border: 1px solid var(--border);
+    }
+    .num { text-align: right; }
+    .form-grid {
+      display: grid;
+      grid-template-columns: 118px 1fr;
+      gap: 6px 8px;
+      align-items: center;
+      font-size: 11.8px;
+    }
+    label { font-weight: 700; }
+    input[type="text"], select {
+      width: 100%;
+      padding: 3.5px 7px;
+      border: 1px solid var(--border);
+      font-size: 11.8px;
+      color: var(--text);
+      background: #FFFFFF;
+    }
+    .inline-row {
+      display: flex;
+      gap: 7px;
+      align-items: center;
+    }
+    .radio-group {
+      display: flex;
+      gap: 16px;
+      font-size: 11.8px;
+      align-items: center;
+    }
+    .radio-group label {
+      font-weight: 400;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .btn {
+      padding: 4.5px 12px;
+      font-size: 11.8px;
+      font-weight: 700;
+      border: 1px solid var(--navy);
+      background: var(--navy);
+      color: #FFFFFF;
+      white-space: nowrap;
+    }
+    .btn-alt {
+      background: var(--blue-hdr);
+      color: var(--navy);
+    }
+    .btn-outline {
+      background: #FFFFFF;
+      color: var(--navy);
+      border-color: var(--border);
+    }
+    .footer-action {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 8px;
+    }
+    .kv-grid {
+      display: grid;
+      grid-template-columns: 132px 1fr;
+      gap: 6px 8px;
+      font-size: 11.8px;
+    }
+    .status-ok { color: var(--green); font-weight: 700; }
+  </style>
+</head>
+<body>
+  <div class="flow">
+    <!-- SCREEN 1: Checkout (SSD 1 -> 2 -> 3 -> 4 -> 5) -->
+    <div class="window">
+      <div class="titlebar">SaigonBite — Checkout</div>
+      <div class="navbar">
+        <div class="nav-tab">Browse Menu</div>
+        <div class="nav-tab">Shopping Cart (3)</div>
+        <div class="nav-tab active">Checkout</div>
+        <div class="nav-tab">Order Confirmation</div>
+      </div>
+      <div class="body">
+        <!-- SSD 1: requestCheckout(basketItems) -> checkout summary -->
+        <div class="panel">
+          <div class="panel-title">Order Items (Preparing Hub: District 1 Kitchen)</div>
+          <table>
+            <thead>
+              <tr>
+                <th>Item Name (VI / EN)</th>
+                <th style="width:105px;">Brand</th>
+                <th style="width:88px;" class="num">Unit Price</th>
+                <th style="width:38px;" class="num">Qty</th>
+                <th style="width:92px;" class="num">Line Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Phở Bò Đặc Biệt / Special Wagyu Beef Pho</td>
+                <td>Pho Saigon</td>
+                <td class="num">85,000 VND</td>
+                <td class="num">1</td>
+                <td class="num">85,000 VND</td>
+              </tr>
+              <tr>
+                <td>Chả Giò Hải Sản Giòn / Crispy Spring Rolls</td>
+                <td>Saigon Crispy</td>
+                <td class="num">45,000 VND</td>
+                <td class="num">1</td>
+                <td class="num">45,000 VND</td>
+              </tr>
+              <tr>
+                <td>Trà Đào Cam Sả / Peach Lemongrass Tea</td>
+                <td>GreenBowl</td>
+                <td class="num">35,000 VND</td>
+                <td class="num">1</td>
+                <td class="num">35,000 VND</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- SSD 2: enterDeliveryAddress(deliveryAddress) & SSD 3: applyVoucher(voucherCode) -->
+        <div class="panel">
+          <div class="panel-title">Delivery Address &amp; Promotional Voucher</div>
+          <div class="form-grid">
+            <label>Delivery Address:</label>
+            <div class="inline-row">
+              <input type="text" value="45 Le Loi, Ben Nghe Ward, District 1, HCMC" readonly />
+              <button class="btn btn-alt">Calculate Fee</button>
+            </div>
+            <label>Calculated Route:</label>
+            <div class="inline-row">
+              <input type="text" value="3.2 km" readonly style="width:90px;" />
+              <span style="color:var(--muted);">Delivery Fee: 25,000 VND &nbsp;|&nbsp; Quiet-Kitchen Discount (10%): -16,500 VND</span>
+            </div>
+            <label>Voucher Code:</label>
+            <div class="inline-row">
+              <input type="text" value="SBWELCOME10" readonly style="width:160px;" />
+              <button class="btn btn-alt">Apply Voucher</button>
+              <span style="color:var(--green); font-weight:700;">10% Off Subtotal (-16,500 VND)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- SSD 4: authorizeOnlinePayment(paymentDetails) -->
+        <div class="panel">
+          <div class="panel-title">Payment Method &amp; Card Details</div>
+          <div class="form-grid">
+            <label>Payment Method:</label>
+            <div class="radio-group">
+              <label><input type="radio" checked onclick="return false;" /> Online Card</label>
+              <label><input type="radio" onclick="return false;" /> Cash on Delivery (VND)</label>
+            </div>
+            <label>Card Details:</label>
+            <div class="inline-row">
+              <select style="width:95px;"><option selected>Visa</option><option>Mastercard</option></select>
+              <input type="text" value="4111 **** **** 8841" readonly style="width:155px;" />
+              <label style="font-weight:400;">Exp:</label>
+              <input type="text" value="08/28" readonly style="width:65px;" />
+              <button class="btn btn-alt">Authorize Payment</button>
+              <span class="status-ok">Approved</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- SSD 5: submitOrder(paymentMethod) -->
+        <div class="panel">
+          <div class="panel-title">Order Summary</div>
+          <table>
+            <tbody>
+              <tr>
+                <td>Food Subtotal (3 items)</td>
+                <td class="num" style="width:125px;">165,000 VND</td>
+              </tr>
+              <tr>
+                <td>Distance Delivery Fee (3.2 km)</td>
+                <td class="num">25,000 VND</td>
+              </tr>
+              <tr>
+                <td>Quiet-Kitchen Discount (10%)</td>
+                <td class="num" style="color:var(--green);">-16,500 VND</td>
+              </tr>
+              <tr>
+                <td>Promotional Voucher Discount (10%)</td>
+                <td class="num" style="color:var(--green);">-16,500 VND</td>
+              </tr>
+              <tr style="background:var(--blue-hdr); color:var(--navy); font-weight:700;">
+                <td>Total Payable</td>
+                <td class="num">157,000 VND</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="footer-action">
+            <button class="btn btn-outline">&larr; Back to Cart</button>
+            <button class="btn">Place Order</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="arrow-col">&rarr;</div>
+
+    <!-- SCREEN 2: Order Confirmation (SSD 5.1: displayOrderReceipt) -->
+    <div class="window">
+      <div class="titlebar">SaigonBite — Order Confirmation</div>
+      <div class="navbar">
+        <div class="nav-tab">Browse Menu</div>
+        <div class="nav-tab">Shopping Cart (0)</div>
+        <div class="nav-tab">Checkout</div>
+        <div class="nav-tab active">Order Confirmation</div>
+      </div>
+      <div class="body">
+        <div class="panel">
+          <div class="panel-title">Order Confirmation Receipt</div>
+          <div class="kv-grid">
+            <label>Order Number:</label>
+            <div><strong>ORD-001</strong></div>
+            <label>Order Status:</label>
+            <div class="status-ok">Placed</div>
+            <label>Preparing Hub:</label>
+            <div>District 1 Kitchen</div>
+            <label>Delivery Address:</label>
+            <div>45 Le Loi, Ben Nghe Ward, District 1, HCMC</div>
+            <label>Estimated Delivery:</label>
+            <div><strong>25 mins</strong></div>
+            <label>Payment Method:</label>
+            <div>Online Card (Visa **** 8841)</div>
+            <label>Payment Status:</label>
+            <div class="status-ok">Paid</div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">Items Ordered</div>
+          <table>
+            <thead>
+              <tr>
+                <th>Item Name (VI / EN)</th>
+                <th style="width:42px;" class="num">Qty</th>
+                <th style="width:98px;" class="num">Line Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Phở Bò Đặc Biệt / Special Wagyu Beef Pho</td>
+                <td class="num">1</td>
+                <td class="num">85,000 VND</td>
+              </tr>
+              <tr>
+                <td>Chả Giò Hải Sản Giòn / Crispy Spring Rolls</td>
+                <td class="num">1</td>
+                <td class="num">45,000 VND</td>
+              </tr>
+              <tr>
+                <td>Trà Đào Cam Sả / Peach Lemongrass Tea</td>
+                <td class="num">1</td>
+                <td class="num">35,000 VND</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">Payment Breakdown</div>
+          <table>
+            <tbody>
+              <tr>
+                <td>Food Subtotal</td>
+                <td class="num" style="width:115px;">165,000 VND</td>
+              </tr>
+              <tr>
+                <td>Delivery Fee (3.2 km)</td>
+                <td class="num">25,000 VND</td>
+              </tr>
+              <tr>
+                <td>Total Discount</td>
+                <td class="num" style="color:var(--green);">-33,000 VND</td>
+              </tr>
+              <tr style="background:var(--blue-hdr); color:var(--navy); font-weight:700;">
+                <td>Total Paid</td>
+                <td class="num">157,000 VND</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="footer-action" style="justify-content:flex-end;">
+            <button class="btn btn-alt">Return to Menu</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

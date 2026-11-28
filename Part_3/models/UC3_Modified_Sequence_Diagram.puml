@@ -34,15 +34,15 @@ actor "Customer" as Customer
 participant "<<view>>\n__:Checkout__\n__Window__" as View
 participant "<<controller>>\n__:Order__\n__Handler__" as Ctrl
 participant "__aH:Hub__" as Hub
-participant "<<dataAccess>>\n__:HubDA__" as HubDA
 participant "__aO:Order__" as Order
 participant "__aOL:OrderLine__" as OrderLine
 participant "__aMI:MenuItem__" as MenuItem
 participant "__aV:Voucher__" as Voucher
-participant "<<dataAccess>>\n__:VoucherDA__" as VoucherDA
 participant "__aP:Payment__" as Payment
-participant "<<dataAccess>>\n__:PaymentDA__" as PaymentDA
 participant "__aKT:Kitchen__\n__Ticket__" as Ticket
+participant "<<dataAccess>>\n__:HubDA__" as HubDA
+participant "<<dataAccess>>\n__:VoucherDA__" as VoucherDA
+participant "<<dataAccess>>\n__:PaymentDA__" as PaymentDA
 participant "<<dataAccess>>\n__:OrderDA__" as OrderDA
 
 Customer -> View: requestCheckout(basketItems)

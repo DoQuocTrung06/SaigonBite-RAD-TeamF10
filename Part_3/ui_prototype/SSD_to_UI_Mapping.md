@@ -5,7 +5,7 @@
 ---
 
 ## 1. UC3: Place an order — `CheckoutWindow` (Author: `524H0031` — Ngô Tấn Thành)
-**Prototype File:** `Part_3/ui_prototype/UC3_UC14_Checkout_Catalog_UI.html` (`#uc3-window`)  
+**Prototype File:** `Part_3/ui_prototype/UC3_CheckoutWindow_UI.html` (`UC3_CheckoutWindow_UI.png`)  
 **View & Controller Classes:** `Part_3/src/Views/CheckoutWindow.cs` $\rightarrow$ `Part_3/src/Controllers/OrderHandler.cs`
 
 | Step | SSD Message (Figure 2.4) | Direction | UI Component in `CheckoutWindow` | Mapped C# View & Controller Method | Business Rule Enforced on UI |
@@ -24,7 +24,7 @@
 ---
 
 ## 2. UC14: Manage brands and menu items — `BrandCatalogWindow` (Author: `524H0031` — Ngô Tấn Thành)
-**Prototype File:** `Part_3/ui_prototype/UC3_UC14_Checkout_Catalog_UI.html` (`#uc14-window`)  
+**Prototype File:** `Part_3/ui_prototype/UC14_BrandCatalogWindow_UI.html` (`UC14_BrandCatalogWindow_UI.png`)  
 **View & Controller Classes:** `Part_3/src/Views/BrandCatalogWindow.cs` $\rightarrow$ `Part_3/src/Controllers/BrandCatalogHandler.cs`
 
 | Step | SSD Message (Figure 2.7) | Direction | UI Component in `BrandCatalogWindow` | Mapped C# View & Controller Method | Business Rule Enforced on UI |

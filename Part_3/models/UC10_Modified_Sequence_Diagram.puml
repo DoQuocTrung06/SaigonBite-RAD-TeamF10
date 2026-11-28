@@ -30,10 +30,10 @@ actor "Shipper" as Shipper
 participant "<<view>>\n__:ShipperMobileUI__" as UI
 participant "<<controller>>\n__:DeliveryController__" as Ctrl
 participant "__aDT:DeliveryTask__" as Task
-participant "<<dataAccess>>\n__:DeliveryTaskDAO__" as TaskDAO
 participant "__aO:Order__" as Ord
-participant "<<dataAccess>>\n__:OrderDAO__" as OrderDAO
 participant "__aP:Payment__" as Pay
+participant "<<dataAccess>>\n__:DeliveryTaskDAO__" as TaskDAO
+participant "<<dataAccess>>\n__:OrderDAO__" as OrderDAO
 participant "<<dataAccess>>\n__:AuditLogDAO__" as AuditDAO
 
 Shipper -> UI: onScanPickupQRClicked(orderId, qrCode)

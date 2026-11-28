@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>SaigonBite — Brand &amp; Menu Catalog</title>
+  <style>
+    :root {
+      --navy: #1F3A5F;
+      --blue-hdr: #DCE6F2;
+      --border: #B7C3D3;
+      --text: #111827;
+      --muted: #4B5563;
+      --green: #166534;
+      --red: #991B1B;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Calibri", "Segoe UI", Arial, sans-serif; }
+    html, body {
+      width: 1360px;
+      background: #FFFFFF;
+      color: var(--text);
+      overflow: hidden;
+    }
+    .canvas {
+      padding: 14px;
+      background: #FFFFFF;
+    }
+    .window {
+      border: 1.5px solid var(--navy);
+      background: #FFFFFF;
+    }
+    .titlebar {
+      background: var(--navy);
+      color: #FFFFFF;
+      padding: 7px 14px;
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .navbar {
+      display: flex;
+      background: #F1F5F9;
+      border-bottom: 1px solid var(--border);
+      font-size: 12px;
+    }
+    .nav-tab {
+      padding: 6px 16px;
+      color: var(--muted);
+      border-right: 1px solid var(--border);
+    }
+    .nav-tab.active {
+      background: var(--blue-hdr);
+      color: var(--navy);
+      font-weight: 700;
+    }
+    .master-detail {
+      display: grid;
+      grid-template-columns: 0.92fr 1.08fr;
+      gap: 14px;
+      padding: 12px;
+    }
+    .col {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .panel {
+      border: 1px solid var(--border);
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+    .panel-title {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 8px;
+      padding-bottom: 4px;
+      border-bottom: 1px solid var(--blue-hdr);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11.8px;
+    }
+    th {
+      background: var(--blue-hdr);
+      color: var(--navy);
+      text-align: left;
+      padding: 4.5px 7px;
+      border: 1px solid var(--border);
+      font-weight: 700;
+    }
+    td {
+      padding: 4.5px 7px;
+      border: 1px solid var(--border);
+    }
+    .num { text-align: right; }
+    .form-grid {
+      display: grid;
+      grid-template-columns: 110px 1fr;
+      gap: 7px 10px;
+      align-items: center;
+      font-size: 11.8px;
+    }
+    .form-grid-2col {
+      display: grid;
+      grid-template-columns: 92px 1fr 88px 1fr;
+      gap: 7px 10px;
+      align-items: center;
+      font-size: 11.8px;
+    }
+    .span-3 {
+      grid-column: 2 / 5;
+    }
+    label { font-weight: 700; }
+    input[type="text"], select {
+      width: 100%;
+      padding: 4px 7px;
+      border: 1px solid var(--border);
+      font-size: 11.8px;
+      color: var(--text);
+      background: #FFFFFF;
+    }
+    .checkbox-group {
+      display: flex;
+      gap: 18px;
+      font-size: 11.8px;
+      align-items: center;
+    }
+    .checkbox-group label {
+      font-weight: 400;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: auto;
+      padding-top: 10px;
+    }
+    .btn {
+      padding: 4.5px 12px;
+      font-size: 11.8px;
+      font-weight: 700;
+      border: 1px solid var(--navy);
+      background: var(--navy);
+      color: #FFFFFF;
+    }
+    .btn-outline {
+      background: #FFFFFF;
+      color: var(--navy);
+      border-color: var(--border);
+    }
+    .btn-danger {
+      background: #FFFFFF;
+      color: var(--red);
+      border-color: var(--red);
+    }
+    .status-active { color: var(--green); font-weight: 700; }
+    .status-off { color: var(--red); font-weight: 700; }
+  </style>
+</head>
+<body>
+  <div class="canvas">
+    <div class="window">
+      <div class="titlebar">SaigonBite — Brand &amp; Menu Catalog</div>
+      <div class="navbar">
+        <div class="nav-tab active">Brands &amp; Menus</div>
+        <div class="nav-tab">Promotional Vouchers</div>
+        <div class="nav-tab">Kitchen Hubs &amp; Stations</div>
+        <div class="nav-tab">Management Reports</div>
+      </div>
+      <div class="master-detail">
+        <!-- LEFT COLUMN: MASTER (Virtual Brands — SSD 1, 2, 3) -->
+        <div class="col">
+          <div class="panel">
+            <div class="panel-title">Virtual Brands</div>
+            <table>
+              <thead>
+                <tr>
+                  <th style="width:66px;">Brand ID</th>
+                  <th>Brand Name</th>
+                  <th style="width:145px;">Cuisine Type</th>
+                  <th style="width:74px;">Hubs</th>
+                  <th style="width:64px;">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="background:#F0F6FF; font-weight:700;">
+                  <td>BR-01</td>
+                  <td>Pho Saigon Heritage</td>
+                  <td>Vietnamese Traditional</td>
+                  <td>H01, H02</td>
+                  <td class="status-active">Active</td>
+                </tr>
+                <tr>
+                  <td>BR-02</td>
+                  <td>Saigon Crispy Banh Mi &amp; Rolls</td>
+                  <td>Vietnamese Street Food</td>
+                  <td>H01</td>
+                  <td class="status-active">Active</td>
+                </tr>
+                <tr>
+                  <td>BR-03</td>
+                  <td>GreenBowl Tropical Salads &amp; Tea</td>
+                  <td>Healthy &amp; Beverage</td>
+                  <td>H01, H02</td>
+                  <td class="status-active">Active</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="panel">
+            <div class="panel-title">Brand Details</div>
+            <div class="form-grid">
+              <label>Brand ID:</label>
+              <div style="display:flex; gap:12px; align-items:center;">
+                <input type="text" value="BR-01" readonly style="width:110px;" />
+                <label>Status:</label>
+                <input type="text" value="Active" readonly style="width:110px;" />
+              </div>
+              <label>Brand Name:</label>
+              <input type="text" value="Pho Saigon Heritage" readonly />
+              <label>Cuisine Type:</label>
+              <input type="text" value="Vietnamese Traditional" readonly />
+              <label>Assigned Hubs:</label>
+              <div class="checkbox-group">
+                <label><input type="checkbox" checked onclick="return false;" /> H01 (District 1)</label>
+                <label><input type="checkbox" checked onclick="return false;" /> H02 (District 7)</label>
+              </div>
+            </div>
+            <div class="actions">
+              <button class="btn btn-outline">New / Clear</button>
+              <button class="btn">Save Brand Details</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT COLUMN: DETAIL (Menu Items of Selected Brand — SSD 2.1, 4, 5) -->
+        <div class="col">
+          <div class="panel">
+            <div class="panel-title">Menu Items — Pho Saigon Heritage (BR-01)</div>
+            <table>
+              <thead>
+                <tr>
+                  <th style="width:64px;">Code</th>
+                  <th>Name (VI)</th>
+                  <th>Name (EN)</th>
+                  <th style="width:92px;" class="num">Unit Price</th>
+                  <th style="width:68px;">Station</th>
+                  <th style="width:84px;">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="background:#F0F6FF; font-weight:700;">
+                  <td>PHO-01</td>
+                  <td>Phở Bò Đặc Biệt</td>
+                  <td>Special Wagyu Beef Pho</td>
+                  <td class="num">85,000 VND</td>
+                  <td>Wok</td>
+                  <td class="status-active">Active</td>
+                </tr>
+                <tr>
+                  <td>PHO-02</td>
+                  <td>Phở Tái Nạm Gầu</td>
+                  <td>Sliced Brisket &amp; Flank Pho</td>
+                  <td class="num">80,000 VND</td>
+                  <td>Wok</td>
+                  <td class="status-active">Active</td>
+                </tr>
+                <tr>
+                  <td>PHO-99</td>
+                  <td>Phở Gà Lá Chanh</td>
+                  <td>Lime Leaf Chicken Pho</td>
+                  <td class="num">75,000 VND</td>
+                  <td>Wok</td>
+                  <td class="status-off">Discontinued</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="panel">
+            <div class="panel-title">Menu Item Details</div>
+            <div class="form-grid-2col">
+              <label>Item Code:</label>
+              <input type="text" value="PHO-01" readonly />
+              <label>Unit Price:</label>
+              <input type="text" value="85,000 VND" readonly />
+              <label>Name (VI):</label>
+              <input type="text" value="Phở Bò Đặc Biệt" readonly />
+              <label>Name (EN):</label>
+              <input type="text" value="Special Wagyu Beef Pho" readonly />
+              <label>Description:</label>
+              <input type="text" class="span-3" value="12-hour slow-simmered beef bone broth with sliced Wagyu beef and fresh herbs" readonly />
+              <label>Station:</label>
+              <select>
+                <option selected>Wok</option>
+                <option>Fryer</option>
+                <option>Assembly</option>
+                <option>Beverage</option>
+              </select>
+              <label>Status:</label>
+              <input type="text" value="Active" readonly />
+            </div>
+            <div class="actions">
+              <button class="btn btn-outline">New / Clear</button>
+              <button class="btn">Save Menu Item</button>
+              <button class="btn btn-danger">Discontinue Item</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
